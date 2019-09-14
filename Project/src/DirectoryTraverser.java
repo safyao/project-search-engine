@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class DirectoryTraverser
 {
-	public List<Path> traverseDirectory (Path directory) throws IOException
+	public static List<Path> traverseDirectory (Path directory) throws IOException
 	{
 		List<Path> allFiles = new ArrayList<>();
 
@@ -35,4 +35,9 @@ public class DirectoryTraverser
 		}
 		return false;
 	}
+	
+//	public static void main(String[] args) throws IOException
+//	{
+//		System.out.println(traverseDirectory(Path.of("/Project Tests/text/simple")).toString());
+//	}
 }
