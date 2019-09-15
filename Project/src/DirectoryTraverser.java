@@ -11,16 +11,23 @@ import java.util.ArrayList;
  */
 public class DirectoryTraverser
 {
+	public static final List<Path> allFiles = new ArrayList<>();
+	
 	public static List<Path> traverseDirectory (Path directory) throws IOException
 	{
-		List<Path> allFiles = new ArrayList<>();
-
 	       try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
-	           for (Path file: stream) {
-	               if (isTextFile(file))
-	               {
-	            	   allFiles.add(file);
-	               }
+	           for (Path entry: stream) {
+	        	   if (Files.isDirectory(entry))
+	        	   {
+	        		   traverseDirectory (entry);
+	        	   }
+	        	   else
+	        	   {
+	        		   if (isTextFile(entry))
+		               {
+		            	   allFiles.add(entry);
+		               }
+	        	   }
 	           }
 	       }
 	       return allFiles;
@@ -38,6 +45,6 @@ public class DirectoryTraverser
 	
 //	public static void main(String[] args) throws IOException
 //	{
-//		System.out.println(traverseDirectory(Path.of("/Project Tests/text/simple")).toString());
+//		System.out.println(traverseDirectory(Path.of("/Users/Safya/Desktop/CS 212/Repositories").normalize()).toString());
 //	}
 }
