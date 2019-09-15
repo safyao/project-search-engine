@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 
 /**
  * Outputs several simple data structures in "pretty" JSON format where
@@ -33,18 +34,22 @@ public class JsonWriter {
 	 */
 	public static void asArray(Collection<Integer> elements, Writer writer, int level) throws IOException {
 
-		int counter = 1;
-		writer.write("[\n");
-		for (Integer element : elements){
-			writer.write("\t");
-			indent(element, writer, level);
-			if (counter < elements.size()){
-				writer.write(",");
-				counter++;
-			}
+		writer.write("[");
+		var iterator = elements.iterator();
+		level++;
+		if (iterator.hasNext())
+		{
 			writer.write("\n");
+			indent(iterator.next(), writer, level);
 		}
-		writer.write("]");
+		while (iterator.hasNext())
+		{
+			writer.write(",");
+			writer.write("\n");
+			indent(iterator.next(), writer, level);
+		}
+		writer.write("\n");
+		indent("]", writer, level - 1);
 	}
 
 	/**
@@ -93,19 +98,30 @@ public class JsonWriter {
 	 */
 	public static void asObject(Map<String, Integer> elements, Writer writer, int level) throws IOException {
 
-		int counter = 1;
-		writer.write("{\n");
-		for (var entry : elements.entrySet()){
-			writer.write("\t");
-			quote(entry.getKey(), writer, level);
-			writer.write(": " + entry.getValue());
-			if (counter < elements.size()){
-				writer.write(",");
-				counter++;
-			}
+writer.write("{");
+		
+		var iterator = elements.entrySet().iterator();
+		level++;
+		if (iterator.hasNext())
+		{
 			writer.write("\n");
+			writeEntry(iterator.next(), writer, level);
 		}
-		writer.write("}");
+		while (iterator.hasNext())
+		{
+			writer.write(",");
+			writer.write("\n");
+			writeEntry(iterator.next(), writer, level);
+		}
+		writer.write("\n");
+		indent("}", writer, level - 1);
+	}
+	
+	private static void writeEntry(Entry<String, Integer> element, Writer writer, int level) throws IOException
+	{
+		quote(element.getKey(), writer, level);
+		writer.write(": ");
+		writer.write(element.getValue().toString());
 	}
 
 	/**
