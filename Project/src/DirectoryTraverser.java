@@ -11,7 +11,12 @@ import java.util.ArrayList;
  */
 public class DirectoryTraverser
 {
-	public static final List<Path> allFiles = new ArrayList<>();
+	public static List<Path> allFiles;
+	
+	public DirectoryTraverser()
+	{
+		allFiles = new ArrayList<>();
+	}
 	
 	public static List<Path> traverseDirectory (Path directory) throws IOException
 	{

@@ -64,15 +64,6 @@ public class ArgParser {
 					}
 				}
 			}
-			
-			if (!hasValue("-index"))
-			{
-				map.replace("-index", "index.json");
-			}
-			if (!hasValue("-counts"))
-			{
-				map.replace("-counts", "counts.json");
-			}
 		}
 	}
 

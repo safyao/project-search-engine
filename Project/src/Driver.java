@@ -1,6 +1,11 @@
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Class responsible for running this project based on the provided command-line
@@ -25,6 +30,18 @@ public class Driver {
 
 		// TODO Fill in and modify this method as necessary.
 		System.out.println(Arrays.toString(args));
+		
+		ArgParser parsedArgs = new ArgParser();
+		parsedArgs.getPath("-input", Path.of("index.json").normalize());
+		parsedArgs.getPath("-counts", Path.of("counts.json").normalize());
+		
+		
+		
+		DirectoryTraverser traverse = new DirectoryTraverser();
+		
+//		traverse.traverseDirectory( );
+		
+		Map<String, TreeMap<String, TreeSet<Integer>>> map = new TreeMap<>();
 
 		// calculate time elapsed and output
 		Duration elapsed = Duration.between(start, Instant.now());
