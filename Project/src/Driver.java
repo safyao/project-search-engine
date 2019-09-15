@@ -31,17 +31,24 @@ public class Driver {
 		// TODO Fill in and modify this method as necessary.
 		System.out.println(Arrays.toString(args));
 		
+		
+		//Take argument - includes file location, output file location, count location
 		ArgParser parsedArgs = new ArgParser();
-		parsedArgs.getPath("-input", Path.of("index.json").normalize());
-		parsedArgs.getPath("-counts", Path.of("counts.json").normalize());
 		
-		
-		
+		//For path in parsedargs, get file locations
+		//Taverse the directory for all the text files - gives an ArrayList of Paths
 		DirectoryTraverser traverse = new DirectoryTraverser();
+		//for each file in allFiles, parse and stem the words - returns TreeSet of Strings
+		//Create InvertedIndex data structure (similar to ArgParser)
+		//Enter keys into index, with the same file location, and incrementor for line number
 		
-//		traverse.traverseDirectory( );
+		//Write the index into files as Json object
+		//If index then output file:
+		//parsedArgs.getPath("-index", Path.of("index.json").normalize());
+		//Somehow figure out the word counts iff
+		//parsedArgs.getPath("-counts", Path.of("counts.json").normalize());
+
 		
-		Map<String, TreeMap<String, TreeSet<Integer>>> map = new TreeMap<>();
 
 		// calculate time elapsed and output
 		Duration elapsed = Duration.between(start, Instant.now());
