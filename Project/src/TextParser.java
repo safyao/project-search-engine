@@ -1,5 +1,13 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.Normalizer;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
+
+import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 /**
  * Utility class for parsing text in a consistent manner.
@@ -51,5 +59,26 @@ public class TextParser {
 	 */
 	public static String[] parse(String text) {
 		return split(clean(text));
+	}
+	
+	public static TreeSet<String> parseFile(Path inputFile) throws IOException {
+
+		TreeSet<String> parsedWords = new TreeSet<>();
+		
+		try (
+				BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8);
+		) {
+			
+			String line = null;
+			while ((line = reader.readLine()) != null)
+			{
+				String[] parsedLine = parse(line);
+				for (String item : parsedLine)
+				{
+					parsedWords.add(item);
+				}
+			}
+		}
+		return parsedWords;
 	}
 }
