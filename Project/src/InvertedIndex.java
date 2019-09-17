@@ -20,12 +20,14 @@ public class InvertedIndex
 	
 //	TODO Implement getters & setters
 //	public void addKey(String key, TreeMap<String, TreeSet<Integer>> littleMap)
-//	public addTreeValue(TreeMap<String, TreeSet<Integer>> value);
+	// No duplicates!
+//	public addValue(TreeMap<String, TreeSet<Integer>> value);
 //	public addIntValue(String key, String treeValue, Integer value);
 	
+//	public getElement();
 //	public getKey();
 //	public getValue();
-//	public getValueOfValue();
+//	public getIntValue();
 //	public toString()
 
 	
