@@ -38,21 +38,18 @@ public class Driver {
 		
 		
 		
-		//Take argument - includes file location, output file location, count location
+		//Take argument - get the path
 		ArgParser parsedArgs = new ArgParser();
-		
-		Path path = parsedArgs.getPath("-path");
-		
-		//If directory, traverse the directory for all the text files - gives an ArrayList of Paths
-
+		Path path = parsedArgs.getPath("-path"); // does case matter?
 		List<Path> allFiles = DirectoryTraverser.traverseDirectory(path);
-		
+//		 maybe inside 2nd for- loop? TreeSet<String> stems = TextStemmer.uniqueStems(file);
 		for (Path file : allFiles)
 		{
-			TreeSet<String> stems = TextStemmer.uniqueStems(file);
+			//counter for line number
+			//uniqueStems each line
+			
 			
 		}
-		//for each path, use uniqueStems(Path) - returns TreeSet of stem Strings from file
 		
 		//Create InvertedIndex data structure (similar to ArgParser)
 		//go through TreeSet and add stems to Index (addKey), the file and initial location (increment for line number) 
