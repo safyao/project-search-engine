@@ -100,4 +100,30 @@ public class TextStemmer {
 		}
 		return stemmedLines;
 	}
+	
+	public static TreeSet<Integer> uniqueStemPositions(Path inputFile, String word) throws IOException {
+
+		TreeSet<Integer> positions = new TreeSet<>();
+		int lineNumber = 1;
+		
+		try (
+				BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8);
+		) {
+			
+			String line = null;
+			while ((line = reader.readLine()) != null)
+			{
+				TreeSet<String> stemmedLine = uniqueStems(line, new SnowballStemmer(DEFAULT));
+				for (String item : stemmedLine)
+				{
+					if (item.equals(word))
+					{
+						positions.add(lineNumber);
+					}
+				}
+				lineNumber++;
+			}
+		}
+		return positions;
+	}
 }
