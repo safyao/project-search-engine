@@ -1,6 +1,8 @@
 import java.io.IOException;
 
 import java.nio.file.Path;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import opennlp.tools.stemmer.Stemmer;
