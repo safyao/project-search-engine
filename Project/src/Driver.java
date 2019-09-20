@@ -1,13 +1,19 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
+import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 /**
  * Class responsible for running this project based on the provided command-line
@@ -38,18 +44,61 @@ public class Driver {
 		
 		
 		
-		//Take argument - get the path
-		ArgParser parsedArgs = new ArgParser();
-		Path path = parsedArgs.getPath("-path"); // does case matter?
-		List<Path> allFiles = DirectoryTraverser.traverseDirectory(path);
-//		 maybe inside 2nd for- loop? TreeSet<String> stems = TextStemmer.uniqueStems(file);
-		for (Path file : allFiles)
+
+		ArgParser parsedArgs = new ArgParser(args);
+		Path path = parsedArgs.getPath("-path");
+		System.out.println(path);
+		List<Path> file = new ArrayList<>();
+		
+		DirectoryTraverser traverse = new DirectoryTraverser();
+		if (Files.isDirectory(path))
 		{
-			//counter for line number
-			//uniqueStems each line
+			file = traverse.traverseDirectory(path);
+		}
+		else
+		{
+			file.add(path);
+		}
+		
+		InvertedIndex index = new InvertedIndex();
+		
+		for (Path item : file)
+		{
+			TreeSet<String> stems = TextStemmer.uniqueStems(item);
+			
+			for (String word : stems)
+			{
+				Map<String, TreeSet<Integer>> occurrences = new TreeMap<>();
+				TreeSet<Integer> positions = new TreeSet<>();
+				
+				try (
+						BufferedReader reader = Files.newBufferedReader(item, StandardCharsets.UTF_8);
+				) {
+					String line = null;
+					int lineNumber = 1;
+					while ((line = reader.readLine()) != null)
+					{
+						TreeSet<String> stemmedLine = TextStemmer.uniqueStems(line);
+						for (String element : stemmedLine)
+						{
+							if (word.equals(item))
+							{
+								
+							}
+						}
+						lineNumber++;
+					}
+				}
+				
+				
+				
+				
+				index.addKey(word, null);
+			}	
 			
 			
 		}
+		
 		
 		//Create InvertedIndex data structure (similar to ArgParser)
 		//go through TreeSet and add stems to Index (addKey), the file and initial location (increment for line number) 
