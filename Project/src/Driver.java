@@ -86,7 +86,7 @@ public class Driver {
 		
 		if (parsedArgs.getPath("-index") != null)
 		{
-			JsonWriter.asDoubleObject(index.getIndex(), Path.of("index.json"));
+			JsonWriter.asDoubleObject(index.getIndex(), Path.of("index.json").normalize());
 		}
 		if (parsedArgs.getPath("-counts") != null)
 		{
@@ -98,25 +98,8 @@ public class Driver {
 				counts.put(someFile.toString(), wordCount);
 			}
 			
-			JsonWriter.asObject(counts, Path.of("counts.json"));
+			JsonWriter.asObject(counts, Path.of("counts.json").normalize());
 		}
-		
-
-		
-		
-		
-		//for each word in index, go through each file, and do UniqueStemPositions -- this will return a single TreeSet<Integer> of all positions
-		//Add that treeSet to the TreeMap with the file name as key and treeSet as value
-		//replace index(word, null) with index(word, map)
-		
-	
-		
-		//If index then output file:
-		//Write the index into files as Json object (use asNestedObject for file)
-		//parsedArgs.getPath("-index", Path.of("index.json").normalize());
-		//parsedArgs.getPath("-counts", Path.of("counts.json").normalize());
-
-		//if want count, then parseFile() and output size
 		
 		//Exceptions
 		//Clean Up
