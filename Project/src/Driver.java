@@ -83,7 +83,24 @@ public class Driver {
 				index.addKey(word, wordOccurrences);
 			}		
 		}
-		System.out.println(JsonWriter.asObject(index.getIndex()));
+		
+		if (parsedArgs.getPath("-index") != null)
+		{
+			JsonWriter.asDoubleObject(index.getIndex(), Path.of("index.json"));
+		}
+		if (parsedArgs.getPath("-counts") != null)
+		{
+			Map<String, Integer> counts = new TreeMap<>();
+			
+			for (Path someFile : file)
+			{
+				int wordCount = TextParser.parseFile(someFile).size();
+				counts.put(someFile.toString(), wordCount);
+			}
+			
+			JsonWriter.asObject(counts, Path.of("counts.json"));
+		}
+		
 
 		
 		
