@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -67,46 +68,31 @@ public class Driver {
 			TreeSet<String> stems = TextStemmer.uniqueStems(item);
 			
 			for (String word : stems)
-			{
-				Map<String, TreeSet<Integer>> occurrences = new TreeMap<>();
-				TreeSet<Integer> positions = new TreeSet<>();
+			{	
+				TreeMap<String, TreeSet<Integer>> wordOccurrences = new TreeMap<>();
 				
-				try (
-						BufferedReader reader = Files.newBufferedReader(item, StandardCharsets.UTF_8);
-				) {
-					String line = null;
-					int lineNumber = 1;
-					while ((line = reader.readLine()) != null)
+				for (Path element : file)
+				{
+					TreeSet<Integer> positions = TextStemmer.uniqueStemPositions(element, word);
+					if (!positions.isEmpty())
 					{
-						TreeSet<String> stemmedLine = TextStemmer.uniqueStems(line);
-						for (String element : stemmedLine)
-						{
-							if (word.equals(item))
-							{
-								
-							}
-						}
-						lineNumber++;
+						wordOccurrences.putIfAbsent(element.normalize().toString(), positions);
 					}
 				}
 				
-				
-				
-				
-				index.addKey(word, null);
-			}	
-			
-			
+				index.addKey(word, wordOccurrences);
+			}		
 		}
+		System.out.println(JsonWriter.asObject(index.getIndex()));
+
 		
 		
-		//Create InvertedIndex data structure (similar to ArgParser)
-		//go through TreeSet and add stems to Index (addKey), the file and initial location (increment for line number) 
-		//(addValue, addSecondValue)
-		//then add second value if present by providing stem and file name
-			//need addKey method (if not already there? Allows duplicates?)
-			//addValue (TreeSet)
-			//addInteger
+		
+		//for each word in index, go through each file, and do UniqueStemPositions -- this will return a single TreeSet<Integer> of all positions
+		//Add that treeSet to the TreeMap with the file name as key and treeSet as value
+		//replace index(word, null) with index(word, map)
+		
+	
 		
 		//If index then output file:
 		//Write the index into files as Json object (use asNestedObject for file)
