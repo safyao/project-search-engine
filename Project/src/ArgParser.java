@@ -220,18 +220,4 @@ public class ArgParser {
 		// DO NOT MODIFY; THIS METHOD IS PROVIDED FOR YOU
 		return this.map.toString();
 	}
-
-	/**
-	 * A simple main method that parses the command-line arguments provided and
-	 * prints the result to the console.
-	 *
-	 * @param args the command-line arguments to parse
-	 */
-	
-	//TODO Remove when complete
-//	public static void main(String[] args) {
-//		String[] test = new String[] {"-path", "/Users/Safya/Desktop/CS 212/Repositories/project-tests/Project Tests/text/simple/hello.txt", "-b", "bee", "-b", "bat", "cat", "-d", "-e", "elk", "-f", "-index", "-counts"};
-//		var map = new ArgParser(test);
-//		System.out.println(map.getPath("-path"));
-//	}
 }

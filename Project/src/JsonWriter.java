@@ -399,43 +399,4 @@ public class JsonWriter {
 		indent(writer, times);
 		quote(element, writer);
 	}
-
-	/**
-	 * A simple main method that demonstrates this class.
-	 *
-	 * @param args unused
-	 */
-	public static void main(String[] args) {
-		// MODIFY AS NECESSARY TO DEBUG YOUR CODE
-
-//		TreeSet<Integer> elements = new TreeSet<>();
-//		System.out.println("Empty:");
-//		System.out.println(asArray(elements));
-//
-//		elements.add(65);
-//		System.out.println("\nSingle:");
-//		System.out.println(asArray(elements));
-//
-//		elements.add(66);
-//		elements.add(67);
-//		System.out.println("\nSimple:");
-//		System.out.println(asArray(elements));
-		
-		
-
-		TreeMap<String, TreeSet<Integer>> elements = new TreeMap<>();
-		elements.put("a", new TreeSet<>());
-		elements.put("b", new TreeSet<>());
-		elements.put("c", new TreeSet<>());
-
-		elements.get("a").add(1);
-		elements.get("b").add(2);
-		elements.get("b").add(3);
-		elements.get("b").add(4);
-
-		System.out.println(asNestedObject(elements));;
-		
-		
-		
-	}
 }
