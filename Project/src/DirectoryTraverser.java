@@ -18,7 +18,7 @@ public class DirectoryTraverser
 		allFiles = new ArrayList<>();
 	}
 	
-	public static List<Path> traverseDirectory (Path directory) throws IOException
+	public List<Path> traverseDirectory (Path directory) throws IOException
 	{
 	       try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
 	           for (Path entry: stream) {
