@@ -193,7 +193,7 @@ public class JsonWriter {
 	{
 		quote(element.getKey(), writer, level);
 		writer.write(": ");
-		writer.write(asNestedObject(element.getValue()));
+		asNestedObject(element.getValue(), writer, 1);
 	}
 
 	/**
@@ -244,36 +244,23 @@ public class JsonWriter {
 	 */
 	public static void asNestedObject(Map<String, ? extends Collection<Integer>> elements, Writer writer, int level) throws IOException {
 		
-		int counter = 1;
-		int count;
+		writer.write("{");
 		
-		writer.write("{\n");
-		
-		for (var entry : elements.entrySet()){
-			writer.write("\t");
-			quote(entry.getKey(), writer, level);
-			writer.write(": ");
-			// Writes value out as a pretty JSON array.
-			count = 1;
-			writer.write("[\n");
-			for (Integer element : entry.getValue()){
-				writer.write("\t");
-				indent(element, writer, level+1);
-				if (count < entry.getValue().size()){
-					writer.write(",");
-					count++;
-				}
-				writer.write("\n");
-			}
-			writer.write("\t]");
-			
-			if (counter < elements.size()){
-				writer.write(",");
-				counter++;
-			}
+		var iterator = elements.entrySet().iterator();
+		level++;
+		if (iterator.hasNext())
+		{
 			writer.write("\n");
+			writeNestedEntry(iterator.next(), writer, level);
 		}
-		writer.write("}");
+		while (iterator.hasNext())
+		{
+			writer.write(",");
+			writer.write("\n");
+			writeNestedEntry(iterator.next(), writer, level);
+		}
+		writer.write("\n");
+		indent("}", writer, level - 1);
 
 		/*
 		 * The generic notation:
@@ -284,6 +271,12 @@ public class JsonWriter {
 		 *
 		 *    HashMap<String, HashSet<Integer>> elements
 		 */
+	}
+	private static void writeNestedEntry(Entry<String, ? extends Collection<Integer>> element, Writer writer, int level) throws IOException
+	{
+		quote(element.getKey(), writer, level);
+		writer.write(": ");
+		asArray(element.getValue(), writer, 2);
 	}
 
 	/**
