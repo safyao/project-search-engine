@@ -47,9 +47,4 @@ public class DirectoryTraverser
 		}
 		return false;
 	}
-	
-//	public static void main(String[] args) throws IOException
-//	{
-//		System.out.println(traverseDirectory(Path.of("/Users/Safya/Desktop/CS 212/Repositories").normalize()).toString());
-//	}
 }

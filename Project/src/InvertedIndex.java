@@ -17,7 +17,7 @@ public class InvertedIndex
 		map = new TreeMap<>();
 	}
 	
-	public void addKey(String word, String path, Integer position)
+	public void add(String word, String path, Integer position)
 	{
 		if (!map.containsKey(word))
 		{
@@ -32,21 +32,12 @@ public class InvertedIndex
 			map.get(word).get(path).add(position);
 		}
 	}
-	
-//	public TreeMap<String, TreeSet<Integer>> getValue(String key)
-//	{
-//		return map.get(key);
-//	}
-//	
+
 	public Map<String, TreeMap<String, TreeSet<Integer>>> getIndex()
 	{
 		return map;
 	}
-//	
-//	public Set<String> getKeys()
-//	{
-//		return map.keySet();
-//	}
+
 	
 	public String toString()
 	{

@@ -4,7 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.Normalizer;
-import java.util.TreeSet;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
@@ -61,9 +62,9 @@ public class TextParser {
 		return split(clean(text));
 	}
 	
-	public static TreeSet<String> parseFile(Path inputFile) throws IOException {
+	public static List<String> parseFile(Path inputFile) throws IOException {
 
-		TreeSet<String> parsedWords = new TreeSet<>();
+		List<String> parsedWords = new ArrayList<>();
 		
 		try (
 				BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8);
