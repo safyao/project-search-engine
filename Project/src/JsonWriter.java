@@ -96,9 +96,9 @@ public class JsonWriter {
 	 * @param level    the initial indent level
 	 * @throws IOException
 	 */
-	public static void asObject(Map<String, Integer> elements, Writer writer, int level) throws IOException {
+	public static void asObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements, Writer writer, int level) throws IOException {
 
-writer.write("{");
+		writer.write("{");
 		
 		var iterator = elements.entrySet().iterator();
 		level++;
@@ -117,11 +117,11 @@ writer.write("{");
 		indent("}", writer, level - 1);
 	}
 	
-	private static void writeEntry(Entry<String, Integer> element, Writer writer, int level) throws IOException
+	private static void writeEntry(Entry<String, TreeMap<String, TreeSet<Integer>>> element, Writer writer, int level) throws IOException
 	{
 		quote(element.getKey(), writer, level);
 		writer.write(": ");
-		writer.write(element.getValue().toString());
+		writer.write(asNestedObject(element.getValue()));
 	}
 
 	/**
@@ -133,7 +133,7 @@ writer.write("{");
 	 *
 	 * @see #asObject(Map, Writer, int)
 	 */
-	public static void asObject(Map<String, Integer> elements, Path path) throws IOException {
+	public static void asObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements, Path path) throws IOException {
 		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 			asObject(elements, writer, 0);
@@ -148,7 +148,7 @@ writer.write("{");
 	 *
 	 * @see #asObject(Map, Writer, int)
 	 */
-	public static String asObject(Map<String, Integer> elements) {
+	public static String asObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements) {
 		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try {
 			StringWriter writer = new StringWriter();
