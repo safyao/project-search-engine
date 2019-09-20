@@ -1,6 +1,7 @@
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.Set;
 //import java.nio.file.Files;
 //import java.nio.file.Path;
 
@@ -30,7 +31,22 @@ public class InvertedIndex
 		}
 	}
 	
-	public String getIndex()
+	public TreeMap<String, TreeSet<Integer>> getValue(String key)
+	{
+		return map.get(key);
+	}
+	
+	public Map<String, TreeMap<String, TreeSet<Integer>>> getIndex()
+	{
+		return map;
+	}
+	
+	public Set<String> getKeys()
+	{
+		return map.keySet();
+	}
+	
+	public String toString()
 	{
 		return map.toString();
 	}
