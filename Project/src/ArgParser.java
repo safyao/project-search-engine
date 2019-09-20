@@ -198,7 +198,7 @@ public class ArgParser {
 		}
 		return null;
 	}
-
+ 
 	/**
 	 * Returns the value the specified flag is mapped as a {@link Path}, or the
 	 * default value if the flag does not exist or has a null value.
@@ -230,8 +230,8 @@ public class ArgParser {
 	
 	//TODO Remove when complete
 //	public static void main(String[] args) {
-//		String[] test = new String[] {"-a", "ant", "-b", "bee", "-b", "bat", "cat", "-d", "-e", "elk", "-f", "-index", "-counts"};
+//		String[] test = new String[] {"-path", "/Users/Safya/Desktop/CS 212/Repositories/project-tests/Project Tests/text/simple/hello.txt", "-b", "bee", "-b", "bat", "cat", "-d", "-e", "elk", "-f", "-index", "-counts"};
 //		var map = new ArgParser(test);
-//		System.out.println(map);
+//		System.out.println(map.getPath("-path"));
 //	}
 }
