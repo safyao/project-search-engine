@@ -4,6 +4,8 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.List;
+import java.util.ArrayList;
 
 import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
@@ -39,7 +41,7 @@ public class TextStemmer {
 	 * @see #DEFAULT
 	 * @see #uniqueStems(String, Stemmer)
 	 */
-	public static TreeSet<String> uniqueStems(String line) {
+	public static List<String> uniqueStems(String line) {
 		// THIS IS PROVIDED FOR YOU; NO NEED TO MODIFY
 		return uniqueStems(line, new SnowballStemmer(DEFAULT));
 	}
@@ -55,18 +57,18 @@ public class TextStemmer {
 	 * @see Stemmer#stem(CharSequence)
 	 * @see TextParser#parse(String)
 	 */
-	public static TreeSet<String> uniqueStems(String line, Stemmer stemmer) {
+	public static List<String> uniqueStems(String line, Stemmer stemmer) {
 		
 		String[] parsedText = TextParser.parse(line);
-		TreeSet<String> stemmedSet = new TreeSet<>();
+		List<String> stemmedList = new ArrayList<>();
 
 		for (String word : parsedText)
 		{
 			String stemmedWord = (String)stemmer.stem(word);
-			stemmedSet.add(stemmedWord);
+			stemmedList.add(stemmedWord);
 		}
 
-		return stemmedSet;
+		return stemmedList;
 	}
 	
 	/**
@@ -80,9 +82,30 @@ public class TextStemmer {
 	 * @see #uniqueStems(String)
 	 * @see TextParser#parse(String)
 	 */
-	public static TreeSet<String> uniqueStems(Path inputFile) throws IOException {
+//	public static TreeSet<String> uniqueStems(Path inputFile) throws IOException {
+//
+//		TreeSet<String> stemmedLines = new TreeSet<>();
+//		
+//		try (
+//				BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8);
+//		) {
+//			
+//			String line = null;
+//			while ((line = reader.readLine()) != null)
+//			{
+//				TreeSet<String> stemmedLine = uniqueStems(line, new SnowballStemmer(DEFAULT));
+//				for (String item : stemmedLine)
+//				{
+//					stemmedLines.add(item);
+//				}
+//			}
+//		}
+//		return stemmedLines;
+//	}
+	
+	public static List<String> uniqueStems(Path inputFile) throws IOException {
 
-		TreeSet<String> stemmedLines = new TreeSet<>();
+		List<String> stemmedLines = new ArrayList<>();
 		
 		try (
 				BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8);
@@ -91,7 +114,7 @@ public class TextStemmer {
 			String line = null;
 			while ((line = reader.readLine()) != null)
 			{
-				TreeSet<String> stemmedLine = uniqueStems(line, new SnowballStemmer(DEFAULT));
+				List<String> stemmedLine = uniqueStems(line, new SnowballStemmer(DEFAULT));
 				for (String item : stemmedLine)
 				{
 					stemmedLines.add(item);
@@ -101,29 +124,29 @@ public class TextStemmer {
 		return stemmedLines;
 	}
 	
-	public static TreeSet<Integer> uniqueStemPositions(Path inputFile, String word) throws IOException {
-
-		TreeSet<Integer> positions = new TreeSet<>();
-		int lineNumber = 1;
-		
-		try (
-				BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8);
-		) {
-			
-			String line = null;
-			while ((line = reader.readLine()) != null)
-			{
-				TreeSet<String> stemmedLine = uniqueStems(line, new SnowballStemmer(DEFAULT));
-				for (String item : stemmedLine)
-				{
-					if (item.equals(word))
-					{
-						positions.add(lineNumber);
-					}
-				}
-				lineNumber++;
-			}
-		}
-		return positions;
-	}
+//	public static TreeSet<Integer> uniqueStemPositions(Path inputFile, String word) throws IOException {
+//
+//		TreeSet<Integer> positions = new TreeSet<>();
+//		int lineNumber = 1;
+//		
+//		try (
+//				BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8);
+//		) {
+//			
+//			String line = null;
+//			while ((line = reader.readLine()) != null)
+//			{
+//				TreeSet<String> stemmedLine = uniqueStems(line, new SnowballStemmer(DEFAULT));
+//				for (String item : stemmedLine)
+//				{
+//					if (item.equals(word))
+//					{
+//						positions.add(lineNumber);
+//					}
+//				}
+//				lineNumber++;
+//			}
+//		}
+//		return positions;
+//	}
 }
