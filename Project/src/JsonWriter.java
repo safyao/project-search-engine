@@ -87,6 +87,78 @@ public class JsonWriter {
 			return null;
 		}
 	}
+	
+	/**
+	 * Writes the elements as a pretty JSON object.
+	 *
+	 * @param elements the elements to write
+	 * @param writer   the writer to use
+	 * @param level    the initial indent level
+	 * @throws IOException
+	 */
+	public static void asObject(Map<String, Integer> elements, Writer writer, int level) throws IOException {
+
+		writer.write("{");
+		
+		var iterator = elements.entrySet().iterator();
+		level++;
+		if (iterator.hasNext())
+		{
+			writer.write("\n");
+			writeObjectEntry(iterator.next(), writer, level);
+		}
+		while (iterator.hasNext())
+		{
+			writer.write(",");
+			writer.write("\n");
+			writeObjectEntry(iterator.next(), writer, level);
+		}
+		writer.write("\n");
+		indent("}", writer, level - 1);
+	}
+	
+	private static void writeObjectEntry(Entry<String, Integer> element, Writer writer, int level) throws IOException
+	{
+		quote(element.getKey(), writer, level);
+		writer.write(": ");
+		writer.write(element.getValue().toString());
+	}
+
+	/**
+	 * Writes the elements as a pretty JSON object to file.
+	 *
+	 * @param elements the elements to write
+	 * @param path     the file path to use
+	 * @throws IOException
+	 *
+	 * @see #asObject(Map, Writer, int)
+	 */
+	public static void asObject(Map<String, Integer> elements, Path path) throws IOException {
+		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
+		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+			asObject(elements, writer, 0);
+		}
+	}
+
+	/**
+	 * Returns the elements as a pretty JSON object.
+	 *
+	 * @param elements the elements to use
+	 * @return a {@link String} containing the elements in pretty JSON format
+	 *
+	 * @see #asObject(Map, Writer, int)
+	 */
+	public static String asObject(Map<String, Integer> elements) {
+		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
+		try {
+			StringWriter writer = new StringWriter();
+			asObject(elements, writer, 0);
+			return writer.toString();
+		}
+		catch (IOException e) {
+			return null;
+		}
+	}
 
 	/**
 	 * Writes the elements as a pretty JSON object.
@@ -96,7 +168,7 @@ public class JsonWriter {
 	 * @param level    the initial indent level
 	 * @throws IOException
 	 */
-	public static void asObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements, Writer writer, int level) throws IOException {
+	public static void asDoubleObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements, Writer writer, int level) throws IOException {
 
 		writer.write("{");
 		
@@ -133,10 +205,10 @@ public class JsonWriter {
 	 *
 	 * @see #asObject(Map, Writer, int)
 	 */
-	public static void asObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements, Path path) throws IOException {
+	public static void asDoubleObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements, Path path) throws IOException {
 		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-			asObject(elements, writer, 0);
+			asDoubleObject(elements, writer, 0);
 		}
 	}
 
@@ -148,11 +220,11 @@ public class JsonWriter {
 	 *
 	 * @see #asObject(Map, Writer, int)
 	 */
-	public static String asObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements) {
+	public static String asDoubleObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements) {
 		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try {
 			StringWriter writer = new StringWriter();
-			asObject(elements, writer, 0);
+			asDoubleObject(elements, writer, 0);
 			return writer.toString();
 		}
 		catch (IOException e) {
