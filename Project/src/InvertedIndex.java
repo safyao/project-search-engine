@@ -18,9 +18,53 @@ public class InvertedIndex
 		map = new TreeMap<>();
 	}
 	
+	public void addKey(String key, TreeMap<String, TreeSet<Integer>> value)
+	{
+		if (!map.containsKey(key))
+		{
+			map.put(key, value);
+		}
+		else
+		{
+			map.replace(key, value);
+		}
+	}
+	
+	public String getIndex()
+	{
+		return map.toString();
+	}
+	
+//	public void addStringValue(String key, String value, TreeSet<Integer> setValue)
+//	{
+//		if (map.containsKey(key))
+//		{
+//			TreeMap<String, TreeSet<Integer>> newValue = map.get(key);
+//			if (newValue.containsKey(value))
+//			{
+//				newValue.replace(value, setValue);
+//			}
+//			else
+//			{
+//				
+//			}
+//			
+//			map.replace(key, newValue);
+//		}
+//	}
+//	public void addIntValue(String key, String value, Integer intValue)
+//	{
+//		if (map.containsKey(key))
+//		{
+//			TreeSet<Integer> newValue = map.get(key).get(value);	//sets dont allow duplicates anyway
+//			newValue.add(intValue);
+//
+//		}
+//	}
+	
+	
 //	TODO Implement getters & setters
-//	public void addKey(String key, TreeMap<String, TreeSet<Integer>> littleMap)
-	// No duplicates!
+
 //	public addValue(TreeMap<String, TreeSet<Integer>> value);
 //	public addIntValue(String key, String treeValue, Integer value);
 	
