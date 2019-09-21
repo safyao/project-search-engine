@@ -211,8 +211,20 @@ public class ArgParser {
 	 */
 	public Path getPath(String flag, Path defaultValue) {
 		// DO NOT MODIFY; THIS METHOD IS PROVIDED FOR YOU
-		Path value = getPath(flag);
-		return value == null ? defaultValue : value;
+		if (hasFlag(flag))
+		{
+			if (getString(flag) != null)
+			{
+				return Path.of(getString(flag));
+			}
+			else
+			{
+				return defaultValue;
+			}
+		}
+		return null;
+		
+//		return value == null ? defaultValue : value;
 	}
 
 	@Override
