@@ -39,50 +39,60 @@ public class Driver {
 
 		System.out.println(Arrays.toString(args));
 
-		ArgParser parsedArgs = new ArgParser(args);
-		Path path = parsedArgs.getPath("-path");
-		List<Path> file = new ArrayList<>();
-		
-		DirectoryTraverser traverse = new DirectoryTraverser();
-		if (Files.isDirectory(path))
+		try
 		{
-			file = traverse.traverseDirectory(path);
-		}
-		else
-		{
-			file.add(path);
-		}
-		
-		
-		InvertedIndex index = new InvertedIndex();
-		for (Path item : file)
-		{
-			List<String> stems = TextStemmer.uniqueStems(item);
-			for (int i = 0; i < stems.size(); i++)
-			{
-				index.add(stems.get(i), item.toString(), i+1);
-			}
-		}
-
-		if (parsedArgs.getPath("-index", Path.of("index.json")) != null)
-		{
-			JsonWriter.asDoubleObject(index.getIndex(), parsedArgs.getPath("-index", Path.of("index.json")));
-		}
-		if (parsedArgs.getPath("-counts", Path.of("counts.json")) != null)
-		{
-			Map<String, Integer> counts = new TreeMap<>();
+			ArgParser parsedArgs = new ArgParser(args);
+			Path path = parsedArgs.getPath("-path");
+			List<Path> file = new ArrayList<>();
 			
-			for (Path someFile : file)
+			DirectoryTraverser traverse = new DirectoryTraverser();
+			if (Files.isDirectory(path))
 			{
-				int wordCount = TextParser.parseFile(someFile).size();
-				if (wordCount != 0)
+				file = traverse.traverseDirectory(path);
+			}
+			else
+			{
+				file.add(path);
+			}
+			
+			
+			InvertedIndex index = new InvertedIndex();
+			for (Path item : file)
+			{
+				List<String> stems = TextStemmer.uniqueStems(item);
+				for (int i = 0; i < stems.size(); i++)
 				{
-					counts.put(someFile.toString(), wordCount);
+					index.add(stems.get(i), item.toString(), i+1);
 				}
 			}
-			JsonWriter.asObject(counts, parsedArgs.getPath("-counts", Path.of("counts.json")));
+	
+			if (parsedArgs.getPath("-index", Path.of("index.json")) != null)
+			{
+				JsonWriter.asDoubleObject(index.getIndex(), parsedArgs.getPath("-index", Path.of("index.json")));
+			}
+			if (parsedArgs.getPath("-counts", Path.of("counts.json")) != null)
+			{
+				Map<String, Integer> counts = new TreeMap<>();
+				
+				for (Path someFile : file)
+				{
+					int wordCount = TextParser.parseFile(someFile).size();
+					if (wordCount != 0)
+					{
+						counts.put(someFile.toString(), wordCount);
+					}
+				}
+				JsonWriter.asObject(counts, parsedArgs.getPath("-counts", Path.of("counts.json")));
+			}
 		}
-		
+		catch (IOException e)
+		{
+			System.err.println("The file cannot be found.");
+		}
+		catch (NullPointerException e)
+		{
+			System.err.println("Please enter a valid path argument.");
+		}
 		
 		
 		
