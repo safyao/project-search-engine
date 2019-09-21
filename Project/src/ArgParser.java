@@ -31,7 +31,6 @@ public class ArgParser {
 	 * @param args the command line arguments to parse
 	 */
 	public ArgParser(String[] args) {
-		// DO NOT MODIFY; THIS METHOD IS PROVIDED FOR YOU
 		this();
 		parse(args);
 	}
@@ -43,23 +42,16 @@ public class ArgParser {
 	 * @param args the command line arguments to parse
 	 */
 	public void parse(String[] args) {
-		
-		for (int i = 0; i < args.length; i++) 
-		{
-			if (isFlag(args[i])) 
-			{
-				if (!hasFlag(args[i])) 
-				{
+		for (int i = 0; i < args.length; i++) {
+			if (isFlag(args[i])) {
+				if (!hasFlag(args[i])) {
 					map.put(args[i], null);
 				}
-				else 
-				{
+				else {
 					map.replace(args[i], null);
 				}
-				if ((i+1) != args.length) 
-				{
-					if (isValue(args[i+1])) 
-					{
+				if ((i+1) != args.length) {
+					if (isValue(args[i+1])) {
 						map.replace(args[i], args[i+1]);
 					}
 				}
@@ -78,13 +70,10 @@ public class ArgParser {
 	 * @see String#length()
 	 */
 	public static boolean isFlag(String arg) {
-		
-		if (arg == null)
-		{
+		if (arg == null) {
 			return false;
 		}
-		if (arg.startsWith("-") && (arg.length() > 1))
-		{
+		if (arg.startsWith("-") && (arg.length() > 1)) {
 			return true;
 		}
 		return false;
@@ -101,13 +90,10 @@ public class ArgParser {
 	 * @see String#length()
 	 */
 	public static boolean isValue(String arg) {
-		
-		if (arg == null)
-		{
+		if (arg == null) {
 			return false;
 		}
-		if (!arg.startsWith("-") && (arg.length() > 0))
-		{
+		if (!arg.startsWith("-") && (arg.length() > 0)) {
 			return true;
 		}
 		return false;
@@ -139,8 +125,7 @@ public class ArgParser {
 	 * @return {@code true} if the flag is mapped to a non-null value
 	 */
 	public boolean hasValue(String flag) {
-		if (!hasFlag(flag))
-		{
+		if (!hasFlag(flag)) {
 			return false;
 		}
 		return (getString(flag) != null);
@@ -155,8 +140,7 @@ public class ArgParser {
 	 *         there is no mapping for the flag
 	 */
 	public String getString(String flag) {
-		if (hasFlag(flag))
-		{
+		if (hasFlag(flag)) {
 			return map.get(flag);
 		}
 		return null;
@@ -173,7 +157,6 @@ public class ArgParser {
 	 *         if there is no mapping for the flag
 	 */
 	public String getString(String flag, String defaultValue) {
-		// DO NOT MODIFY; THIS METHOD IS PROVIDED FOR YOU
 		String value = getString(flag);
 		return value == null ? defaultValue : value;
 	}
@@ -189,10 +172,8 @@ public class ArgParser {
 	 * @see Path#of(String, String...)
 	 */
 	public Path getPath(String flag) {
-		if (hasFlag(flag))
-		{
-			if (getString(flag) != null)
-			{
+		if (hasFlag(flag)) {
+			if (getString(flag) != null) {
 				return Path.of(getString(flag));
 			}
 		}
@@ -207,29 +188,23 @@ public class ArgParser {
 	 * @param defaultValue the default value to return if there is no valid mapping
 	 *                     for the flag
 	 * @return the value the specified flag is mapped as a {@link Path}, or the
-	 *         default value if there is no valid mapping for the flag
+	 *         default value if there is no valid mapping for the flag, or null if the
+	 *         flag does not exist.
 	 */
 	public Path getPath(String flag, Path defaultValue) {
-		// DO NOT MODIFY; THIS METHOD IS PROVIDED FOR YOU
-		if (hasFlag(flag))
-		{
-			if (getString(flag) != null)
-			{
+		if (hasFlag(flag)) {
+			if (getString(flag) != null) {
 				return Path.of(getString(flag));
 			}
-			else
-			{
+			else {
 				return defaultValue;
 			}
 		}
 		return null;
-		
-//		return value == null ? defaultValue : value;
 	}
 
 	@Override
 	public String toString() {
-		// DO NOT MODIFY; THIS METHOD IS PROVIDED FOR YOU
 		return this.map.toString();
 	}
 }

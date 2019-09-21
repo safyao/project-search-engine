@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import opennlp.tools.stemmer.snowball.SnowballStemmer;
-
 /**
  * Utility class for parsing text in a consistent manner.
  *
@@ -62,8 +60,15 @@ public class TextParser {
 		return split(clean(text));
 	}
 	
+	/**
+	 * Parses the text from a given file.
+	 * 
+	 * @param inputFile the inputFile to parse
+	 * @return a parsed list of Strings from the file
+	 * @throws IOException if unable to read or parse file
+	 */
 	public static List<String> parseFile(Path inputFile) throws IOException {
-
+		
 		List<String> parsedWords = new ArrayList<>();
 		
 		try (
@@ -71,11 +76,9 @@ public class TextParser {
 		) {
 			
 			String line = null;
-			while ((line = reader.readLine()) != null)
-			{
+			while ((line = reader.readLine()) != null){
 				String[] parsedLine = parse(line);
-				for (String item : parsedLine)
-				{
+				for (String item : parsedLine){
 					parsedWords.add(item);
 				}
 			}

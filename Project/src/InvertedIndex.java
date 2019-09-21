@@ -10,8 +10,7 @@ import java.util.TreeSet;
  * @author University of San Francisco
  * @version Fall 2019
  */
-public class InvertedIndex
-{
+public class InvertedIndex {
 	/**
 	 * Stores arguments in key = value pairs.
 	 */
@@ -20,8 +19,7 @@ public class InvertedIndex
 	/**
 	 * Initializes this argument map.
 	 */
-	public InvertedIndex()
-	{
+	public InvertedIndex() {
 		map = new TreeMap<>();
 	}
 	
@@ -33,18 +31,14 @@ public class InvertedIndex
 	 * @param path the path to add if it's not already mapped to the corresponding word
 	 * @param position the position to add if it's not already mapped to the corresponding word and path
 	 */
-	public void add(String word, String path, Integer position)
-	{
-		if (!map.containsKey(word))
-		{
+	public void add(String word, String path, Integer position) {
+		if (!map.containsKey(word)) {
 			map.put(word, new TreeMap<String, TreeSet<Integer>>());
 		}
-		if (!map.get(word).containsKey(path))
-		{
+		if (!map.get(word).containsKey(path)) {
 			map.get(word).put(path, new TreeSet<Integer>());
 		}
-		if (!map.get(word).get(path).contains(position))
-		{
+		if (!map.get(word).get(path).contains(position)) {
 			map.get(word).get(path).add(position);
 		}
 	}
@@ -54,14 +48,12 @@ public class InvertedIndex
 	 * 
 	 * @return the map
 	 */
-	public Map<String, TreeMap<String, TreeSet<Integer>>> getIndex()
-	{
+	public Map<String, TreeMap<String, TreeSet<Integer>>> getIndex() {
 		return map;
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return map.toString();
 	}
 }

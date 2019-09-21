@@ -37,13 +37,11 @@ public class JsonWriter {
 		writer.write("[");
 		var iterator = elements.iterator();
 		level++;
-		if (iterator.hasNext())
-		{
+		if (iterator.hasNext()) {
 			writer.write("\n");
 			indent(iterator.next(), writer, level);
 		}
-		while (iterator.hasNext())
-		{
+		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			indent(iterator.next(), writer, level);
@@ -62,7 +60,6 @@ public class JsonWriter {
 	 * @see #asArray(Collection, Writer, int)
 	 */
 	public static void asArray(Collection<Integer> elements, Path path) throws IOException {
-		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 			asArray(elements, writer, 0);
 		}
@@ -77,7 +74,6 @@ public class JsonWriter {
 	 * @see #asArray(Collection, Writer, int)
 	 */
 	public static String asArray(Collection<Integer> elements) {
-		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try {
 			StringWriter writer = new StringWriter();
 			asArray(elements, writer, 0);
@@ -102,13 +98,11 @@ public class JsonWriter {
 		
 		var iterator = elements.entrySet().iterator();
 		level++;
-		if (iterator.hasNext())
-		{
+		if (iterator.hasNext()) {
 			writer.write("\n");
 			writeObjectEntry(iterator.next(), writer, level);
 		}
-		while (iterator.hasNext())
-		{
+		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			writeObjectEntry(iterator.next(), writer, level);
@@ -117,8 +111,15 @@ public class JsonWriter {
 		indent("}", writer, level - 1);
 	}
 	
-	private static void writeObjectEntry(Entry<String, Integer> element, Writer writer, int level) throws IOException
-	{
+	/**
+	 * Writes entries of element as key = value pair.
+	 * 
+	 * @param element the element to write
+	 * @param writer the writer to use
+	 * @param level the level to indent
+	 * @throws IOException
+	 */
+	private static void writeObjectEntry(Entry<String, Integer> element, Writer writer, int level) throws IOException {
 		quote(element.getKey(), writer, level);
 		writer.write(": ");
 		writer.write(element.getValue().toString());
@@ -134,7 +135,6 @@ public class JsonWriter {
 	 * @see #asObject(Map, Writer, int)
 	 */
 	public static void asObject(Map<String, Integer> elements, Path path) throws IOException {
-		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 			asObject(elements, writer, 0);
 		}
@@ -149,7 +149,6 @@ public class JsonWriter {
 	 * @see #asObject(Map, Writer, int)
 	 */
 	public static String asObject(Map<String, Integer> elements) {
-		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try {
 			StringWriter writer = new StringWriter();
 			asObject(elements, writer, 0);
@@ -159,79 +158,7 @@ public class JsonWriter {
 			return null;
 		}
 	}
-
-	/**
-	 * Writes the elements as a pretty JSON object.
-	 *
-	 * @param elements the elements to write
-	 * @param writer   the writer to use
-	 * @param level    the initial indent level
-	 * @throws IOException
-	 */
-	public static void asDoubleObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements, Writer writer, int level) throws IOException {
-
-		writer.write("{");
-		
-		var iterator = elements.entrySet().iterator();
-		level++;
-		if (iterator.hasNext())
-		{
-			writer.write("\n");
-			writeEntry(iterator.next(), writer, level);
-		}
-		while (iterator.hasNext())
-		{
-			writer.write(",");
-			writer.write("\n");
-			writeEntry(iterator.next(), writer, level);
-		}
-		writer.write("\n");
-		indent("}", writer, level - 1);
-	}
 	
-	private static void writeEntry(Entry<String, TreeMap<String, TreeSet<Integer>>> element, Writer writer, int level) throws IOException
-	{
-		quote(element.getKey(), writer, level);
-		writer.write(": ");
-		asNestedObject(element.getValue(), writer, 1);
-	}
-
-	/**
-	 * Writes the elements as a pretty JSON object to file.
-	 *
-	 * @param elements the elements to write
-	 * @param path     the file path to use
-	 * @throws IOException
-	 *
-	 * @see #asObject(Map, Writer, int)
-	 */
-	public static void asDoubleObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements, Path path) throws IOException {
-		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
-		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-			asDoubleObject(elements, writer, 0);
-		}
-	}
-
-	/**
-	 * Returns the elements as a pretty JSON object.
-	 *
-	 * @param elements the elements to use
-	 * @return a {@link String} containing the elements in pretty JSON format
-	 *
-	 * @see #asObject(Map, Writer, int)
-	 */
-	public static String asDoubleObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements) {
-		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
-		try {
-			StringWriter writer = new StringWriter();
-			asDoubleObject(elements, writer, 0);
-			return writer.toString();
-		}
-		catch (IOException e) {
-			return null;
-		}
-	}
-
 	/**
 	 * Writes the elements as a nested pretty JSON object. The generic notation used
 	 * allows this method to be used for any type of map with any type of nested
@@ -248,13 +175,11 @@ public class JsonWriter {
 		
 		var iterator = elements.entrySet().iterator();
 		level++;
-		if (iterator.hasNext())
-		{
+		if (iterator.hasNext()) {
 			writer.write("\n");
 			writeNestedEntry(iterator.next(), writer, level);
 		}
-		while (iterator.hasNext())
-		{
+		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			writeNestedEntry(iterator.next(), writer, level);
@@ -272,8 +197,16 @@ public class JsonWriter {
 		 *    HashMap<String, HashSet<Integer>> elements
 		 */
 	}
-	private static void writeNestedEntry(Entry<String, ? extends Collection<Integer>> element, Writer writer, int level) throws IOException
-	{
+	
+	/**
+	 * Writes entries of element as key = value (array) pair
+	 * 
+	 * @param element the element to write
+	 * @param writer the writer to use
+	 * @param level the level to indent
+	 * @throws IOException
+	 */
+	private static void writeNestedEntry(Entry<String, ? extends Collection<Integer>> element, Writer writer, int level) throws IOException {
 		quote(element.getKey(), writer, level);
 		writer.write(": ");
 		asArray(element.getValue(), writer, 2);
@@ -289,7 +222,6 @@ public class JsonWriter {
 	 * @see #asNestedObject(Map, Writer, int)
 	 */
 	public static void asNestedObject(Map<String, ? extends Collection<Integer>> elements, Path path) throws IOException {
-		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 			asNestedObject(elements, writer, 0);
 		}
@@ -304,10 +236,80 @@ public class JsonWriter {
 	 * @see #asNestedObject(Map, Writer, int)
 	 */
 	public static String asNestedObject(Map<String, ? extends Collection<Integer>> elements) {
-		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try {
 			StringWriter writer = new StringWriter();
 			asNestedObject(elements, writer, 0);
+			return writer.toString();
+		}
+		catch (IOException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Writes the elements as a double-nested pretty JSON object.
+	 *
+	 * @param elements the elements to write
+	 * @param writer   the writer to use
+	 * @param level    the initial indent level
+	 * @throws IOException
+	 */
+	public static void asDoubleObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements, Writer writer, int level) throws IOException {
+
+		writer.write("{");
+		
+		var iterator = elements.entrySet().iterator();
+		level++;
+		if (iterator.hasNext()) {
+			writer.write("\n");
+			writeEntry(iterator.next(), writer, level);
+		}
+		while (iterator.hasNext()) {
+			writer.write(",");
+			writer.write("\n");
+			writeEntry(iterator.next(), writer, level);
+		}
+		writer.write("\n");
+		indent("}", writer, level - 1);
+	}
+	
+	/**
+	 * Writes entries of element as key = value (nested object) pair.
+	 * 
+	 * @param element the element to write
+	 * @param writer the writer to use
+	 * @param level the level to indent
+	 * @throws IOException
+	 */
+	private static void writeEntry(Entry<String, TreeMap<String, TreeSet<Integer>>> element, Writer writer, int level) throws IOException {
+		quote(element.getKey(), writer, level);
+		writer.write(": ");
+		asNestedObject(element.getValue(), writer, 1);
+	}
+
+	/**
+	 * Writes the elements as a double-nested pretty JSON object to file.
+	 *
+	 * @param elements the elements to write
+	 * @param path     the file path to use
+	 * @throws IOException
+	 */
+	public static void asDoubleObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements, Path path) throws IOException {
+		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+			asDoubleObject(elements, writer, 0);
+		}
+	}
+
+	/**
+	 * Returns the elements as a double-nested pretty JSON object.
+	 *
+	 * @param elements the elements to use
+	 * @return a {@link String} containing the elements in pretty JSON format
+	 */
+	public static String asDoubleObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements) {
+		try {
+			StringWriter writer = new StringWriter();
+			asDoubleObject(elements, writer, 0);
 			return writer.toString();
 		}
 		catch (IOException e) {
@@ -341,7 +343,6 @@ public class JsonWriter {
 	 * @see #indent(Writer, int)
 	 */
 	public static void indent(Integer element, Writer writer, int times) throws IOException {
-		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		indent(element.toString(), writer, times);
 	}
 
@@ -356,7 +357,6 @@ public class JsonWriter {
 	 * @see #indent(Writer, int)
 	 */
 	public static void indent(String element, Writer writer, int times) throws IOException {
-		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		indent(writer, times);
 		writer.write(element);
 	}
@@ -369,7 +369,6 @@ public class JsonWriter {
 	 * @throws IOException
 	 */
 	public static void quote(String element, Writer writer) throws IOException {
-		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		writer.write('"');
 		writer.write(element);
 		writer.write('"');
@@ -388,7 +387,6 @@ public class JsonWriter {
 	 * @see #quote(String, Writer)
 	 */
 	public static void quote(String element, Writer writer, int times) throws IOException {
-		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		indent(writer, times);
 		quote(element, writer);
 	}
