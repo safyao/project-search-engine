@@ -38,17 +38,10 @@ public class Driver {
 		// store initial start time
 		Instant start = Instant.now();
 
-		// TODO Fill in and modify this method as necessary.
 		System.out.println(Arrays.toString(args));
-		
-		
-		
-		
-		
 
 		ArgParser parsedArgs = new ArgParser(args);
 		Path path = parsedArgs.getPath("-path");
-		System.out.println(path);
 		List<Path> file = new ArrayList<>();
 		
 		DirectoryTraverser traverse = new DirectoryTraverser();
@@ -61,45 +54,39 @@ public class Driver {
 			file.add(path);
 		}
 		
-		InvertedIndex index = new InvertedIndex();
 		
+		InvertedIndex index = new InvertedIndex();
 		for (Path item : file)
 		{
-			TreeSet<String> stems = TextStemmer.uniqueStems(item);
-			
-			for (String word : stems)
-			{	
-				TreeMap<String, TreeSet<Integer>> wordOccurrences = new TreeMap<>();
-				
-				for (Path element : file)
-				{
-					TreeSet<Integer> positions = TextStemmer.uniqueStemPositions(element, word);
-					if (!positions.isEmpty())
-					{
-						wordOccurrences.putIfAbsent(element.normalize().toString(), positions);
-					}
-				}
-				
-				index.addKey(word, wordOccurrences);
-			}		
+			List<String> stems = TextStemmer.uniqueStems(item);
+			for (int i = 0; i < stems.size(); i++)
+			{
+				index.add(stems.get(i), item.toString(), i+1);
+			}
 		}
 		
-		if (parsedArgs.getPath("-index") != null)
+
+		if (parsedArgs.getPath("-index", Path.of("index.json")) != null)
 		{
-			JsonWriter.asDoubleObject(index.getIndex(), Path.of("index.json").normalize());
+			JsonWriter.asDoubleObject(index.getIndex(), parsedArgs.getPath("-index", Path.of("index.json")));
 		}
-		if (parsedArgs.getPath("-counts") != null)
+		if (parsedArgs.getPath("-counts", Path.of("counts.json")) != null)
 		{
 			Map<String, Integer> counts = new TreeMap<>();
 			
 			for (Path someFile : file)
 			{
 				int wordCount = TextParser.parseFile(someFile).size();
-				counts.put(someFile.toString(), wordCount);
+				if (wordCount != 0)
+				{
+					counts.put(someFile.toString(), wordCount);
+				}
 			}
-			
-			JsonWriter.asObject(counts, Path.of("counts.json").normalize());
+			JsonWriter.asObject(counts, parsedArgs.getPath("-counts", Path.of("counts.json")));
 		}
+		
+		
+		
 		
 		//Exceptions
 		//Clean Up
