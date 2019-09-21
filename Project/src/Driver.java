@@ -33,19 +33,24 @@ public class Driver {
 	 * @param args flag/value pairs used to start this program
 	 * @throws IOException 
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		// store initial start time
 		Instant start = Instant.now();
 
 		System.out.println(Arrays.toString(args));
 
+
+		ArgParser parsedArgs = new ArgParser(args);
+		Path path = parsedArgs.getPath("-path");
+		Path indexPath = parsedArgs.getPath("-index", Path.of("index.json"));
+		Path countsPath = parsedArgs.getPath("-counts", Path.of("counts.json"));
+		List<Path> file = new ArrayList<>();
+		
+		
 		try
 		{
-			ArgParser parsedArgs = new ArgParser(args);
-			Path path = parsedArgs.getPath("-path");
-			List<Path> file = new ArrayList<>();
-			
 			DirectoryTraverser traverse = new DirectoryTraverser();
+			
 			if (Files.isDirectory(path))
 			{
 				file = traverse.traverseDirectory(path);
@@ -66,11 +71,11 @@ public class Driver {
 				}
 			}
 	
-			if (parsedArgs.getPath("-index", Path.of("index.json")) != null)
+			if (indexPath != null)
 			{
-				JsonWriter.asDoubleObject(index.getIndex(), parsedArgs.getPath("-index", Path.of("index.json")));
+				JsonWriter.asDoubleObject(index.getIndex(), indexPath);
 			}
-			if (parsedArgs.getPath("-counts", Path.of("counts.json")) != null)
+			if (countsPath != null)
 			{
 				Map<String, Integer> counts = new TreeMap<>();
 				
@@ -82,7 +87,7 @@ public class Driver {
 						counts.put(someFile.toString(), wordCount);
 					}
 				}
-				JsonWriter.asObject(counts, parsedArgs.getPath("-counts", Path.of("counts.json")));
+				JsonWriter.asObject(counts, countsPath);
 			}
 		}
 		catch (IOException e)
@@ -93,6 +98,25 @@ public class Driver {
 		{
 			System.err.println("Please enter a valid path argument.");
 		}
+		finally
+		{
+			try 
+			{
+				if (indexPath != null && path == null)
+				{
+					Files.createFile(indexPath);
+				}
+				
+				// calculate time elapsed and output
+				Duration elapsed = Duration.between(start, Instant.now());
+				double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();
+				System.out.printf("Elapsed: %f seconds%n", seconds);
+			}
+			catch (IOException e)
+			{
+				System.err.println("The file cannot be found.");
+			}
+		}
 		
 		
 		
@@ -100,16 +124,5 @@ public class Driver {
 		//Clean Up
 		//Javadoc
 		
-		
-		
-		
-		
-		
-		
-		
-		// calculate time elapsed and output
-		Duration elapsed = Duration.between(start, Instant.now());
-		double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();
-		System.out.printf("Elapsed: %f seconds%n", seconds);
 	}
 }
