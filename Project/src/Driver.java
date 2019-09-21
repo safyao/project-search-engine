@@ -1,20 +1,19 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collection;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
-import opennlp.tools.stemmer.snowball.SnowballStemmer;
+import java.util.TreeMap;
+
+
+
 
 /**
  * Class responsible for running this project based on the provided command-line
@@ -64,7 +63,6 @@ public class Driver {
 				index.add(stems.get(i), item.toString(), i+1);
 			}
 		}
-		
 
 		if (parsedArgs.getPath("-index", Path.of("index.json")) != null)
 		{
