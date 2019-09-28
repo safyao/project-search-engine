@@ -19,6 +19,41 @@ import java.util.TreeMap;
  */
 public class Driver {
 
+	/*
+	 * TODO One style of programming is to declare a bunch of variables at the start.
+	 * Here for memory and style reasons...
+	 * 
+	 * Declare and define where you intend to use the object.
+	 * 
+	 * ArgumentParser parser = new ArgrumentParser(args);
+	 * InvertedIndex index = new InvertedIndex();
+	 * 
+	 * if (parser.hasFlag("-path")) {
+	 * 
+	 * }
+	 * 
+	 * if (parser.hasFlag("-index")) {
+	 * 
+	 * }
+	 * 
+	 * if (parser.hasFlag("-counts")) {
+	 * 		Path path = parser.getPath("-counts", Path.of("counts.json"));
+	 * 
+	 * 		try {
+	 * 			output the counts to json
+	 * 		}
+	 * 		catch (IOException e) {
+	 * 			System.out.println("Unable to write the word counts to a JSON file at: " + path);
+	 * 		}
+	 * }
+	 */
+	
+	/*
+	 * TODO Keep Driver small, move some of the directory traversing and word count code outside of Driver.
+	 * Driver is the only programmer specific class that will not be shared with other developers.
+	 * So all "useful" code needs to be outside of Driver to be reused.
+	 */
+	
 	/**
 	 * Initializes the classes necessary based on the provided command-line
 	 * arguments. This includes (but is not limited to) how to build or search an
@@ -30,10 +65,10 @@ public class Driver {
 		// Store initial start time.
 		Instant start = Instant.now();
 
-		System.out.println(Arrays.toString(args));
+		System.out.println(Arrays.toString(args)); // TODO Remove
 		
 		// Parse and store flag arguments.
-		ArgParser parsedArgs = new ArgParser(args);
+		ArgParser parsedArgs = new ArgParser(args); // TODO Refactor to ArgumentParser... ArgumentMap
 		Path path = parsedArgs.getPath("-path");
 		Path indexPath = parsedArgs.getPath("-index", Path.of("index.json"));
 		Path countsPath = parsedArgs.getPath("-counts", Path.of("counts.json"));
