@@ -64,7 +64,7 @@ public class Driver {
 				JsonWriter.asDoubleObject(index.getIndex(), indexPath);
 			}
 			catch (IOException e) {
-				System.err.println("Unable to write the word counts to a JSON file at: \n" + indexPath);
+				System.err.println("Unable to write the inverted index to a JSON file at: \n" + indexPath);
 			}
 		}
 		
