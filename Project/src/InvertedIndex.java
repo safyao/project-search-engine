@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -44,12 +45,12 @@ public class InvertedIndex {
 	}
 
 	/**
-	 * Returns the argument map.
+	 * Returns an unmodifiable view of the argument map.
 	 * 
 	 * @return the map
 	 */
 	public Map<String, TreeMap<String, TreeSet<Integer>>> getIndex() {
-		return map;
+		return Collections.unmodifiableMap(map);
 	}
 
 	@Override
