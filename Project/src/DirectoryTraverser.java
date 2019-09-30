@@ -26,7 +26,7 @@ public class DirectoryTraverser {
 	public DirectoryTraverser() {
 		allFiles = new ArrayList<>();
 	}
-	
+
 	/**
 	 * Traverses through a given path and adds text files to list.
 	 * 
@@ -42,22 +42,13 @@ public class DirectoryTraverser {
 		    	   
 	           for (Path entry: stream) {
 	        	   // Use recursion to loop through nested directories.
-	        	   if (Files.isDirectory(entry)) {
-	        		   traverseDirectory (entry);
-	        	   }
-	        	   else {
-	        		   //Only add text files to list.
-	        		   if (isTextFile(entry)) {
-		            	   allFiles.add(entry);
-		               }
-	        	   }
+	        	   traverseDirectory (entry);
 	           }
 			}
 		}
-		else {
-			if (isTextFile(path)) {
-				allFiles.add(path);
-            }
+		// Only adds text files to list.
+		else if (isTextFile(path)) {
+			allFiles.add(path);
 		}
        return allFiles;
 	}
@@ -70,7 +61,7 @@ public class DirectoryTraverser {
 	 * @return {@code true} if the argument is a text file
 	 */
 	public static boolean isTextFile (Path file) {
-		// Converts path to String in lowercase.
+		// Converts path to String in lower case.
 		String name = file.getFileName().toString().toLowerCase();
 		// Tests if it ends in text file format.
 		if (name.endsWith(".txt") || name.endsWith(".text")) {
