@@ -1,11 +1,10 @@
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
-import java.time.Instant;
+//import java.time.Duration;
+//import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Class responsible for running this project based on the provided command-line
@@ -19,36 +18,6 @@ public class Driver {
 	//Extras: Unmodifiable in InvertedIndex
 	//Clean Up JsonWriter methods
 	
-	
-	/*
-	 * TODO One style of programming is to declare a bunch of variables at the start.
-	 * Here for memory and style reasons...
-	 * 
-	 * Declare and define where you intend to use the object.
-	 * 
-	 * ArgumentParser parser = new ArgrumentParser(args);
-	 * InvertedIndex index = new InvertedIndex();
-	 * 
-	 * if (parser.hasFlag("-path")) {
-	 * 
-	 * }
-	 * 
-	 * if (parser.hasFlag("-index")) {
-	 * 
-	 * }
-	 * 
-	 * if (parser.hasFlag("-counts")) {
-	 * 		Path path = parser.getPath("-counts", Path.of("counts.json"));
-	 * 
-	 * 		try {
-	 * 			output the counts to json
-	 * 		}
-	 * 		catch (IOException e) {
-	 * 			System.out.println("Unable to write the word counts to a JSON file at: " + path);
-	 * 		}
-	 * }
-	 */
-	
 	/**
 	 * Initializes the classes necessary based on the provided command-line
 	 * arguments. This includes (but is not limited to) how to build or search an
@@ -57,60 +26,57 @@ public class Driver {
 	 * @param args flag/value pairs used to start this program
 	 */
 	public static void main(String[] args) {
-		// Store initial start time.
-		Instant start = Instant.now();
 		
-		// Parse and store flag arguments.
-		ArgumentParser parsedArgs = new ArgumentParser(args);
-		Path path = parsedArgs.getPath("-path");
-		Path indexPath = parsedArgs.getPath("-index", Path.of("index.json"));
-		Path countsPath = parsedArgs.getPath("-counts", Path.of("counts.json"));
+		// Initialize ArgumentParser, InvertedIndex, and the list of files for a given path.
+		ArgumentParser parser = new ArgumentParser(args);
+		InvertedIndex index = new InvertedIndex();
+		List<Path> files = new ArrayList<>();
 		
-		try
-		{
-			// Store files in an ArrayList<Path>.
-			DirectoryTraverser traverse = new DirectoryTraverser();
-			List<Path> files = traverse.traverseDirectory(path);
-			
-			// Initialize and store elements into InvertedIndex.
-			InvertedIndex index = new InvertedIndex();
-			for (Path item : files) {
-				List<String> stems = TextStemmer.uniqueStems(item);
-				for (int i = 0; i < stems.size(); i++) {
-					index.add(stems.get(i), item.toString(), i+1);
+		if (parser.hasFlag("-path")) {
+			try {	
+				Path path = parser.getPath("-path");
+				
+				// Store files in an ArrayList<Path>.
+				DirectoryTraverser traverse = new DirectoryTraverser();
+				files = traverse.traverseDirectory(path);
+				
+				// Store elements into InvertedIndex.
+				for (Path item : files) {
+					List<String> stems = TextStemmer.uniqueStems(item);
+					for (int i = 0; i < stems.size(); i++) {
+						index.add(stems.get(i), item.toString(), i+1);
+					}
 				}
 			}
-	
-			// If necessary, write index and count to files in pretty Json format.
-			if (indexPath != null) {
+			catch (NullPointerException e) {
+				System.err.println("Please enter a valid path argument.");
+			}
+			catch (IOException e) {
+				System.err.println("Unable to traverse and stem the given file(s).");
+			}
+		}
+		
+		if (parser.hasFlag("-index")) {
+			Path indexPath = parser.getPath("-index", Path.of("index.json"));
+			
+			try {
+				// Writes index in pretty Json format to file.
 				JsonWriter.asDoubleObject(index.getIndex(), indexPath);
 			}
-			if (countsPath != null) {
+			catch (IOException e) {
+				System.err.println("Unable to write the word counts to a JSON file at: \n" + indexPath);
+			}
+		}
+		
+		if (parser.hasFlag("-counts")) {
+			Path countsPath = parser.getPath("-counts", Path.of("counts.json"));
+			
+			try {
 				Map<String, Integer> counts = TextParser.countPathWords(files);
 				JsonWriter.asObject(counts, countsPath);
 			}
-		}
-		catch (IOException e) {
-			System.err.println("The file cannot be found.");
-		}
-		catch (NullPointerException e) {
-			System.err.println("Please enter a valid path argument.");
-		}
-		finally {
-			try {
-				// Create an empty file if -index flag is provided.
-				if (indexPath != null && path == null) {
-					Files.createFile(indexPath);
-				}
-				
-				// Calculate time elapsed and output.
-				Duration elapsed = Duration.between(start, Instant.now());
-				double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();
-				System.out.printf("Elapsed: %f seconds%n", seconds);
-			}
-			catch (IOException e)
-			{
-				System.err.println("The file cannot be found.");
+			catch (IOException e) {
+				System.err.println("Unable to write the word counts to a JSON file at: \n" + countsPath);
 			}
 		}
 	}
