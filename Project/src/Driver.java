@@ -4,8 +4,6 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -18,7 +16,10 @@ import java.util.TreeMap;
  * @version Fall 2019
  */
 public class Driver {
-
+	//Extras: Unmodifiable in InvertedIndex
+	//Clean Up JsonWriter methods
+	
+	
 	/*
 	 * TODO One style of programming is to declare a bunch of variables at the start.
 	 * Here for memory and style reasons...
@@ -48,12 +49,6 @@ public class Driver {
 	 * }
 	 */
 	
-	/*
-	 * TODO Keep Driver small, move some of the directory traversing and word count code outside of Driver.
-	 * Driver is the only programmer specific class that will not be shared with other developers.
-	 * So all "useful" code needs to be outside of Driver to be reused.
-	 */
-	
 	/**
 	 * Initializes the classes necessary based on the provided command-line
 	 * arguments. This includes (but is not limited to) how to build or search an
@@ -64,31 +59,22 @@ public class Driver {
 	public static void main(String[] args) {
 		// Store initial start time.
 		Instant start = Instant.now();
-
-		System.out.println(Arrays.toString(args)); // TODO Remove
 		
 		// Parse and store flag arguments.
-		ArgParser parsedArgs = new ArgParser(args); // TODO Refactor to ArgumentParser... ArgumentMap
+		ArgumentParser parsedArgs = new ArgumentParser(args);
 		Path path = parsedArgs.getPath("-path");
 		Path indexPath = parsedArgs.getPath("-index", Path.of("index.json"));
 		Path countsPath = parsedArgs.getPath("-counts", Path.of("counts.json"));
-		List<Path> file = new ArrayList<>();
 		
 		try
 		{
 			// Store files in an ArrayList<Path>.
 			DirectoryTraverser traverse = new DirectoryTraverser();
-			
-			if (Files.isDirectory(path)){
-				file = traverse.traverseDirectory(path);
-			}
-			else{
-				file.add(path);
-			}
+			List<Path> files = traverse.traverseDirectory(path);
 			
 			// Initialize and store elements into InvertedIndex.
 			InvertedIndex index = new InvertedIndex();
-			for (Path item : file) {
+			for (Path item : files) {
 				List<String> stems = TextStemmer.uniqueStems(item);
 				for (int i = 0; i < stems.size(); i++) {
 					index.add(stems.get(i), item.toString(), i+1);
@@ -100,14 +86,7 @@ public class Driver {
 				JsonWriter.asDoubleObject(index.getIndex(), indexPath);
 			}
 			if (countsPath != null) {
-				Map<String, Integer> counts = new TreeMap<>();
-				
-				for (Path someFile : file) {
-					int wordCount = TextParser.parseFile(someFile).size();
-					if (wordCount != 0) {
-						counts.put(someFile.toString(), wordCount);
-					}
-				}
+				Map<String, Integer> counts = TextParser.countPathWords(files);
 				JsonWriter.asObject(counts, countsPath);
 			}
 		}
