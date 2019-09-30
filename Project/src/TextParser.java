@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.Normalizer;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -84,5 +86,24 @@ public class TextParser {
 			}
 		}
 		return parsedWords;
+	}
+	
+	/**
+	 * Returns a mapping of a file to its word count for all files in a given list.
+	 * 
+	 * @param files the files to count the number of words in each
+	 * @return a map of each file name as key and the number of words in it as value
+	 * @throws IOException
+	 */
+	public static Map<String, Integer> countPathWords(List<Path> files) throws IOException {
+		Map<String, Integer> counts = new TreeMap<>();
+		
+		for (Path file : files) {
+			int wordCount = TextParser.parseFile(file).size();
+			if (wordCount != 0) {
+				counts.put(file.toString(), wordCount);
+			}
+		}
+		return counts;
 	}
 }
