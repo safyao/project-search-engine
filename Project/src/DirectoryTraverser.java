@@ -28,16 +28,18 @@ public class DirectoryTraverser {
 	}
 	
 	/**
-	 * Traverses through a given directory and adds text files to list.
+	 * Traverses through a given path and adds text files to list.
 	 * 
-	 * @param directory the directory to traverse
+	 * @param path the path to traverse
 	 * @return the list of text files from the directory
 	 * @throws IOException if unable to access directory
 	 */
-	public List<Path> traverseDirectory (Path directory) throws IOException {
+	public List<Path> traverseDirectory (Path path) throws IOException {
 		
-	       try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
-	    	   
+		if (Files.isDirectory(path)) {
+			
+			try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
+		    	   
 	           for (Path entry: stream) {
 	        	   // Use recursion to loop through nested directories.
 	        	   if (Files.isDirectory(entry)) {
@@ -50,8 +52,14 @@ public class DirectoryTraverser {
 		               }
 	        	   }
 	           }
-	       }
-	       return allFiles;
+			}
+		}
+		else {
+			if (isTextFile(path)) {
+				allFiles.add(path);
+            }
+		}
+       return allFiles;
 	}
 	
 	
