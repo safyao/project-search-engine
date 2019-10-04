@@ -1,7 +1,5 @@
 import java.io.IOException;
 import java.nio.file.Path;
-//import java.time.Duration;
-//import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +13,6 @@ import java.util.Map;
  * @version Fall 2019
  */
 public class Driver {
-	//Extras: Unmodifiable in InvertedIndex
-	//Clean Up JsonWriter methods
 	
 	/**
 	 * Initializes the classes necessary based on the provided command-line
