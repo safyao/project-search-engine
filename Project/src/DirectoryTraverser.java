@@ -15,10 +15,14 @@ import java.util.List;
  */
 public class DirectoryTraverser {
 	
+	/*
+	 * TODO Configure Eclipse to always convert between tabs or spaces
+	 */
+	
 	/**
 	 * Stores the text files in the directory as paths in a list.
 	 */
-	public static List<Path> allFiles;
+	public static List<Path> allFiles; // TODO Static means shared, public means not encapsulated
 	
 	/**
 	 * Initializes this list.
@@ -53,6 +57,31 @@ public class DirectoryTraverser {
        return allFiles;
 	}
 	
+	/* TODO 
+	public static List<Path> traverseDirectory(Path path) throws IOException {
+		List<Path> allFiles = new ArrayList<>();
+		traverseDirectory(path, allFiles);
+		return allFiles;
+	}
+	
+	private static void traverseDirectory(Path path, List<Path> allFiles) throws IOException {
+		if (Files.isDirectory(path)) {
+
+			try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
+
+				for (Path entry : stream) {
+					// Use recursion to loop through nested directories.
+					traverseDirectory(entry, allFiles);
+				}
+			}
+		}
+		// Only adds text files to list.
+		else if (isTextFile(path)) {
+			allFiles.add(path);
+		}
+	}
+	*/
+	
 	
 	/**
 	 * Determines whether the file is a text file if it ends in ".txt" or ".text".
@@ -68,5 +97,7 @@ public class DirectoryTraverser {
 			return true;
 		}
 		return false;
+		
+		// TODO return (name.endsWith(".txt") || name.endsWith(".text"));
 	}
 }

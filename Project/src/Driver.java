@@ -30,7 +30,7 @@ public class Driver {
 		// Initialize ArgumentParser, InvertedIndex, and the list of files for a given path.
 		ArgumentParser parser = new ArgumentParser(args);
 		InvertedIndex index = new InvertedIndex();
-		List<Path> files = new ArrayList<>();
+		List<Path> files = new ArrayList<>(); // TODO Move into -path if statement
 		
 		if (parser.hasFlag("-path")) {
 			try {	
@@ -40,8 +40,22 @@ public class Driver {
 				DirectoryTraverser traverse = new DirectoryTraverser();
 				files = traverse.traverseDirectory(path);
 				
+				// TODO Create a builder class that knows how to build an index from a text file
 				// Store elements into InvertedIndex.
 				for (Path item : files) {
+					/*
+					 * TODO Efficiency issue... read the file into a list
+					 * Then you loop through the list to add to the index
+					 * Causes more time and space than necessary if you didn't have the list
+					 * 
+					 * addPath(Path path, InvertedIndex index) method
+					 * 		- creates a stemmer object
+					 * 		- opens up a file and reads line by line
+					 * 		- for each line parses the line into words
+					 * 		- for each word, stem and add immediately to an index
+					 * 
+					 *    - update the count here
+					 */
 					List<String> stems = TextStemmer.uniqueStems(item);
 					for (int i = 0; i < stems.size(); i++) {
 						index.add(stems.get(i), item.toString(), i+1);
@@ -61,6 +75,7 @@ public class Driver {
 			
 			try {
 				// Writes index in pretty Json format to file.
+				// TODO index.writeIndex(Path path)
 				JsonWriter.asDoubleObject(index.getIndex(), indexPath);
 			}
 			catch (IOException e) {
@@ -72,6 +87,15 @@ public class Driver {
 			Path countsPath = parser.getPath("-counts", Path.of("counts.json"));
 			
 			try {
+				/*
+				 * TODO totally makes sense for project 1
+				 * 
+				 * For project 2 you always need the word count to calculate search results
+				 * 
+				 * Store the counts map in your inverted index class (will need it there for project 2)
+				 * 
+				 * index.writeCounts(countsPath);
+				 */
 				Map<String, Integer> counts = TextParser.countPathWords(files);
 				JsonWriter.asObject(counts, countsPath);
 			}

@@ -56,6 +56,16 @@ public class ArgumentParser {
 					}
 				}
 			}
+			
+			/* TODO
+			if (isFlag(args[i])) {
+				map.put(args[i], null);
+				
+				if ((i+1) != args.length && isValue(args[i+1])) {
+					map.put(args[i], args[i+1]);
+				}
+			}
+			*/
 		}
 	}
 
@@ -73,12 +83,15 @@ public class ArgumentParser {
 		if (arg == null) {
 			return false;
 		}
+		// TODO return (arg.startsWith("-") && (arg.length() > 1));
 		if (arg.startsWith("-") && (arg.length() > 1)) {
 			return true;
 		}
 		return false;
 	}
 
+	// TODO Simplify your if statements to return condition where appropriate
+	
 	/**
 	 * Determines whether the argument is a value. Values do not start with a dash
 	 * "-" character, and must consist of at least one character.

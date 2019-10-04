@@ -11,6 +11,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
+// TODO Consider adding blank lines in between blocks of code 
+
 /**
  * Outputs several simple data structures in "pretty" JSON format where
  * newlines are used to separate elements and nested elements are indented.
@@ -37,15 +39,18 @@ public class JsonWriter {
 		writer.write("[");
 		var iterator = elements.iterator();
 		level++;
+		
 		if (iterator.hasNext()) {
 			writer.write("\n");
 			indent(iterator.next(), writer, level);
 		}
+		
 		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			indent(iterator.next(), writer, level);
 		}
+		
 		writer.write("\n");
 		indent("]", writer, level - 1);
 	}
@@ -187,15 +192,6 @@ public class JsonWriter {
 		writer.write("\n");
 		indent("}", writer, level - 1);
 
-		/*
-		 * The generic notation:
-		 *
-		 *    Map<String, ? extends Collection<Integer>> elements
-		 *
-		 * May be confusing. You can mentally replace it with:
-		 *
-		 *    HashMap<String, HashSet<Integer>> elements
-		 */
 	}
 	
 	/**
