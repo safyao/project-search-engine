@@ -1,8 +1,5 @@
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Class responsible for running this project based on the provided command-line
@@ -26,19 +23,15 @@ public class Driver {
 		// Initialize ArgumentParser, InvertedIndex, and the list of files for a given path.
 		ArgumentParser parser = new ArgumentParser(args);
 		InvertedIndex index = new InvertedIndex();
-		List<Path> files = new ArrayList<>(); // TODO Move into -path if statement
 		
 		if (parser.hasFlag("-path")) {
-			try {	
-				Path path = parser.getPath("-path");
-				
+			try {
 				// Store files in an ArrayList<Path>.
-				DirectoryTraverser traverse = new DirectoryTraverser();
-				files = traverse.traverseDirectory(path);
+//				List<Path> files = DirectoryTraverser.traverseDirectory(parser.getPath("-path"));
 				
 				// TODO Create a builder class that knows how to build an index from a text file
 				// Store elements into InvertedIndex.
-				for (Path item : files) {
+//				for (Path item : files) {
 					/*
 					 * TODO Efficiency issue... read the file into a list
 					 * Then you loop through the list to add to the index
@@ -52,11 +45,17 @@ public class Driver {
 					 * 
 					 *    - update the count here
 					 */
-					List<String> stems = TextStemmer.uniqueStems(item);
-					for (int i = 0; i < stems.size(); i++) {
-						index.add(stems.get(i), item.toString(), i+1);
-					}
-				}
+//					List<String> stems = TextStemmer.uniqueStems(item);
+//					for (int i = 0; i < stems.size(); i++) {
+//						index.add(stems.get(i), item.toString(), i+1);
+//					}
+//				}
+//				List<Path> files = DirectoryTraverser.traverseDirectory(parser.getPath("-path"));
+//				for (Path item : files) {
+//					IndexBuilder.addPath (item, index);
+//				}
+				
+				IndexBuilder.buildIndex(parser.getPath("-path"), index);
 			}
 			catch (NullPointerException e) {
 				System.err.println("Please enter a valid path argument.");
@@ -91,8 +90,9 @@ public class Driver {
 				 * 
 				 * index.writeCounts(countsPath);
 				 */
-				Map<String, Integer> counts = TextParser.countPathWords(files);
-				JsonWriter.asObject(counts, countsPath);
+//				Map<String, Integer> counts = TextParser.countPathWords(files);
+//				JsonWriter.asObject(counts, countsPath);
+				index.writeCounts(countsPath);
 			}
 			catch (IOException e) {
 				System.err.println("Unable to write the word counts to a JSON file at: \n" + countsPath);
