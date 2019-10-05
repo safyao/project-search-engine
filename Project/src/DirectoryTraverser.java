@@ -22,14 +22,7 @@ public class DirectoryTraverser {
 	/**
 	 * Stores the text files in the directory as paths in a list.
 	 */
-	public static List<Path> allFiles; // TODO Static means shared, public means not encapsulated
-	
-	/**
-	 * Initializes this list.
-	 */
-	public DirectoryTraverser() {
-		allFiles = new ArrayList<>();
-	}
+//	private List<Path> allFiles = new ArrayList<>(); // TODO Static means shared, public means not encapsulated
 
 	/**
 	 * Traverses through a given path and adds text files to list.
@@ -38,26 +31,6 @@ public class DirectoryTraverser {
 	 * @return the list of text files from the directory
 	 * @throws IOException if unable to access directory
 	 */
-	public List<Path> traverseDirectory (Path path) throws IOException {
-		
-		if (Files.isDirectory(path)) {
-			
-			try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
-		    	   
-	           for (Path entry: stream) {
-	        	   // Use recursion to loop through nested directories.
-	        	   traverseDirectory (entry);
-	           }
-			}
-		}
-		// Only adds text files to list.
-		else if (isTextFile(path)) {
-			allFiles.add(path);
-		}
-       return allFiles;
-	}
-	
-	/* TODO 
 	public static List<Path> traverseDirectory(Path path) throws IOException {
 		List<Path> allFiles = new ArrayList<>();
 		traverseDirectory(path, allFiles);
@@ -80,7 +53,6 @@ public class DirectoryTraverser {
 			allFiles.add(path);
 		}
 	}
-	*/
 	
 	
 	/**
