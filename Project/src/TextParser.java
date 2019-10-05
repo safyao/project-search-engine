@@ -87,23 +87,4 @@ public class TextParser {
 		}
 		return parsedWords;
 	}
-	
-	/**
-	 * Returns a mapping of a file to its word count for all files in a given list.
-	 * 
-	 * @param files the files to count the number of words in each
-	 * @return a map of each file name as key and the number of words in it as value
-	 * @throws IOException
-	 */
-	public static Map<String, Integer> countPathWords(List<Path> files) throws IOException {
-		Map<String, Integer> counts = new TreeMap<>();
-		
-		for (Path file : files) {
-			int wordCount = TextParser.parseFile(file).size();
-			if (wordCount != 0) {
-				counts.put(file.toString(), wordCount);
-			}
-		}
-		return counts;
-	}
 }

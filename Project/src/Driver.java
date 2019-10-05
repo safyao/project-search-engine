@@ -26,12 +26,6 @@ public class Driver {
 		
 		if (parser.hasFlag("-path")) {
 			try {
-				// Store files in an ArrayList<Path>.
-//				List<Path> files = DirectoryTraverser.traverseDirectory(parser.getPath("-path"));
-				
-				// TODO Create a builder class that knows how to build an index from a text file
-				// Store elements into InvertedIndex.
-//				for (Path item : files) {
 					/*
 					 * TODO Efficiency issue... read the file into a list
 					 * Then you loop through the list to add to the index
@@ -45,16 +39,6 @@ public class Driver {
 					 * 
 					 *    - update the count here
 					 */
-//					List<String> stems = TextStemmer.uniqueStems(item);
-//					for (int i = 0; i < stems.size(); i++) {
-//						index.add(stems.get(i), item.toString(), i+1);
-//					}
-//				}
-//				List<Path> files = DirectoryTraverser.traverseDirectory(parser.getPath("-path"));
-//				for (Path item : files) {
-//					IndexBuilder.addPath (item, index);
-//				}
-				
 				IndexBuilder.buildIndex(parser.getPath("-path"), index);
 			}
 			catch (NullPointerException e) {
@@ -81,17 +65,6 @@ public class Driver {
 			Path countsPath = parser.getPath("-counts", Path.of("counts.json"));
 			
 			try {
-				/*
-				 * TODO totally makes sense for project 1
-				 * 
-				 * For project 2 you always need the word count to calculate search results
-				 * 
-				 * Store the counts map in your inverted index class (will need it there for project 2)
-				 * 
-				 * index.writeCounts(countsPath);
-				 */
-//				Map<String, Integer> counts = TextParser.countPathWords(files);
-//				JsonWriter.asObject(counts, countsPath);
 				index.writeCounts(countsPath);
 			}
 			catch (IOException e) {

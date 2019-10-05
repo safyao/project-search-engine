@@ -19,10 +19,7 @@ public class DirectoryTraverser {
 	 * TODO Configure Eclipse to always convert between tabs or spaces
 	 */
 	
-	/**
-	 * Stores the text files in the directory as paths in a list.
-	 */
-//	private List<Path> allFiles = new ArrayList<>(); // TODO Static means shared, public means not encapsulated
+	// TODO Static means shared, public means not encapsulated
 
 	/**
 	 * Traverses through a given path and adds text files to list.

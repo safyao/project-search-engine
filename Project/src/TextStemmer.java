@@ -71,7 +71,6 @@ public class TextStemmer {
 	 * @see #uniqueStems(String)
 	 * @see TextParser#parse(String)
 	 */
-	
 	public static List<String> uniqueStems(Path inputFile) throws IOException {
 
 		List<String> stemmedLines = new ArrayList<>();

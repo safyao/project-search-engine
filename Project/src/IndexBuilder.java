@@ -27,8 +27,10 @@ public class IndexBuilder {
 		) {
 			String line = null;
 			while ((line = reader.readLine()) != null) {
+				
 				String[] parsedLine = TextParser.parse(line);
 				wordCount = wordCount + parsedLine.length;
+				
 				List<String> stemmedLine = TextStemmer.uniqueStems(line);
 				for (String item : stemmedLine) {
 					index.add(item, path.toString(), ++positionCount);
