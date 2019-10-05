@@ -26,19 +26,6 @@ public class Driver {
 		
 		if (parser.hasFlag("-path")) {
 			try {
-					/*
-					 * TODO Efficiency issue... read the file into a list
-					 * Then you loop through the list to add to the index
-					 * Causes more time and space than necessary if you didn't have the list
-					 * 
-					 * addPath(Path path, InvertedIndex index) method
-					 * 		- creates a stemmer object
-					 * 		- opens up a file and reads line by line
-					 * 		- for each line parses the line into words
-					 * 		- for each word, stem and add immediately to an index
-					 * 
-					 *    - update the count here
-					 */
 				IndexBuilder.buildIndex(parser.getPath("-path"), index);
 			}
 			catch (NullPointerException e) {

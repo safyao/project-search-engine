@@ -5,7 +5,9 @@ import java.util.TreeSet;
 
 
 /**
- * Nested data structure class that houses Integers, TreeSets, Strings, and TreeMaps in a Map.
+ * Nested data structure class that houses Strings, TreeMaps, TreeSets, and Integers in one Map 
+ * and Strings and Integers in another.
+ * 
  *
  * @author CS 212 Software Development
  * @author University of San Francisco
@@ -16,10 +18,13 @@ public class InvertedIndex {
 	 * Stores arguments in key = value pairs.
 	 */
 	private final TreeMap<String, TreeMap<String, TreeSet<Integer>>> map;
+	/**
+	 * Stores arguments in key = value pairs.
+	 */
 	private final TreeMap<String, Integer> countsMap;
 	
 	/**
-	 * Initializes this argument map.
+	 * Initializes the argument maps.
 	 */
 	public InvertedIndex() {
 		map = new TreeMap<>();
@@ -40,25 +45,43 @@ public class InvertedIndex {
 		map.get(word).get(path).add(position);
 	}
 	
+	/**
+	 * Adds String element and its corresponding Integer element to countsMap.
+	 * 
+	 * @param path the path to add to map
+	 * @param count the count to add to corresponding path in map
+	 */
 	public void addCount(String path, Integer count)
 	{
-		if (count > 0)
-		{
+		if (count > 0) {
 			countsMap.put(path, count);
 		}
+	}
+	
+	
+	/**
+	 * Writes index in pretty Json format.
+	 * 
+	 * @param path the path to write the index to
+	 * @throws IOException if unable to access path
+	 */
+	public void writeIndex(Path path) throws IOException {
+		JsonWriter.asDoubleObject(map, path);
+	}
+	
+	/**
+	 * Writes word counts in pretty Json format.
+	 * 
+	 * @param path the path to write counts to
+	 * @throws IOException if unable to access path
+	 */
+	public void writeCounts(Path path) throws IOException {
+		JsonWriter.asObject(countsMap, path);
 	}
 	
 	@Override
 	public String toString() {
 		return map.toString();
-	}
-
-	public void writeIndex(Path path) throws IOException {
-		JsonWriter.asDoubleObject(map, path);
-	}
-	
-	public void writeCounts(Path path) throws IOException {
-		JsonWriter.asObject(countsMap, path);
 	}
 
 }
