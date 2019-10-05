@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -16,12 +17,14 @@ public class InvertedIndex {
 	 * Stores arguments in key = value pairs.
 	 */
 	private final TreeMap<String, TreeMap<String, TreeSet<Integer>>> map;
+	private final TreeMap<String, Integer> countsMap;
 	
 	/**
 	 * Initializes this argument map.
 	 */
 	public InvertedIndex() {
 		map = new TreeMap<>();
+		countsMap = new TreeMap<>();
 	}
 	
 	/**
@@ -37,11 +40,15 @@ public class InvertedIndex {
 		map.get(word).putIfAbsent(path, new TreeSet<Integer>());
 		map.get(word).get(path).add(position);
 	}
-
-	// TODO Still breaks encapsulation... see: 
-	// https://github.com/usf-cs212-fall2019/lectures/blob/master/OOP%20Principles/src/PrefixMap.java#L222-L230
-	// https://github.com/usf-cs212-fall2019/lectures/blob/master/OOP%20Principles/src/PrefixDemo.java#L72-L78
-
+	
+	public void addCount(String path, Integer count)
+	{
+		if (count > 0)
+		{
+			countsMap.put(path, count);
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return map.toString();
@@ -49,6 +56,10 @@ public class InvertedIndex {
 
 	public void writeIndex(Path path) throws IOException {
 		JsonWriter.asDoubleObject(map, path);
+	}
+	
+	public void writeCounts(Path path) throws IOException {
+		JsonWriter.asObject(countsMap, path);
 	}
 
 }
