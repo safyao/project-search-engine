@@ -14,15 +14,9 @@ import java.util.List;
  * @version Fall 2019
  */
 public class DirectoryTraverser {
-	
-	/*
-	 * TODO Configure Eclipse to always convert between tabs or spaces
-	 */
-	
-	// TODO Static means shared, public means not encapsulated
 
 	/**
-	 * Traverses through a given path and adds text files to list.
+	 * Traverses a given path and returns a list of all text files from that path.
 	 * 
 	 * @param path the path to traverse
 	 * @return the list of text files from the directory
@@ -34,6 +28,13 @@ public class DirectoryTraverser {
 		return allFiles;
 	}
 	
+	/**
+	 * Traverses through given path and adds text files to list.
+	 * 
+	 * @param path the path to traverse
+	 * @param allFiles the list to add text files to
+	 * @throws IOException if unable to access path
+	 */
 	private static void traverseDirectory(Path path, List<Path> allFiles) throws IOException {
 		if (Files.isDirectory(path)) {
 
@@ -61,12 +62,7 @@ public class DirectoryTraverser {
 	public static boolean isTextFile (Path file) {
 		// Converts path to String in lower case.
 		String name = file.getFileName().toString().toLowerCase();
-		// Tests if it ends in text file format.
-		if (name.endsWith(".txt") || name.endsWith(".text")) {
-			return true;
-		}
-		return false;
-		
-		// TODO return (name.endsWith(".txt") || name.endsWith(".text"));
+		// Returns true if file is a text file.
+		return (name.endsWith(".txt") || name.endsWith(".text"));
 	}
 }

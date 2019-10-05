@@ -78,9 +78,12 @@ public class TextStemmer {
 		try (
 				BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8);
 		) {
+			
 			String line = null;
+			
 			while ((line = reader.readLine()) != null) {
 				List<String> stemmedLine = uniqueStems(line, new SnowballStemmer(DEFAULT));
+				
 				for (String item : stemmedLine) {
 					stemmedLines.add(item);
 				}

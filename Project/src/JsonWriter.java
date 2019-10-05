@@ -11,8 +11,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
-// TODO Consider adding blank lines in between blocks of code 
-
 /**
  * Outputs several simple data structures in "pretty" JSON format where
  * newlines are used to separate elements and nested elements are indented.
@@ -103,15 +101,18 @@ public class JsonWriter {
 		
 		var iterator = elements.entrySet().iterator();
 		level++;
+		
 		if (iterator.hasNext()) {
 			writer.write("\n");
 			writeObjectEntry(iterator.next(), writer, level);
 		}
+		
 		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			writeObjectEntry(iterator.next(), writer, level);
 		}
+		
 		writer.write("\n");
 		indent("}", writer, level - 1);
 	}
@@ -177,18 +178,20 @@ public class JsonWriter {
 	public static void asNestedObject(Map<String, ? extends Collection<Integer>> elements, Writer writer, int level) throws IOException {
 		
 		writer.write("{");
-		
 		var iterator = elements.entrySet().iterator();
 		level++;
+		
 		if (iterator.hasNext()) {
 			writer.write("\n");
 			writeNestedEntry(iterator.next(), writer, level);
 		}
+		
 		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			writeNestedEntry(iterator.next(), writer, level);
 		}
+		
 		writer.write("\n");
 		indent("}", writer, level - 1);
 
@@ -253,18 +256,20 @@ public class JsonWriter {
 	public static void asDoubleObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements, Writer writer, int level) throws IOException {
 
 		writer.write("{");
-		
 		var iterator = elements.entrySet().iterator();
 		level++;
+		
 		if (iterator.hasNext()) {
 			writer.write("\n");
 			writeEntry(iterator.next(), writer, level);
 		}
+		
 		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			writeEntry(iterator.next(), writer, level);
 		}
+		
 		writer.write("\n");
 		indent("}", writer, level - 1);
 	}
@@ -321,7 +326,6 @@ public class JsonWriter {
 	 * @throws IOException
 	 */
 	public static void indent(Writer writer, int times) throws IOException {
-		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		for (int i = 0; i < times; i++) {
 			writer.write('\t');
 		}

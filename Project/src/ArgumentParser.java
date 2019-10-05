@@ -11,11 +11,10 @@ import java.util.HashMap;
  */
 public class ArgumentParser {
 
-	/**
-	 * Stores command-line arguments in key = value pairs.
-	 */
+	/** Stores command-line arguments in key = value pairs. */
 	private final Map<String, String> map;
 
+	
 	/**
 	 * Initializes this argument map.
 	 */
@@ -43,29 +42,14 @@ public class ArgumentParser {
 	 */
 	public void parse(String[] args) {
 		for (int i = 0; i < args.length; i++) {
-			if (isFlag(args[i])) {
-				if (!hasFlag(args[i])) {
-					map.put(args[i], null);
-				}
-				else {
-					map.replace(args[i], null);
-				}
-				if ((i+1) != args.length) {
-					if (isValue(args[i+1])) {
-						map.replace(args[i], args[i+1]);
-					}
-				}
-			}
 			
-			/* TODO
 			if (isFlag(args[i])) {
 				map.put(args[i], null);
-				
+			
 				if ((i+1) != args.length && isValue(args[i+1])) {
-					map.put(args[i], args[i+1]);
+						map.put(args[i], args[i+1]);
 				}
 			}
-			*/
 		}
 	}
 
@@ -83,14 +67,8 @@ public class ArgumentParser {
 		if (arg == null) {
 			return false;
 		}
-		// TODO return (arg.startsWith("-") && (arg.length() > 1));
-		if (arg.startsWith("-") && (arg.length() > 1)) {
-			return true;
-		}
-		return false;
+		return (arg.startsWith("-") && (arg.length() > 1));
 	}
-
-	// TODO Simplify your if statements to return condition where appropriate
 	
 	/**
 	 * Determines whether the argument is a value. Values do not start with a dash
@@ -106,10 +84,7 @@ public class ArgumentParser {
 		if (arg == null) {
 			return false;
 		}
-		if (!arg.startsWith("-") && (arg.length() > 0)) {
-			return true;
-		}
-		return false;
+		return (!arg.startsWith("-") && (arg.length() > 0));
 	}
 
 	/**
@@ -186,6 +161,7 @@ public class ArgumentParser {
 	 */
 	public Path getPath(String flag) {
 		if (hasFlag(flag)) {
+			
 			if (getString(flag) != null) {
 				return Path.of(getString(flag));
 			}
@@ -206,6 +182,7 @@ public class ArgumentParser {
 	 */
 	public Path getPath(String flag, Path defaultValue) {
 		if (hasFlag(flag)) {
+			
 			if (getString(flag) != null) {
 				return Path.of(getString(flag));
 			}

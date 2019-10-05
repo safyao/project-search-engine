@@ -14,14 +14,13 @@ import java.util.TreeSet;
  * @version Fall 2019
  */
 public class InvertedIndex {
-	/**
-	 * Stores arguments in key = value pairs.
-	 */
+	
+	/** Stores arguments in key = value pairs. **/
 	private final TreeMap<String, TreeMap<String, TreeSet<Integer>>> map;
-	/**
-	 * Stores arguments in key = value pairs.
-	 */
+	
+	/** Stores arguments in key = value pairs. **/
 	private final TreeMap<String, Integer> countsMap;
+	
 	
 	/**
 	 * Initializes the argument maps.
@@ -51,8 +50,7 @@ public class InvertedIndex {
 	 * @param path the path to add to map
 	 * @param count the count to add to corresponding path in map
 	 */
-	public void addCount(String path, Integer count)
-	{
+	public void addCount(String path, Integer count) {
 		if (count > 0) {
 			countsMap.put(path, count);
 		}

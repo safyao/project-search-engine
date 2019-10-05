@@ -5,8 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.Normalizer;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -78,8 +76,10 @@ public class TextParser {
 		) {
 			
 			String line = null;
+			
 			while ((line = reader.readLine()) != null){
 				String[] parsedLine = parse(line);
+				
 				for (String item : parsedLine){
 					parsedWords.add(item);
 				}

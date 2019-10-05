@@ -20,12 +20,13 @@ public class Driver {
 	 */
 	public static void main(String[] args) {
 		
-		// Initialize ArgumentParser, InvertedIndex, and the list of files for a given path.
+		// Initialize ArgumentParser and InvertedIndex for given command-line arguments.
 		ArgumentParser parser = new ArgumentParser(args);
 		InvertedIndex index = new InvertedIndex();
 		
 		if (parser.hasFlag("-path")) {
 			try {
+				// Builds index and the word counts after traversing the given path.
 				IndexBuilder.buildIndex(parser.getPath("-path"), index);
 			}
 			catch (NullPointerException e) {
@@ -52,6 +53,7 @@ public class Driver {
 			Path countsPath = parser.getPath("-counts", Path.of("counts.json"));
 			
 			try {
+				// Writes counts in pretty Json format to file.
 				index.writeCounts(countsPath);
 			}
 			catch (IOException e) {
