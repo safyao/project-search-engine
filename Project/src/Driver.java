@@ -71,8 +71,7 @@ public class Driver {
 			
 			try {
 				// Writes index in pretty Json format to file.
-				// TODO index.writeIndex(Path path)
-				JsonWriter.asDoubleObject(index.getIndex(), indexPath);
+				index.writeIndex(indexPath);
 			}
 			catch (IOException e) {
 				System.err.println("Unable to write the inverted index to a JSON file at: \n" + indexPath);
