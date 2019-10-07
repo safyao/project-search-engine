@@ -23,10 +23,12 @@ public class Driver {
 		// Initialize ArgumentParser and InvertedIndex for given command-line arguments.
 		ArgumentParser parser = new ArgumentParser(args);
 		InvertedIndex index = new InvertedIndex();
+		// TODO IndexBuilder builder = new IndexBuilder(index);
 		
 		if (parser.hasFlag("-path")) {
 			try {
 				// Builds index and the word counts after traversing the given path.
+				// TODO builder.buildIndex(...)
 				IndexBuilder.buildIndex(parser.getPath("-path"), index);
 			}
 			catch (NullPointerException e) {
