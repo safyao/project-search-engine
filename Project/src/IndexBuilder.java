@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 
@@ -16,23 +17,23 @@ import opennlp.tools.stemmer.snowball.SnowballStemmer;
  * @version Fall 2019
  */
 public class IndexBuilder {
-	/* TODO Use the instance version in Driver. 
+	/* TODO Use the instance version in Driver.
 	private final InvertedIndex index;
-	
+
 	public IndexBuilder(InvertedIndex index) {
 		this.index = index;
 	}
-	
+
 	public void buildIndex (Path path) throws IOException {
 		buildIndex(path, this.index);
 	}
-	
+
 	public void addPath (Path path) throws IOException {
 		addPath(path, this.index);
 	}
 	*/
-	
-	
+
+
 
 	/** The default stemmer algorithm used by this class. */
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
@@ -62,9 +63,9 @@ public class IndexBuilder {
 	public static void addPath (Path path, InvertedIndex index) throws IOException {
 		int wordCount = 0;
 		int positionCount = 0;
-		
-		// TODO Stemmer stemmer = new SnowballStemmer(DEFAULT);
-		// TODO String location = path.toString(); reuse in your add method
+
+		Stemmer stemmer = new SnowballStemmer(DEFAULT);
+		String location = path.toString();
 
 		// Reads text file line by line.
 		try (
@@ -81,13 +82,12 @@ public class IndexBuilder {
 				// Stems word and adds each word to index with associated position.
 				for (String word : parsedLine)
 				{
-					// TODO String stemmedWord = stemmer.stem(word).toString();
-					String stemmedWord = (String)new SnowballStemmer(DEFAULT).stem(word);
+					String stemmedWord = stemmer.stem(word).toString();
 					index.add(stemmedWord, path.toString(), ++positionCount);
 				}
 			}
 			// Adds word count to index's word count map.
-			index.addCount(path.toString(), Integer.valueOf(wordCount)); // TODO Remove
+			index.addCount(location, Integer.valueOf(wordCount)); // TODO Remove
 		}
 
 	}
