@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -72,6 +74,46 @@ public class InvertedIndex {
 	public String toString() {
 		return map.toString();
 	}
+
+	public Set<String> getPaths() {
+		return Collections.unmodifiableSet(countsMap.keySet());
+	}
+
+	public Integer getCount(String path)
+	{
+		return countsMap.get(path);
+	}
+
+	public Set<String> getLocations(String word) {
+		return Collections.unmodifiableSet(map.get(word).keySet());
+	}
+
+	public Set<Integer> getPositions(String word, String location) {
+		return Collections.unmodifiableSet(map.get(word).get(location));
+	}
+
+	public boolean containsCount(String path)
+	{
+		return countsMap.containsKey(path);
+	}
+
+	public boolean contains(String word)
+	{
+		return map.containsKey(word);
+	}
+
+	public boolean contains(String word, String location)
+	{
+		return (map.containsKey(word) && map.get(word).containsKey(location));
+	}
+
+	public boolean contains(String word, String location, int position)
+	{
+		return (map.containsKey(word) && map.get(word).containsKey(location) && map.get(word).get(location).contains(position));
+	}
+
+
+
 
 	/* TODO
 	 * Add some contains/getter methods for both data structures (map and countsMap)
