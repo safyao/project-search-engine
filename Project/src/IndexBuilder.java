@@ -17,7 +17,7 @@ import opennlp.tools.stemmer.snowball.SnowballStemmer;
  * @version Fall 2019
  */
 public class IndexBuilder {
-	/* TODO Use the instance version in Driver.
+
 	private final InvertedIndex index;
 
 	public IndexBuilder(InvertedIndex index) {
@@ -31,9 +31,6 @@ public class IndexBuilder {
 	public void addPath (Path path) throws IOException {
 		addPath(path, this.index);
 	}
-	*/
-
-
 
 	/** The default stemmer algorithm used by this class. */
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
@@ -61,7 +58,6 @@ public class IndexBuilder {
 	 * @throws IOException if unable to access path
 	 */
 	public static void addPath (Path path, InvertedIndex index) throws IOException {
-		int wordCount = 0;
 		int positionCount = 0;
 
 		Stemmer stemmer = new SnowballStemmer(DEFAULT);
@@ -77,17 +73,14 @@ public class IndexBuilder {
 
 				// Parses line and updates word count of text file.
 				String[] parsedLine = TextParser.parse(line);
-				wordCount = wordCount + parsedLine.length;
 
 				// Stems word and adds each word to index with associated position.
 				for (String word : parsedLine)
 				{
 					String stemmedWord = stemmer.stem(word).toString();
-					index.add(stemmedWord, path.toString(), ++positionCount);
+					index.add(stemmedWord, location, ++positionCount);
 				}
 			}
-			// Adds word count to index's word count map.
-			index.addCount(location, Integer.valueOf(wordCount)); // TODO Remove
 		}
 
 	}
