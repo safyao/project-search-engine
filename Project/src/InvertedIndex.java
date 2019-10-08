@@ -42,8 +42,19 @@ public class InvertedIndex {
 		map.putIfAbsent(word, new TreeMap<String, TreeSet<Integer>>());
 		map.get(word).putIfAbsent(path, new TreeSet<Integer>());
 		map.get(word).get(path).add(position);
+		
+		/*
+		 * TODO Calculate word count here.
+		 * 
+		 * 1) If this wasn't a duplicate (check the result of add(position), add 1 to the word count
+		 * 
+		 * 2) Always use the max position as a proxy for the word count
+		 * added position 12 for hello.txt, know we have at least 12 words in hello.txt.
+		 * added position 4 for hello.txt, we do nothing
+		 */
 	}
 	
+	// TODO Remove
 	/**
 	 * Adds String element and its corresponding Integer element to countsMap.
 	 * 
@@ -82,4 +93,20 @@ public class InvertedIndex {
 		return map.toString();
 	}
 
+	/* TODO
+	 * Add some contains/getter methods for both data structures (map and countsMap)
+	 * 
+	 * public Set<String> getLocations() {
+	 * 		unmodifiable view of the countsMap keyset
+	 * }
+	 *
+	 * public Set<String> getLocations(String word) {
+	 * 	unmodifiable view of the inner treemap for the word in your map object
+	 * }
+	 * 
+	 * public boolean contains(String word)
+	 * public boolean contains(String word, String location)
+	 * public boolean contains(String word, String location, int position)
+	 * 
+	 */
 }
