@@ -1,8 +1,9 @@
+import java.util.Comparator;
 
-public class SearchResult
+public class SearchResult implements Comparable<SearchResult>
 {
 	private String where;
-	private int count;
+	private Integer count;
 	private String score;
 
 	public SearchResult(String where, int count, String score)
@@ -11,6 +12,33 @@ public class SearchResult
 		this.count = count;
 		this.score = score;
 	}
+
+	@Override
+	public int compareTo(SearchResult other)
+	{
+		if (this.score.compareTo(other.getScore()) != 0)
+		{
+			return (this.score.compareTo(other.getScore()));
+		}
+		else if (this.count.compareTo(other.getCount()) != 0)
+		{
+			return (this.count.compareTo(other.getCount()));
+		}
+		else
+		{
+			return (this.where.compareTo(other.getWhere()));
+		}
+	}
+
+	public static Comparator<SearchResult> SearchComparator = new Comparator<SearchResult>()
+	{
+		@Override
+		public int compare(SearchResult one, SearchResult two)
+		{
+			return two.compareTo(one);
+		}
+	};
+
 
 	public String getWhere()
 	{
@@ -26,4 +54,16 @@ public class SearchResult
 	{
 		return score;
 	}
+
+	public void setCount(int newCount)
+	{
+		count = newCount;
+	}
+
+	public void setScore(String newScore)
+	{
+		score = newScore;
+	}
+
+
 }

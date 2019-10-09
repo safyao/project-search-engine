@@ -1,5 +1,9 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * Class responsible for running this project based on the provided command-line
@@ -63,21 +67,28 @@ public class Driver {
 		}
 
 
-//		if (parser.hasFlag("-query")) {
-//			Path queryPath = parser.getPath("-query");
-//			try (
-//				BufferedReader reader = Files.newBufferedReader(queryPath, StandardCharsets.UTF_8);
-//			) {
-//				String line = null;
-//				while ((line = reader.readLine()) != null) {
-//					System.out.println(TextStemmer.queryParser(line).toString());
-//				}
-//
-//			}
-//			catch (IOException e) {
-//				System.err.println("Unable to parse query line for: " + queryPath);
-//			}
-//		}
-//	}
+		if (parser.hasFlag("-query")) {
+			Path queryPath = parser.getPath("-query");
+			try (
+				BufferedReader reader = Files.newBufferedReader(queryPath, StandardCharsets.UTF_8);
+			) {
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					List<String> queryList = TextStemmer.queryParser(line);
+					System.out.println("Query Words: " + queryList);
+					List<SearchResult> results = SearchResults.search(queryList, index);
+					for (SearchResult item : results)
+					{
+						System.out.println("\twhere: " + item.getWhere());
+						System.out.println("\tcount: " + item.getCount());
+						System.out.println("\tscore: " + item.getScore());
+					}
+				}
+
+			}
+			catch (IOException e) {
+				System.err.println("Unable to parse query line for: " + queryPath);
+			}
+		}
 	}
 }
