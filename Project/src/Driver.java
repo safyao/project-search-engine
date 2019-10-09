@@ -61,5 +61,23 @@ public class Driver {
 				System.err.println("Unable to write the word counts to a JSON file at: \n" + countsPath);
 			}
 		}
+
+
+//		if (parser.hasFlag("-query")) {
+//			Path queryPath = parser.getPath("-query");
+//			try (
+//				BufferedReader reader = Files.newBufferedReader(queryPath, StandardCharsets.UTF_8);
+//			) {
+//				String line = null;
+//				while ((line = reader.readLine()) != null) {
+//					System.out.println(TextStemmer.queryParser(line).toString());
+//				}
+//
+//			}
+//			catch (IOException e) {
+//				System.err.println("Unable to parse query line for: " + queryPath);
+//			}
+//		}
+//	}
 	}
 }

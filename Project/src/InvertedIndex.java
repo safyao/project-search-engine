@@ -157,22 +157,4 @@ public class InvertedIndex {
 	public String toString() {
 		return map.toString();
 	}
-
-
-	/* TODO
-	 * Add some contains/getter methods for both data structures (map and countsMap)
-	 *
-	 * public Set<String> getLocations() {
-	 * 		unmodifiable view of the countsMap keyset
-	 * }
-	 *
-	 * public Set<String> getLocations(String word) {
-	 * 	unmodifiable view of the inner treemap for the word in your map object
-	 * }
-	 *
-	 * public boolean contains(String word)
-	 * public boolean contains(String word, String location)
-	 * public boolean contains(String word, String location, int position)
-	 *
-	 */
 }
