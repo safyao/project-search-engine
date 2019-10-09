@@ -1,12 +1,14 @@
-import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
-import opennlp.tools.stemmer.Stemmer;
-import opennlp.tools.stemmer.snowball.SnowballStemmer;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import opennlp.tools.stemmer.Stemmer;
+import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 /**
  * Utility class for parsing and stemming text and text files into sets of
@@ -22,7 +24,7 @@ public class TextStemmer {
 
 	/** The default stemmer algorithm used by this class. */
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
-	
+
 
 	/**
 	 * Returns a list of cleaned and stemmed words (not unique) parsed from the provided line.
@@ -59,7 +61,7 @@ public class TextStemmer {
 
 		return stemmedList;
 	}
-	
+
 	/**
 	 * Reads a file line by line, parses each line into cleaned and stemmed words,
 	 * and then adds those words to a list.
@@ -74,21 +76,37 @@ public class TextStemmer {
 	public static List<String> uniqueStems(Path inputFile) throws IOException {
 
 		List<String> stemmedLines = new ArrayList<>();
-		
+
 		try (
 				BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8);
 		) {
-			
+
 			String line = null;
-			
+
 			while ((line = reader.readLine()) != null) {
 				List<String> stemmedLine = uniqueStems(line, new SnowballStemmer(DEFAULT));
-				
+
 				for (String item : stemmedLine) {
 					stemmedLines.add(item);
 				}
 			}
 		}
 		return stemmedLines;
+	}
+
+	public static List<String> queryParser(String line)
+	{
+		List<String> parsedQuery = new ArrayList<>();
+		Stemmer stemmer = new SnowballStemmer(DEFAULT);
+		String[] parsedLine = TextParser.parse(line);
+		for (String word : parsedLine)
+		{
+			String stemmedWord = stemmer.stem(word).toString();
+			if (!parsedQuery.contains(stemmedWord)) {
+				parsedQuery.add(stemmedWord);
+			}
+		}
+		Collections.sort(parsedQuery);
+		return parsedQuery;
 	}
 }
