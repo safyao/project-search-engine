@@ -70,49 +70,93 @@ public class InvertedIndex {
 		JsonWriter.asObject(countsMap, path);
 	}
 
-	@Override
-	public String toString() {
-		return map.toString();
-	}
-
+	/**
+	 * Returns and unmodifiable set view of the keys contained in countsMap.
+	 *
+	 * @return unmodifiable set of Strings
+	 */
 	public Set<String> getPaths() {
 		return Collections.unmodifiableSet(countsMap.keySet());
 	}
 
-	public Integer getCount(String path)
-	{
+	/**
+	 * Returns the count for a given path in countsMap.
+	 *
+	 * @param path the path to get count from
+	 * @return value mapped to path in countsMap
+	 */
+	public Integer getCount(String path) {
 		return countsMap.get(path);
 	}
 
+	/**
+	 * Returns an unmodifiable set view of the locations mapped to the given word.
+	 *
+	 * @param word the word the locations are mapped to
+	 * @return unmodifiable view of set of Strings
+	 */
 	public Set<String> getLocations(String word) {
 		return Collections.unmodifiableSet(map.get(word).keySet());
 	}
 
+	/**
+	 * Returns an unmodifiable view of the inner set mapped to a given word and location in the map.
+	 *
+	 * @param word the word the set is mapped to
+	 * @param location the location the set is mapped to
+	 * @return unmodifiable view of set of Integers
+	 */
 	public Set<Integer> getPositions(String word, String location) {
 		return Collections.unmodifiableSet(map.get(word).get(location));
 	}
 
-	public boolean containsCount(String path)
-	{
+	/**
+	 * Returns true if countsMap contains the given path.
+	 *
+	 * @param path the path to verify is in the map
+	 * @return true if the path is in the map as key
+	 */
+	public boolean containsCount(String path) {
 		return countsMap.containsKey(path);
 	}
 
-	public boolean contains(String word)
-	{
+	/**
+	 * Returns true if the map contains the given word as key.
+	 *
+	 * @param word the word to verify is in the map
+	 * @return true if the word is in the map
+	 */
+	public boolean contains(String word) {
 		return map.containsKey(word);
 	}
 
-	public boolean contains(String word, String location)
-	{
+	/**
+	 * Returns true if the map contains the given location mapped to the given word.
+	 *
+	 * @param word the word that location is mapped to
+	 * @param location the location to verify is in the map
+	 * @return true if the location is in the map
+	 */
+	public boolean contains(String word, String location) {
 		return (map.containsKey(word) && map.get(word).containsKey(location));
 	}
 
-	public boolean contains(String word, String location, int position)
-	{
+	/**
+	 * Returns true if the map contains the given position mapped to the given word and location.
+	 *
+	 * @param word the word that position is mapped to
+	 * @param location the location that position is mapped to
+	 * @param position the position to verify is in the map
+	 * @return true if the position is in the map
+	 */
+	public boolean contains(String word, String location, Integer position) {
 		return (map.containsKey(word) && map.get(word).containsKey(location) && map.get(word).get(location).contains(position));
 	}
 
-
+	@Override
+	public String toString() {
+		return map.toString();
+	}
 
 
 	/* TODO
