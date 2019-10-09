@@ -18,22 +18,41 @@ import opennlp.tools.stemmer.snowball.SnowballStemmer;
  */
 public class IndexBuilder {
 
+	/** Creates an instance of InvertedIndex. */
 	private final InvertedIndex index;
 
+	/** The default stemmer algorithm used by this class. */
+	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
+
+
+	/**
+	 * Initializes the InvertedIndex.
+	 *
+	 * @param index the index to initialize
+	 */
 	public IndexBuilder(InvertedIndex index) {
 		this.index = index;
 	}
 
+	/**
+	 * Calls on buildIndex(...) using non-static reference.
+	 *
+	 * @param path the path to traverse
+	 * @throws IOException if unable to access file
+	 */
 	public void buildIndex (Path path) throws IOException {
 		buildIndex(path, this.index);
 	}
 
+	/**
+	 * Calls on addPath(...) using non-static reference.
+	 *
+	 * @param path the path to gather data from for index
+	 * @throws IOException if unable to access file
+	 */
 	public void addPath (Path path) throws IOException {
 		addPath(path, this.index);
 	}
-
-	/** The default stemmer algorithm used by this class. */
-	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
 
 	/**
 	 * Traverses directory and adds each text file to index.
@@ -70,18 +89,15 @@ public class IndexBuilder {
 			String line = null;
 
 			while ((line = reader.readLine()) != null) {
-
 				// Parses line and updates word count of text file.
 				String[] parsedLine = TextParser.parse(line);
 
 				// Stems word and adds each word to index with associated position.
-				for (String word : parsedLine)
-				{
+				for (String word : parsedLine) {
 					String stemmedWord = stemmer.stem(word).toString();
 					index.add(stemmedWord, location, ++positionCount);
 				}
 			}
 		}
-
 	}
 }
