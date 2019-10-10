@@ -1,9 +1,5 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 /**
  * Class responsible for running this project based on the provided command-line
@@ -28,6 +24,7 @@ public class Driver {
 		ArgumentParser parser = new ArgumentParser(args);
 		InvertedIndex index = new InvertedIndex();
 		IndexBuilder builder = new IndexBuilder(index);
+		QueryResults results = new QueryResults();
 
 		if (parser.hasFlag("-path")) {
 			try {
@@ -69,26 +66,24 @@ public class Driver {
 
 		if (parser.hasFlag("-query")) {
 			Path queryPath = parser.getPath("-query");
-			try (
-				BufferedReader reader = Files.newBufferedReader(queryPath, StandardCharsets.UTF_8);
-			) {
-				String line = null;
-				while ((line = reader.readLine()) != null) {
-					List<String> queryList = TextStemmer.queryParser(line);
-					System.out.println("Query Words: " + queryList);
-					List<SearchResult> results = SearchBuilder.exactSearch(queryList, index);
-					for (SearchResult item : results)
-					{
-						System.out.println("\twhere: " + item.getWhere());
-						System.out.println("\tcount: " + item.getCount());
-						System.out.println("\tscore: " + item.getScore());
-					}
+			try {
+				if (parser.hasFlag("-exact"))
+				{
+					SearchBuilder.buildSearch(results, queryPath, index, true);
 				}
-
+				else
+				{
+					SearchBuilder.buildSearch(results, queryPath, index, false);
+				}
 			}
 			catch (IOException e) {
-				System.err.println("Unable to parse query line for: " + queryPath);
+				System.err.println("Unable to search query line for: " + queryPath);
 			}
 		}
+		if (parser.hasFlag("-results"))
+		{
+
+		}
+
 	}
 }

@@ -320,6 +320,154 @@ public class JsonWriter {
 
 
 
+
+
+
+
+
+
+
+
+
+//	public static void asNestedArray(Collection<SearchResult> elements, Writer writer, int level) throws IOException {
+//
+//		writer.write("[");
+//		var iterator = elements.iterator();
+//		level++;
+//
+//		if (iterator.hasNext()) {
+//			writer.write("\n");
+//			indent(writer, level);
+//			asSearchObject(iterator.next(), writer, level);
+//		}
+//
+//		while (iterator.hasNext()) {
+//			writer.write(",");
+//			writer.write("\n");
+//			indent(writer, level);
+//			asSearchObject(iterator.next(), writer, level);
+//		}
+//
+//		writer.write("\n");
+//		indent("]", writer, level - 1);
+//	}
+//	public static void asNestedArray(Collection<SearchResult> elements, Path path) throws IOException {
+//		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+//			asNestedArray(elements, writer, 0);
+//		}
+//	}
+//	public static String asNestedArray(Collection<SearchResult> elements) {
+//		try {
+//			StringWriter writer = new StringWriter();
+//			asNestedArray(elements, writer, 0);
+//			return writer.toString();
+//		}
+//		catch (IOException e) {
+//			return null;
+//		}
+//	}
+//	public static void asSearchObject(SearchResult element, Writer writer, int level) throws IOException
+//	{
+//		writer.write("{");
+//		level++;
+//		writer.write("\n");
+//
+//		quote("where", writer);
+//		writer.write(": ");
+//		quote(element.getWhere(), writer);
+//		writer.write(",\n");
+//
+//		quote("count", writer);
+//		writer.write(": ");
+//		writer.write(element.getCount());
+//		writer.write(",\n");
+//
+//		quote("score", writer);
+//		writer.write(": ");
+//		writer.write(element.getScore());
+//		writer.write("\n");
+//
+//		indent("}", writer, level - 1);
+//	}
+
+//	public static void writeQuery(QueryResults queryResults, Path path) throws IOException
+//	{
+//		Set<List<String>> queries = queryResults.getQueries();
+//
+//		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+//			for (List<String> query : queries)
+//			{
+//				var iterator = query.iterator();
+//				if (iterator.hasNext()) {
+//					writer.write('"');
+//					writer.write(iterator.next());
+//				}
+//
+//				while (iterator.hasNext()) {
+//					writer.write(", ");
+//					writer.write(iterator.next());
+//				}
+//				writer.write('"');
+//				writer.write(": ");
+//
+//
+//			}
+//		}
+//	}
+
+//	public static void asDoubleObject(QueryResults elements, Writer writer, int level) throws IOException {
+//
+//		writer.write("{");
+//		var iterator = elements.entrySet().iterator();
+//		level++;
+//
+//		if (iterator.hasNext()) {
+//			writer.write("\n");
+//			writeEntry(iterator.next(), writer, level);
+//		}
+//
+//		while (iterator.hasNext()) {
+//			writer.write(",");
+//			writer.write("\n");
+//			writeEntry(iterator.next(), writer, level);
+//		}
+//
+//		writer.write("\n");
+//		indent("}", writer, level - 1);
+//	}
+//
+//	private static void writeEntry(Entry<String, TreeMap<String, TreeSet<Integer>>> element, Writer writer, int level) throws IOException {
+//		quote(element.getKey(), writer, level);
+//		writer.write(": ");
+//		asNestedObject(element.getValue(), writer, 1);
+//	}
+//
+//	public static void asDoubleObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements, Path path) throws IOException {
+//		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+//			asDoubleObject(elements, writer, 0);
+//		}
+//	}
+//	private static void writeNestedEntry(Entry<String, ? extends Collection<Integer>> element, Writer writer, int level) throws IOException {
+//		quote(element.getKey(), writer, level);
+//		writer.write(": ");
+//		asArray(element.getValue(), writer, 2);
+//	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	/**
 	 * Writes the {@code \t} tab symbol by the number of times specified.
 	 *

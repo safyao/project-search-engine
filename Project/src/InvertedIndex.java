@@ -90,6 +90,15 @@ public class InvertedIndex {
 	}
 
 	/**
+	 * Returns an unmodifiable set view of the keys contained in the map.
+	 *
+	 * @return unmodifiable view of set of Strings
+	 */
+	public Set<String> getWords() {
+		return Collections.unmodifiableSet(map.keySet());
+	}
+
+	/**
 	 * Returns an unmodifiable set view of the locations mapped to the given word.
 	 *
 	 * @param word the word the locations are mapped to
