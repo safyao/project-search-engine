@@ -35,6 +35,7 @@ public class InvertedIndex {
 	/**
 	 * Adds elements to map if the given element does not already exist for the corresponding
 	 * key(s). If a new word or path is being entered, also initializes it's associated value.
+	 * Also updates the word count for a given path if position is not a duplicate.
 	 *
 	 * @param word the word to add if it's not already in the map
 	 * @param path the path to add if it's not already mapped to the corresponding word
