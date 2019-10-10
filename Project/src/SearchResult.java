@@ -26,7 +26,7 @@ public class SearchResult implements Comparable<SearchResult>
 		}
 		else
 		{
-			return (this.where.compareTo(other.getWhere()));
+			return (other.getWhere().compareTo(this.where));
 		}
 	}
 
@@ -45,7 +45,7 @@ public class SearchResult implements Comparable<SearchResult>
 		return where;
 	}
 
-	public int getCount()
+	public Integer getCount()
 	{
 		return count;
 	}
@@ -55,7 +55,7 @@ public class SearchResult implements Comparable<SearchResult>
 		return score;
 	}
 
-	public void setCount(int newCount)
+	public void setCount(Integer newCount)
 	{
 		count = newCount;
 	}

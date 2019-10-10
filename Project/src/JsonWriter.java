@@ -354,9 +354,10 @@ public class JsonWriter {
 	}
 
 	private static void writeQueryEntry(Entry<List<String>, List<SearchResult>> element, Writer writer, int level) throws IOException {
+		indent(writer, level);
 		quote(element.getKey(), writer);
 		writer.write(": ");
-		asNestedArray(element.getValue(), writer, 1);
+		asNestedArray(element.getValue(), writer, level);
 	}
 
 	public static void asNestedArray(Collection<SearchResult> elements, Writer writer, int level) throws IOException
@@ -388,16 +389,19 @@ public class JsonWriter {
 		level++;
 		writer.write("\n");
 
+		indent(writer, level);
 		quote("where", writer);
 		writer.write(": ");
 		quote(element.getWhere(), writer);
 		writer.write(",\n");
 
+		indent(writer, level);
 		quote("count", writer);
 		writer.write(": ");
-		writer.write(element.getCount());
+		writer.write(element.getCount().toString());
 		writer.write(",\n");
 
+		indent(writer, level);
 		quote("score", writer);
 		writer.write(": ");
 		writer.write(element.getScore());
@@ -405,169 +409,6 @@ public class JsonWriter {
 
 		indent("}", writer, level - 1);
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//	public static void asNestedArray(Collection<SearchResult> elements, Writer writer, int level) throws IOException {
-//
-//		writer.write("[");
-//		var iterator = elements.iterator();
-//		level++;
-//
-//		if (iterator.hasNext()) {
-//			writer.write("\n");
-//			indent(writer, level);
-//			asSearchObject(iterator.next(), writer, level);
-//		}
-//
-//		while (iterator.hasNext()) {
-//			writer.write(",");
-//			writer.write("\n");
-//			indent(writer, level);
-//			asSearchObject(iterator.next(), writer, level);
-//		}
-//
-//		writer.write("\n");
-//		indent("]", writer, level - 1);
-//	}
-//	public static void asNestedArray(Collection<SearchResult> elements, Path path) throws IOException {
-//		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-//			asNestedArray(elements, writer, 0);
-//		}
-//	}
-//	public static String asNestedArray(Collection<SearchResult> elements) {
-//		try {
-//			StringWriter writer = new StringWriter();
-//			asNestedArray(elements, writer, 0);
-//			return writer.toString();
-//		}
-//		catch (IOException e) {
-//			return null;
-//		}
-//	}
-//	public static void asSearchObject(SearchResult element, Writer writer, int level) throws IOException
-//	{
-//		writer.write("{");
-//		level++;
-//		writer.write("\n");
-//
-//		quote("where", writer);
-//		writer.write(": ");
-//		quote(element.getWhere(), writer);
-//		writer.write(",\n");
-//
-//		quote("count", writer);
-//		writer.write(": ");
-//		writer.write(element.getCount());
-//		writer.write(",\n");
-//
-//		quote("score", writer);
-//		writer.write(": ");
-//		writer.write(element.getScore());
-//		writer.write("\n");
-//
-//		indent("}", writer, level - 1);
-//	}
-
-//	public static void writeQuery(QueryResults queryResults, Path path) throws IOException
-//	{
-//		Set<List<String>> queries = queryResults.getQueries();
-//
-//		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-//			for (List<String> query : queries)
-//			{
-//				var iterator = query.iterator();
-//				if (iterator.hasNext()) {
-//					writer.write('"');
-//					writer.write(iterator.next());
-//				}
-//
-//				while (iterator.hasNext()) {
-//					writer.write(", ");
-//					writer.write(iterator.next());
-//				}
-//				writer.write('"');
-//				writer.write(": ");
-//
-//
-//			}
-//		}
-//	}
-
-//	public static void asDoubleObject(QueryResults elements, Writer writer, int level) throws IOException {
-//
-//		writer.write("{");
-//		var iterator = elements.entrySet().iterator();
-//		level++;
-//
-//		if (iterator.hasNext()) {
-//			writer.write("\n");
-//			writeEntry(iterator.next(), writer, level);
-//		}
-//
-//		while (iterator.hasNext()) {
-//			writer.write(",");
-//			writer.write("\n");
-//			writeEntry(iterator.next(), writer, level);
-//		}
-//
-//		writer.write("\n");
-//		indent("}", writer, level - 1);
-//	}
-//
-//	private static void writeEntry(Entry<String, TreeMap<String, TreeSet<Integer>>> element, Writer writer, int level) throws IOException {
-//		quote(element.getKey(), writer, level);
-//		writer.write(": ");
-//		asNestedObject(element.getValue(), writer, 1);
-//	}
-//
-//	public static void asDoubleObject(Map<String, TreeMap<String, TreeSet<Integer>>> elements, Path path) throws IOException {
-//		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-//			asDoubleObject(elements, writer, 0);
-//		}
-//	}
-//	private static void writeNestedEntry(Entry<String, ? extends Collection<Integer>> element, Writer writer, int level) throws IOException {
-//		quote(element.getKey(), writer, level);
-//		writer.write(": ");
-//		asArray(element.getValue(), writer, 2);
-//	}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

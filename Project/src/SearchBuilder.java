@@ -44,13 +44,14 @@ public class SearchBuilder {
 
 				for (String location : locations)
 				{
-					int totalCount = index.getCount(location);
+					double totalCount = index.getCount(location);
 
 					if (!paths.contains(location))
 					{
 						paths.add(location);
-						int count = index.getPositions(word, location).size();
-						String score = String.format("%.8f", (double)count/(double)totalCount);
+						Integer count = index.getPositions(word, location).size();
+						double countCopy = count;
+						String score = String.format("%.8f", countCopy/totalCount);
 
 						SearchResult item = new SearchResult(location, count, score);
 						results.add(item);
@@ -64,7 +65,7 @@ public class SearchBuilder {
 								int newCount = thing.getCount() + index.getPositions(word, location).size();
 								thing.setCount(newCount);
 
-								String newScore = String.format("%.8f", (double)newCount/totalCount);
+								String newScore = String.format("%.8f", newCount/totalCount);
 								thing.setScore(newScore);
 							}
 						}
@@ -73,7 +74,10 @@ public class SearchBuilder {
 			}
 		}
 		Collections.sort(results, SearchResult.SearchComparator);
-		queryResults.add(query, results);
+		if (!query.isEmpty())
+		{
+			queryResults.add(query, results);
+		}
 		return results;
 	}
 
@@ -102,13 +106,14 @@ public class SearchBuilder {
 
 					for (String location : locations)
 					{
-						int totalCount = index.getCount(location);
+						double totalCount = index.getCount(location);
 
 						if (!paths.contains(location))
 						{
 							paths.add(location);
-							int count = index.getPositions(wordKey, location).size();
-							String score = String.format("%.8f", (double)count/(double)totalCount);
+							Integer count = index.getPositions(wordKey, location).size();
+							double countCopy = count;
+							String score = String.format("%.8f", countCopy/totalCount);
 
 							SearchResult item = new SearchResult(location, count, score);
 							results.add(item);
@@ -122,7 +127,7 @@ public class SearchBuilder {
 									int newCount = thing.getCount() + index.getPositions(wordKey, location).size();
 									thing.setCount(newCount);
 
-									String newScore = String.format("%.8f", (double)newCount/totalCount);
+									String newScore = String.format("%.8f", newCount/totalCount);
 									thing.setScore(newScore);
 								}
 							}
@@ -132,7 +137,10 @@ public class SearchBuilder {
 			}
 		}
 		Collections.sort(results, SearchResult.SearchComparator);
-		queryResults.add(query, results);
+		if (!query.isEmpty())
+		{
+			queryResults.add(query, results);
+		}
 		return results;
 	}
 }
