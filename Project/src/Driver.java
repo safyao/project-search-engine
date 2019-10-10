@@ -82,7 +82,14 @@ public class Driver {
 		}
 		if (parser.hasFlag("-results"))
 		{
-
+			Path resultPath = parser.getPath("-results");
+			try
+			{
+				results.writeQuery(resultPath);
+			}
+			catch (IOException e) {
+				System.err.println("Unable to write the search results to a Json file at: " + resultPath);
+			}
 		}
 
 	}
