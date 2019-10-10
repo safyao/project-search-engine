@@ -1,9 +1,10 @@
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class QueryResults {
-	private final HashMap<List<String>, List<SearchResult>> queryResults;
+	private final Map<List<String>, List<SearchResult>> queryResults;
 
 	public QueryResults()
 	{
