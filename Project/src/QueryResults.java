@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,4 +28,8 @@ public class QueryResults {
 		return queryResults.keySet();
 	}
 
+	public void writeQuery(Path path) throws IOException
+	{
+		JsonWriter.asQueryObject(queryResults, path);
+	}
 }

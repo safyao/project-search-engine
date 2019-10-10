@@ -326,7 +326,11 @@ public class JsonWriter {
 
 
 
-
+	public static void asQueryObject(Map<List<String>, List<SearchResult>> results, Path path) throws IOException {
+		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+			asQueryObject(results, writer, 0);
+		}
+	}
 
 	public static void asQueryObject(Map<List<String>, List<SearchResult>> results, Writer writer, int level) throws IOException {
 
