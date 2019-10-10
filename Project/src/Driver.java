@@ -80,7 +80,7 @@ public class Driver {
 				System.err.println("Please enter a valid query argument.");
 			}
 			catch (IOException e) {
-				System.err.println("Unable to search query line for: " + queryPath);
+				System.err.println("Unable to search index for words in query file at: " + queryPath);
 			}
 		}
 		if (parser.hasFlag("-results"))

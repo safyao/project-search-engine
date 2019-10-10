@@ -410,9 +410,6 @@ public class JsonWriter {
 		indent("}", writer, level - 1);
 	}
 
-
-
-
 	/**
 	 * Writes the {@code \t} tab symbol by the number of times specified.
 	 *
@@ -485,18 +482,4 @@ public class JsonWriter {
 		indent(writer, times);
 		quote(element, writer);
 	}
-
-//	public static void quote(List<String> element, Writer writer) throws IOException {
-//		writer.write('"');
-//		var iterator = element.iterator();
-//
-//		if (iterator.hasNext()) {
-//			writer.write(iterator.next());
-//		}
-//		while (iterator.hasNext()) {
-//			writer.write(" ");
-//			writer.write(iterator.next());
-//		}
-//		writer.write('"');
-//	}
 }

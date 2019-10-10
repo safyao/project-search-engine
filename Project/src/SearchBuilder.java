@@ -27,8 +27,6 @@ public class SearchBuilder {
 						List<SearchResult> results = SearchBuilder.partialSearch(queryResults, queryList, index);
 					}
 				}
-//				queryResults.sorted();
-
 			}
 	}
 
@@ -97,13 +95,6 @@ public class SearchBuilder {
 		}
 		return string.toString();
 	}
-
-
-
-
-
-
-
 
 	public static List<SearchResult> partialSearch(QueryResults queryResults, List<String> query, InvertedIndex index)
 	{

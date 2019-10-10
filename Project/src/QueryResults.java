@@ -32,12 +32,4 @@ public class QueryResults {
 	{
 		JsonWriter.asQueryObject(queryResults, path);
 	}
-
-//	public Map<List<String>, List<SearchResult>> sorted()
-//	{
-//		TreeMap<List<String>, List<SearchResult>> sortedResults = new TreeMap<>();
-//		sortedResults.putAll(queryResults);
-//		queryResults = sortedResults;
-//		return queryResults;
-//	}
 }

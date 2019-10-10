@@ -43,8 +43,8 @@ public class InvertedIndex {
 	public void add(String word, String path, Integer position) {
 		map.putIfAbsent(word, new TreeMap<String, TreeSet<Integer>>());
 		map.get(word).putIfAbsent(path, new TreeSet<Integer>());
-		if (map.get(word).get(path).add(position))
-		{
+
+		if (map.get(word).get(path).add(position)) {
 			int count = 1 + countsMap.getOrDefault(path, 0);
 			countsMap.put(path, count);
 		}

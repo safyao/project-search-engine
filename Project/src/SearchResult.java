@@ -39,7 +39,6 @@ public class SearchResult implements Comparable<SearchResult>
 		}
 	};
 
-
 	public String getWhere()
 	{
 		return where;
@@ -64,6 +63,4 @@ public class SearchResult implements Comparable<SearchResult>
 	{
 		score = newScore;
 	}
-
-
 }
