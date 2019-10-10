@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -327,6 +328,105 @@ public class JsonWriter {
 
 
 
+	public static void asQueryObject(Map<List<String>, List<SearchResult>> results, Writer writer, int level) throws IOException {
+
+		writer.write("{");
+		var iterator = results.entrySet().iterator();
+		level++;
+
+		if (iterator.hasNext()) {
+			writer.write("\n");
+			writeQueryEntry(iterator.next(), writer, level);
+		}
+
+		while (iterator.hasNext()) {
+			writer.write(",");
+			writer.write("\n");
+			writeQueryEntry(iterator.next(), writer, level);
+		}
+
+		writer.write("\n");
+		indent("}", writer, level - 1);
+	}
+
+	private static void writeQueryEntry(Entry<List<String>, List<SearchResult>> element, Writer writer, int level) throws IOException {
+		quote(element.getKey(), writer);
+		writer.write(": ");
+		asNestedArray(element.getValue(), writer, 1);
+	}
+
+	public static void asNestedArray(Collection<SearchResult> elements, Writer writer, int level) throws IOException
+	{
+		writer.write("[");
+		var iterator = elements.iterator();
+		level++;
+
+		if (iterator.hasNext()) {
+			writer.write("\n");
+			indent(writer, level);
+			asSearchObject(iterator.next(), writer, level);
+		}
+
+		while (iterator.hasNext()) {
+			writer.write(",");
+			writer.write("\n");
+			indent(writer, level);
+			asSearchObject(iterator.next(), writer, level);
+		}
+
+		writer.write("\n");
+		indent("]", writer, level - 1);
+	}
+
+	public static void asSearchObject(SearchResult element, Writer writer, int level) throws IOException
+	{
+		writer.write("{");
+		level++;
+		writer.write("\n");
+
+		quote("where", writer);
+		writer.write(": ");
+		quote(element.getWhere(), writer);
+		writer.write(",\n");
+
+		quote("count", writer);
+		writer.write(": ");
+		writer.write(element.getCount());
+		writer.write(",\n");
+
+		quote("score", writer);
+		writer.write(": ");
+		writer.write(element.getScore());
+		writer.write("\n");
+
+		indent("}", writer, level - 1);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //	public static void asNestedArray(Collection<SearchResult> elements, Writer writer, int level) throws IOException {
@@ -539,5 +639,19 @@ public class JsonWriter {
 	public static void quote(String element, Writer writer, int times) throws IOException {
 		indent(writer, times);
 		quote(element, writer);
+	}
+
+	public static void quote(List<String> element, Writer writer) throws IOException {
+		writer.write('"');
+		var iterator = element.iterator();
+
+		if (iterator.hasNext()) {
+			writer.write(iterator.next());
+		}
+		while (iterator.hasNext()) {
+			writer.write(" ");
+			writer.write(iterator.next());
+		}
+		writer.write('"');
 	}
 }
