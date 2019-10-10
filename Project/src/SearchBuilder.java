@@ -27,6 +27,7 @@ public class SearchBuilder {
 						List<SearchResult> results = SearchBuilder.partialSearch(queryResults, queryList, index);
 					}
 				}
+//				queryResults.sorted();
 
 			}
 	}
@@ -76,12 +77,26 @@ public class SearchBuilder {
 		Collections.sort(results, SearchResult.SearchComparator);
 		if (!query.isEmpty())
 		{
-			queryResults.add(query, results);
+			queryResults.add(queryAsString(query), results);
 		}
+
 		return results;
 	}
 
+	public static String queryAsString(List<String> query)
+	{
+		StringBuilder string = new StringBuilder();
+		var iterator = query.iterator();
 
+		if (iterator.hasNext()) {
+			string.append(iterator.next());
+		}
+		while (iterator.hasNext()) {
+			string.append(" ");
+			string.append(iterator.next());
+		}
+		return string.toString();
+	}
 
 
 
@@ -139,7 +154,7 @@ public class SearchBuilder {
 		Collections.sort(results, SearchResult.SearchComparator);
 		if (!query.isEmpty())
 		{
-			queryResults.add(query, results);
+			queryResults.add(queryAsString(query), results);
 		}
 		return results;
 	}

@@ -1,29 +1,29 @@
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 public class QueryResults {
-	private final Map<List<String>, List<SearchResult>> queryResults;
+	private Map<String, List<SearchResult>> queryResults;
 
 	public QueryResults()
 	{
-		queryResults = new HashMap<>();
+		queryResults = new TreeMap<>();
 	}
 
-	public void add(List<String> query, List<SearchResult> searchResults)
+	public void add(String query, List<SearchResult> searchResults)
 	{
 		queryResults.putIfAbsent(query, searchResults);
 	}
 
-	public List<SearchResult> getSearch(List<String> query)
+	public List<SearchResult> getSearch(String query)
 	{
 		return queryResults.get(query);
 	}
 
-	public Set<List<String>> getQueries()
+	public Set<String> getQueries()
 	{
 		return queryResults.keySet();
 	}
@@ -32,4 +32,12 @@ public class QueryResults {
 	{
 		JsonWriter.asQueryObject(queryResults, path);
 	}
+
+//	public Map<List<String>, List<SearchResult>> sorted()
+//	{
+//		TreeMap<List<String>, List<SearchResult>> sortedResults = new TreeMap<>();
+//		sortedResults.putAll(queryResults);
+//		queryResults = sortedResults;
+//		return queryResults;
+//	}
 }

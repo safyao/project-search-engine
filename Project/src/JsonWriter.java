@@ -326,13 +326,13 @@ public class JsonWriter {
 
 
 
-	public static void asQueryObject(Map<List<String>, List<SearchResult>> results, Path path) throws IOException {
+	public static void asQueryObject(Map<String, List<SearchResult>> results, Path path) throws IOException {
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 			asQueryObject(results, writer, 0);
 		}
 	}
 
-	public static void asQueryObject(Map<List<String>, List<SearchResult>> results, Writer writer, int level) throws IOException {
+	public static void asQueryObject(Map<String, List<SearchResult>> results, Writer writer, int level) throws IOException {
 
 		writer.write("{");
 		var iterator = results.entrySet().iterator();
@@ -353,7 +353,7 @@ public class JsonWriter {
 		indent("}", writer, level - 1);
 	}
 
-	private static void writeQueryEntry(Entry<List<String>, List<SearchResult>> element, Writer writer, int level) throws IOException {
+	private static void writeQueryEntry(Entry<String, List<SearchResult>> element, Writer writer, int level) throws IOException {
 		indent(writer, level);
 		quote(element.getKey(), writer);
 		writer.write(": ");
@@ -486,17 +486,17 @@ public class JsonWriter {
 		quote(element, writer);
 	}
 
-	public static void quote(List<String> element, Writer writer) throws IOException {
-		writer.write('"');
-		var iterator = element.iterator();
-
-		if (iterator.hasNext()) {
-			writer.write(iterator.next());
-		}
-		while (iterator.hasNext()) {
-			writer.write(" ");
-			writer.write(iterator.next());
-		}
-		writer.write('"');
-	}
+//	public static void quote(List<String> element, Writer writer) throws IOException {
+//		writer.write('"');
+//		var iterator = element.iterator();
+//
+//		if (iterator.hasNext()) {
+//			writer.write(iterator.next());
+//		}
+//		while (iterator.hasNext()) {
+//			writer.write(" ");
+//			writer.write(iterator.next());
+//		}
+//		writer.write('"');
+//	}
 }
