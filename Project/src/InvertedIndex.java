@@ -43,8 +43,8 @@ public class InvertedIndex {
 	public void add(String word, String path, Integer position) {
 		map.putIfAbsent(word, new TreeMap<String, TreeSet<Integer>>());
 		map.get(word).putIfAbsent(path, new TreeSet<Integer>());
-		if (map.get(word).get(path).add(position))
-		{
+
+		if (map.get(word).get(path).add(position)) {
 			int count = 1 + countsMap.getOrDefault(path, 0);
 			countsMap.put(path, count);
 		}
@@ -157,22 +157,4 @@ public class InvertedIndex {
 	public String toString() {
 		return map.toString();
 	}
-
-
-	/* TODO
-	 * Add some contains/getter methods for both data structures (map and countsMap)
-	 *
-	 * public Set<String> getLocations() {
-	 * 		unmodifiable view of the countsMap keyset
-	 * }
-	 *
-	 * public Set<String> getLocations(String word) {
-	 * 	unmodifiable view of the inner treemap for the word in your map object
-	 * }
-	 *
-	 * public boolean contains(String word)
-	 * public boolean contains(String word, String location)
-	 * public boolean contains(String word, String location, int position)
-	 *
-	 */
 }
