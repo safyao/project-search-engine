@@ -3,10 +3,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class SearchResults {
+public class SearchBuilder {
 
 
-	public static List<SearchResult> search(List<String> query, InvertedIndex index)
+	public static List<SearchResult> exactSearch(List<String> query, InvertedIndex index)
 	{
 		List<SearchResult> results = new ArrayList<>();
 		List<String> paths = new ArrayList<>();

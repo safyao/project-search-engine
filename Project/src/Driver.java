@@ -76,7 +76,7 @@ public class Driver {
 				while ((line = reader.readLine()) != null) {
 					List<String> queryList = TextStemmer.queryParser(line);
 					System.out.println("Query Words: " + queryList);
-					List<SearchResult> results = SearchResults.search(queryList, index);
+					List<SearchResult> results = SearchBuilder.exactSearch(queryList, index);
 					for (SearchResult item : results)
 					{
 						System.out.println("\twhere: " + item.getWhere());

@@ -7,9 +7,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 /**
  * Outputs several simple data structures in "pretty" JSON format where
@@ -37,18 +37,18 @@ public class JsonWriter {
 		writer.write("[");
 		var iterator = elements.iterator();
 		level++;
-		
+
 		if (iterator.hasNext()) {
 			writer.write("\n");
 			indent(iterator.next(), writer, level);
 		}
-		
+
 		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			indent(iterator.next(), writer, level);
 		}
-		
+
 		writer.write("\n");
 		indent("]", writer, level - 1);
 	}
@@ -86,7 +86,7 @@ public class JsonWriter {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Writes the elements as a pretty JSON object.
 	 *
@@ -98,28 +98,28 @@ public class JsonWriter {
 	public static void asObject(Map<String, Integer> elements, Writer writer, int level) throws IOException {
 
 		writer.write("{");
-		
+
 		var iterator = elements.entrySet().iterator();
 		level++;
-		
+
 		if (iterator.hasNext()) {
 			writer.write("\n");
 			writeObjectEntry(iterator.next(), writer, level);
 		}
-		
+
 		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			writeObjectEntry(iterator.next(), writer, level);
 		}
-		
+
 		writer.write("\n");
 		indent("}", writer, level - 1);
 	}
-	
+
 	/**
 	 * Writes entries of element as key = value pair.
-	 * 
+	 *
 	 * @param element the element to write
 	 * @param writer the writer to use
 	 * @param level the level to indent
@@ -164,7 +164,7 @@ public class JsonWriter {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Writes the elements as a nested pretty JSON object. The generic notation used
 	 * allows this method to be used for any type of map with any type of nested
@@ -176,30 +176,30 @@ public class JsonWriter {
 	 * @throws IOException
 	 */
 	public static void asNestedObject(Map<String, ? extends Collection<Integer>> elements, Writer writer, int level) throws IOException {
-		
+
 		writer.write("{");
 		var iterator = elements.entrySet().iterator();
 		level++;
-		
+
 		if (iterator.hasNext()) {
 			writer.write("\n");
 			writeNestedEntry(iterator.next(), writer, level);
 		}
-		
+
 		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			writeNestedEntry(iterator.next(), writer, level);
 		}
-		
+
 		writer.write("\n");
 		indent("}", writer, level - 1);
 
 	}
-	
+
 	/**
 	 * Writes entries of element as key = value (array) pair
-	 * 
+	 *
 	 * @param element the element to write
 	 * @param writer the writer to use
 	 * @param level the level to indent
@@ -258,25 +258,25 @@ public class JsonWriter {
 		writer.write("{");
 		var iterator = elements.entrySet().iterator();
 		level++;
-		
+
 		if (iterator.hasNext()) {
 			writer.write("\n");
 			writeEntry(iterator.next(), writer, level);
 		}
-		
+
 		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			writeEntry(iterator.next(), writer, level);
 		}
-		
+
 		writer.write("\n");
 		indent("}", writer, level - 1);
 	}
-	
+
 	/**
 	 * Writes entries of element as key = value (nested object) pair.
-	 * 
+	 *
 	 * @param element the element to write
 	 * @param writer the writer to use
 	 * @param level the level to indent
@@ -317,6 +317,8 @@ public class JsonWriter {
 			return null;
 		}
 	}
+
+
 
 	/**
 	 * Writes the {@code \t} tab symbol by the number of times specified.
