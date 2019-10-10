@@ -76,13 +76,16 @@ public class Driver {
 					SearchBuilder.buildSearch(results, queryPath, index, false);
 				}
 			}
+			catch (NullPointerException e) {
+				System.err.println("Please enter a valid query argument.");
+			}
 			catch (IOException e) {
 				System.err.println("Unable to search query line for: " + queryPath);
 			}
 		}
 		if (parser.hasFlag("-results"))
 		{
-			Path resultPath = parser.getPath("-results");
+			Path resultPath = parser.getPath("-results", Path.of("results.json"));
 			try
 			{
 				results.writeQuery(resultPath);
