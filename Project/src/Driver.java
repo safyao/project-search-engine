@@ -24,6 +24,7 @@ public class Driver {
 		ArgumentParser parser = new ArgumentParser(args);
 		InvertedIndex index = new InvertedIndex();
 		IndexBuilder builder = new IndexBuilder(index);
+		QueryResults results = new QueryResults();
 
 		if (parser.hasFlag("-path")) {
 			Path path = parser.getPath("-path");
@@ -63,5 +64,38 @@ public class Driver {
 				System.err.println("Unable to write the word counts to a JSON file at: \n" + countsPath);
 			}
 		}
+
+
+		if (parser.hasFlag("-query")) {
+			Path queryPath = parser.getPath("-query");
+			try {
+				if (parser.hasFlag("-exact"))
+				{
+					SearchBuilder.buildSearch(results, queryPath, index, true);
+				}
+				else
+				{
+					SearchBuilder.buildSearch(results, queryPath, index, false);
+				}
+			}
+			catch (NullPointerException e) {
+				System.err.println("Please enter a valid query argument.");
+			}
+			catch (IOException e) {
+				System.err.println("Unable to search index for words in query file at: " + queryPath);
+			}
+		}
+		if (parser.hasFlag("-results"))
+		{
+			Path resultPath = parser.getPath("-results", Path.of("results.json"));
+			try
+			{
+				results.writeQuery(resultPath);
+			}
+			catch (IOException e) {
+				System.err.println("Unable to write the search results to a Json file at: " + resultPath);
+			}
+		}
+
 	}
 }

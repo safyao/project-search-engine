@@ -6,10 +6,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 /**
  * Outputs several simple data structures in "pretty" JSON format where
@@ -37,18 +38,18 @@ public class JsonWriter {
 		writer.write("[");
 		var iterator = elements.iterator();
 		level++;
-		
+
 		if (iterator.hasNext()) {
 			writer.write("\n");
 			indent(iterator.next(), writer, level);
 		}
-		
+
 		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			indent(iterator.next(), writer, level);
 		}
-		
+
 		writer.write("\n");
 		indent("]", writer, level - 1);
 	}
@@ -86,7 +87,7 @@ public class JsonWriter {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Writes the elements as a pretty JSON object.
 	 *
@@ -98,28 +99,28 @@ public class JsonWriter {
 	public static void asObject(Map<String, Integer> elements, Writer writer, int level) throws IOException {
 
 		writer.write("{");
-		
+
 		var iterator = elements.entrySet().iterator();
 		level++;
-		
+
 		if (iterator.hasNext()) {
 			writer.write("\n");
 			writeObjectEntry(iterator.next(), writer, level);
 		}
-		
+
 		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			writeObjectEntry(iterator.next(), writer, level);
 		}
-		
+
 		writer.write("\n");
 		indent("}", writer, level - 1);
 	}
-	
+
 	/**
 	 * Writes entries of element as key = value pair.
-	 * 
+	 *
 	 * @param element the element to write
 	 * @param writer the writer to use
 	 * @param level the level to indent
@@ -164,7 +165,7 @@ public class JsonWriter {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Writes the elements as a nested pretty JSON object. The generic notation used
 	 * allows this method to be used for any type of map with any type of nested
@@ -176,30 +177,30 @@ public class JsonWriter {
 	 * @throws IOException
 	 */
 	public static void asNestedObject(Map<String, ? extends Collection<Integer>> elements, Writer writer, int level) throws IOException {
-		
+
 		writer.write("{");
 		var iterator = elements.entrySet().iterator();
 		level++;
-		
+
 		if (iterator.hasNext()) {
 			writer.write("\n");
 			writeNestedEntry(iterator.next(), writer, level);
 		}
-		
+
 		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			writeNestedEntry(iterator.next(), writer, level);
 		}
-		
+
 		writer.write("\n");
 		indent("}", writer, level - 1);
 
 	}
-	
+
 	/**
 	 * Writes entries of element as key = value (array) pair
-	 * 
+	 *
 	 * @param element the element to write
 	 * @param writer the writer to use
 	 * @param level the level to indent
@@ -258,25 +259,25 @@ public class JsonWriter {
 		writer.write("{");
 		var iterator = elements.entrySet().iterator();
 		level++;
-		
+
 		if (iterator.hasNext()) {
 			writer.write("\n");
 			writeEntry(iterator.next(), writer, level);
 		}
-		
+
 		while (iterator.hasNext()) {
 			writer.write(",");
 			writer.write("\n");
 			writeEntry(iterator.next(), writer, level);
 		}
-		
+
 		writer.write("\n");
 		indent("}", writer, level - 1);
 	}
-	
+
 	/**
 	 * Writes entries of element as key = value (nested object) pair.
-	 * 
+	 *
 	 * @param element the element to write
 	 * @param writer the writer to use
 	 * @param level the level to indent
@@ -316,6 +317,97 @@ public class JsonWriter {
 		catch (IOException e) {
 			return null;
 		}
+	}
+
+
+
+
+
+
+
+
+	public static void asQueryObject(Map<String, List<SearchResult>> results, Path path) throws IOException {
+		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+			asQueryObject(results, writer, 0);
+		}
+	}
+
+	public static void asQueryObject(Map<String, List<SearchResult>> results, Writer writer, int level) throws IOException {
+
+		writer.write("{");
+		var iterator = results.entrySet().iterator();
+		level++;
+
+		if (iterator.hasNext()) {
+			writer.write("\n");
+			writeQueryEntry(iterator.next(), writer, level);
+		}
+
+		while (iterator.hasNext()) {
+			writer.write(",");
+			writer.write("\n");
+			writeQueryEntry(iterator.next(), writer, level);
+		}
+
+		writer.write("\n");
+		indent("}", writer, level - 1);
+	}
+
+	private static void writeQueryEntry(Entry<String, List<SearchResult>> element, Writer writer, int level) throws IOException {
+		indent(writer, level);
+		quote(element.getKey(), writer);
+		writer.write(": ");
+		asNestedArray(element.getValue(), writer, level);
+	}
+
+	public static void asNestedArray(Collection<SearchResult> elements, Writer writer, int level) throws IOException
+	{
+		writer.write("[");
+		var iterator = elements.iterator();
+		level++;
+
+		if (iterator.hasNext()) {
+			writer.write("\n");
+			indent(writer, level);
+			asSearchObject(iterator.next(), writer, level);
+		}
+
+		while (iterator.hasNext()) {
+			writer.write(",");
+			writer.write("\n");
+			indent(writer, level);
+			asSearchObject(iterator.next(), writer, level);
+		}
+
+		writer.write("\n");
+		indent("]", writer, level - 1);
+	}
+
+	public static void asSearchObject(SearchResult element, Writer writer, int level) throws IOException
+	{
+		writer.write("{");
+		level++;
+		writer.write("\n");
+
+		indent(writer, level);
+		quote("where", writer);
+		writer.write(": ");
+		quote(element.getWhere(), writer);
+		writer.write(",\n");
+
+		indent(writer, level);
+		quote("count", writer);
+		writer.write(": ");
+		writer.write(element.getCount().toString());
+		writer.write(",\n");
+
+		indent(writer, level);
+		quote("score", writer);
+		writer.write(": ");
+		writer.write(element.getScore());
+		writer.write("\n");
+
+		indent("}", writer, level - 1);
 	}
 
 	/**
