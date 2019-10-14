@@ -26,16 +26,17 @@ public class Driver {
 		IndexBuilder builder = new IndexBuilder(index);
 
 		if (parser.hasFlag("-path")) {
+			Path path = parser.getPath("-path");
+
 			try {
 				// Builds index and the word counts after traversing the given path.
-				builder.buildIndex(parser.getPath("-path"));
+				builder.buildIndex(path);
 			}
 			catch (NullPointerException e) {
 				System.err.println("Please enter a valid path argument.");
 			}
 			catch (IOException e) {
-				// TODO Include the path in the exception output!
-				System.err.println("Unable to traverse and stem the given file(s).");
+				System.err.println("Unable to traverse and stem the given file(s) at: \n" + path);
 			}
 		}
 

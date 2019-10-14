@@ -1,6 +1,6 @@
 import java.nio.file.Path;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Parses and stores command-line arguments into simple key = value pairs.
@@ -41,13 +41,12 @@ public class ArgumentParser {
 	 */
 	public void parse(String[] args) {
 		for (int i = 0; i < args.length; i++) {
-			
+
 			if (isFlag(args[i])) {
 				map.put(args[i], null);
-			
-				// TODO Should be "i + 1" with spaces around the + sign.
-				if ((i+1) != args.length && isValue(args[i+1])) {
-						map.put(args[i], args[i+1]);
+
+				if (i + 1 != args.length && isValue(args[i + 1])) {
+						map.put(args[i], args[i + 1]);
 				}
 			}
 		}
@@ -69,7 +68,7 @@ public class ArgumentParser {
 		}
 		return (arg.startsWith("-") && (arg.length() > 1));
 	}
-	
+
 	/**
 	 * Determines whether the argument is a value. Values do not start with a dash
 	 * "-" character, and must consist of at least one character.
@@ -161,14 +160,14 @@ public class ArgumentParser {
 	 */
 	public Path getPath(String flag) {
 		if (hasFlag(flag)) {
-			
+
 			if (getString(flag) != null) {
 				return Path.of(getString(flag));
 			}
 		}
 		return null;
 	}
- 
+
 	/**
 	 * Returns the value the specified flag is mapped as a {@link Path}, or the
 	 * default value if the flag does not exist or has a null value.
@@ -182,7 +181,7 @@ public class ArgumentParser {
 	 */
 	public Path getPath(String flag, Path defaultValue) {
 		if (hasFlag(flag)) {
-			
+
 			if (getString(flag) != null) {
 				return Path.of(getString(flag));
 			}

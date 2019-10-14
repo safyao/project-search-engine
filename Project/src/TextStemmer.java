@@ -1,12 +1,13 @@
-import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
-import opennlp.tools.stemmer.Stemmer;
-import opennlp.tools.stemmer.snowball.SnowballStemmer;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
+import opennlp.tools.stemmer.Stemmer;
+import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 /**
  * Utility class for parsing and stemming text and text files into sets of
@@ -22,7 +23,7 @@ public class TextStemmer {
 
 	/** The default stemmer algorithm used by this class. */
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
-	
+
 
 	/**
 	 * Returns a list of cleaned and stemmed words (not unique) parsed from the provided line.
@@ -32,16 +33,12 @@ public class TextStemmer {
 	 *
 	 * @see SnowballStemmer
 	 * @see #DEFAULT
-	 * @see #uniqueStems(String, Stemmer)
+	 * @see #listStems(String, Stemmer)
 	 */
-	public static List<String> uniqueStems(String line) {
-		return uniqueStems(line, new SnowballStemmer(DEFAULT));
+	public static List<String> listStems(String line) {
+		return listStems(line, new SnowballStemmer(DEFAULT));
 	}
 
-	/*
-	 * TODO This is no longer returning uniqueStems... refactor method name to
-	 * something like listStems() instead.
-	 */
 	/**
 	 * Returns a list of cleaned and stemmed words parsed from the provided line.
 	 *
@@ -52,20 +49,18 @@ public class TextStemmer {
 	 * @see Stemmer#stem(CharSequence)
 	 * @see TextParser#parse(String)
 	 */
-	public static List<String> uniqueStems(String line, Stemmer stemmer) {
+	public static List<String> listStems(String line, Stemmer stemmer) {
 		String[] parsedText = TextParser.parse(line);
 		List<String> stemmedList = new ArrayList<>();
 
 		for (String word : parsedText) {
-			// TODO Avoid downcast: String stemmedWord = stemmer.stem(word).toString();
-			String stemmedWord = (String)stemmer.stem(word);
+			String stemmedWord = stemmer.stem(word).toString();
 			stemmedList.add(stemmedWord);
 		}
 
 		return stemmedList;
 	}
-	
-	// TODO Update method name
+
 	/**
 	 * Reads a file line by line, parses each line into cleaned and stemmed words,
 	 * and then adds those words to a list.
@@ -74,23 +69,23 @@ public class TextStemmer {
 	 * @return a list of stems from file
 	 * @throws IOException if unable to read or parse file
 	 *
-	 * @see #uniqueStems(String)
+	 * @see #listStems(String)
 	 * @see TextParser#parse(String)
 	 */
-	public static List<String> uniqueStems(Path inputFile) throws IOException {
+	public static List<String> listStems(Path inputFile) throws IOException {
 
 		List<String> stemmedLines = new ArrayList<>();
-		
+		Stemmer stemmer = new SnowballStemmer(DEFAULT);
+
 		try (
 				BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8);
 		) {
-			
+
 			String line = null;
-			
+
 			while ((line = reader.readLine()) != null) {
-				// TODO Create 1 stemmer object before while loop and reuse!
-				List<String> stemmedLine = uniqueStems(line, new SnowballStemmer(DEFAULT));
-				
+				List<String> stemmedLine = listStems(line, stemmer);
+
 				for (String item : stemmedLine) {
 					stemmedLines.add(item);
 				}

@@ -90,22 +90,27 @@ public class InvertedIndex {
 	}
 
 	/**
+	 * Returns an unmodifiable set view of the keys (words) in the map.
+	 *
+	 * @return unmodifiable view of set of Strings
+	 */
+	public Set<String> getWords() {
+		return Collections.unmodifiableSet(map.keySet());
+	}
+
+	/**
 	 * Returns an unmodifiable set view of the locations mapped to the given word.
 	 *
 	 * @param word the word the locations are mapped to
 	 * @return unmodifiable view of set of Strings
 	 */
 	public Set<String> getLocations(String word) {
-		/*
-		 * TODO What happens if map.get(word) is null? This code will throw a null pointer 
-		 * exception! Try something like:
-		 * 
-		 * if map has the key
-		 * 	return what you hav now
-		 * else
-		 * 	return Collections.emptySet();
-		 */
-		return Collections.unmodifiableSet(map.get(word).keySet());
+		if (map.containsKey(word)) {
+			return Collections.unmodifiableSet(map.get(word).keySet());
+		}
+		else {
+			return Collections.emptySet();
+		}
 	}
 
 	/**
@@ -116,15 +121,13 @@ public class InvertedIndex {
 	 * @return unmodifiable view of set of Integers
 	 */
 	public Set<Integer> getPositions(String word, String location) {
-		// TODO Same null pointer issue as before
-		return Collections.unmodifiableSet(map.get(word).get(location));
+		if (map.containsKey(word) && map.get(word).containsKey(location)) {
+			return Collections.unmodifiableSet(map.get(word).get(location));
+		}
+		else {
+			return Collections.emptySet();
+		}
 	}
-	
-	/*
-	 * TODO Really close on methods. I think you also need:
-	 * 
-	 * getWords() returns map.keyset safely
-	 */
 
 	/**
 	 * Returns true if countsMap contains the given path.
