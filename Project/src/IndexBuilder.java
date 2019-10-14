@@ -24,7 +24,6 @@ public class IndexBuilder {
 	/** The default stemmer algorithm used by this class. */
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
 
-
 	/**
 	 * Initializes the InvertedIndex.
 	 *
