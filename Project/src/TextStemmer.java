@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import opennlp.tools.stemmer.Stemmer;
@@ -84,6 +85,7 @@ public class TextStemmer {
 			String line = null;
 
 			while ((line = reader.readLine()) != null) {
+
 				List<String> stemmedLine = listStems(line, stemmer);
 
 				for (String item : stemmedLine) {
@@ -92,5 +94,21 @@ public class TextStemmer {
 			}
 		}
 		return stemmedLines;
+	}
+
+	public static List<String> queryParser(String line)
+	{
+		List<String> parsedQuery = new ArrayList<>();
+		Stemmer stemmer = new SnowballStemmer(DEFAULT);
+		String[] parsedLine = TextParser.parse(line);
+		for (String word : parsedLine)
+		{
+			String stemmedWord = stemmer.stem(word).toString();
+			if (!parsedQuery.contains(stemmedWord)) {
+				parsedQuery.add(stemmedWord);
+			}
+		}
+		Collections.sort(parsedQuery);
+		return parsedQuery;
 	}
 }
