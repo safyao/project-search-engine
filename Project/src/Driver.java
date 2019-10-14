@@ -34,6 +34,7 @@ public class Driver {
 				System.err.println("Please enter a valid path argument.");
 			}
 			catch (IOException e) {
+				// TODO Include the path in the exception output!
 				System.err.println("Unable to traverse and stem the given file(s).");
 			}
 		}

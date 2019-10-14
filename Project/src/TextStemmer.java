@@ -38,6 +38,10 @@ public class TextStemmer {
 		return uniqueStems(line, new SnowballStemmer(DEFAULT));
 	}
 
+	/*
+	 * TODO This is no longer returning uniqueStems... refactor method name to
+	 * something like listStems() instead.
+	 */
 	/**
 	 * Returns a list of cleaned and stemmed words parsed from the provided line.
 	 *
@@ -53,6 +57,7 @@ public class TextStemmer {
 		List<String> stemmedList = new ArrayList<>();
 
 		for (String word : parsedText) {
+			// TODO Avoid downcast: String stemmedWord = stemmer.stem(word).toString();
 			String stemmedWord = (String)stemmer.stem(word);
 			stemmedList.add(stemmedWord);
 		}
@@ -60,6 +65,7 @@ public class TextStemmer {
 		return stemmedList;
 	}
 	
+	// TODO Update method name
 	/**
 	 * Reads a file line by line, parses each line into cleaned and stemmed words,
 	 * and then adds those words to a list.
@@ -82,6 +88,7 @@ public class TextStemmer {
 			String line = null;
 			
 			while ((line = reader.readLine()) != null) {
+				// TODO Create 1 stemmer object before while loop and reuse!
 				List<String> stemmedLine = uniqueStems(line, new SnowballStemmer(DEFAULT));
 				
 				for (String item : stemmedLine) {

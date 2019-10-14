@@ -23,7 +23,6 @@ public class InvertedIndex {
 	/** Stores arguments in key = value pairs. **/
 	private final TreeMap<String, Integer> countsMap;
 
-
 	/**
 	 * Initializes the argument maps.
 	 */
@@ -97,6 +96,15 @@ public class InvertedIndex {
 	 * @return unmodifiable view of set of Strings
 	 */
 	public Set<String> getLocations(String word) {
+		/*
+		 * TODO What happens if map.get(word) is null? This code will throw a null pointer 
+		 * exception! Try something like:
+		 * 
+		 * if map has the key
+		 * 	return what you hav now
+		 * else
+		 * 	return Collections.emptySet();
+		 */
 		return Collections.unmodifiableSet(map.get(word).keySet());
 	}
 
@@ -108,8 +116,15 @@ public class InvertedIndex {
 	 * @return unmodifiable view of set of Integers
 	 */
 	public Set<Integer> getPositions(String word, String location) {
+		// TODO Same null pointer issue as before
 		return Collections.unmodifiableSet(map.get(word).get(location));
 	}
+	
+	/*
+	 * TODO Really close on methods. I think you also need:
+	 * 
+	 * getWords() returns map.keyset safely
+	 */
 
 	/**
 	 * Returns true if countsMap contains the given path.

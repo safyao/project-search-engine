@@ -14,7 +14,6 @@ public class ArgumentParser {
 	/** Stores command-line arguments in key = value pairs. */
 	private final Map<String, String> map;
 
-	
 	/**
 	 * Initializes this argument map.
 	 */
@@ -46,6 +45,7 @@ public class ArgumentParser {
 			if (isFlag(args[i])) {
 				map.put(args[i], null);
 			
+				// TODO Should be "i + 1" with spaces around the + sign.
 				if ((i+1) != args.length && isValue(args[i+1])) {
 						map.put(args[i], args[i+1]);
 				}
