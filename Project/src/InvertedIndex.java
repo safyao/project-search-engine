@@ -5,11 +5,9 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-
 /**
  * Nested data structure class that houses Strings, TreeMaps, TreeSets, and Integers in one Map
  * and Strings and Integers in another.
- *
  *
  * @author CS 212 Software Development
  * @author University of San Francisco
