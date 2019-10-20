@@ -319,19 +319,27 @@ public class JsonWriter {
 		}
 	}
 
-
-
-
-
-
-
-
+	/**
+	 * Writes query results as a nested pretty JSON object to file.
+	 *
+	 * @param results the results to write as JSON object
+	 * @param path the path to write to
+	 * @throws IOException
+	 */
 	public static void asQueryObject(Map<String, List<SearchResult>> results, Path path) throws IOException {
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 			asQueryObject(results, writer, 0);
 		}
 	}
 
+	/**
+	 * Writes query results as a nested pretty JSON object.
+	 *
+	 * @param results the results to write as JSON object
+	 * @param writer the writer to use
+	 * @param level the level to indent
+	 * @throws IOException
+	 */
 	public static void asQueryObject(Map<String, List<SearchResult>> results, Writer writer, int level) throws IOException {
 
 		writer.write("{");
@@ -353,6 +361,14 @@ public class JsonWriter {
 		indent("}", writer, level - 1);
 	}
 
+	/**
+	 * Writes entry of query results as key = value pair.
+	 *
+	 * @param element the element to write
+	 * @param writer the writer to use
+	 * @param level the level to indent
+	 * @throws IOException
+	 */
 	private static void writeQueryEntry(Entry<String, List<SearchResult>> element, Writer writer, int level) throws IOException {
 		indent(writer, level);
 		quote(element.getKey(), writer);
@@ -360,8 +376,16 @@ public class JsonWriter {
 		asNestedArray(element.getValue(), writer, level);
 	}
 
-	public static void asNestedArray(Collection<SearchResult> elements, Writer writer, int level) throws IOException
-	{
+	/**
+	 * Writes list of search results as JSON nested array.
+	 *
+	 * @param elements the elements to write
+	 * @param writer the writer to use
+	 * @param level the level to indent
+	 * @throws IOException
+	 */
+	public static void asNestedArray(Collection<SearchResult> elements, Writer writer, int level) throws IOException {
+
 		writer.write("[");
 		var iterator = elements.iterator();
 		level++;
@@ -383,8 +407,16 @@ public class JsonWriter {
 		indent("]", writer, level - 1);
 	}
 
-	public static void asSearchObject(SearchResult element, Writer writer, int level) throws IOException
-	{
+	/**
+	 * Writes SearchResult as a custom JSON object.
+	 *
+	 * @param element the element to write
+	 * @param writer the writer to use
+	 * @param level the level to indent
+	 * @throws IOException
+	 */
+	public static void asSearchObject(SearchResult element, Writer writer, int level) throws IOException {
+
 		writer.write("{");
 		level++;
 		writer.write("\n");
