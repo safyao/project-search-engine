@@ -96,18 +96,27 @@ public class TextStemmer {
 		return stemmedLines;
 	}
 
-	public static List<String> queryParser(String line)
-	{
+	/**
+	 * Parses, stems, removes duplicates, sorts, and returns elements of a single
+	 * query line as a list of Strings.
+	 *
+	 * @param line the line to parse
+	 * @return list of parsed query words
+	 */
+	public static List<String> queryParser(String line) {
+
 		List<String> parsedQuery = new ArrayList<>();
 		Stemmer stemmer = new SnowballStemmer(DEFAULT);
 		String[] parsedLine = TextParser.parse(line);
-		for (String word : parsedLine)
-		{
+
+		for (String word : parsedLine) {
 			String stemmedWord = stemmer.stem(word).toString();
+
 			if (!parsedQuery.contains(stemmedWord)) {
 				parsedQuery.add(stemmedWord);
 			}
 		}
+
 		Collections.sort(parsedQuery);
 		return parsedQuery;
 	}

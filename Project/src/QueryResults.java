@@ -1,35 +1,66 @@
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+/**
+ * Nested data structure class that stores queries and their corresponding search results in a map..
+ *
+ * @author CS 212 Software Development
+ * @author University of San Francisco
+ * @version Fall 2019
+ */
 public class QueryResults {
-	private Map<String, List<SearchResult>> queryResults;
 
-	public QueryResults()
-	{
+	/** Stores arguments in key = value pairs. **/
+	private final Map<String, List<SearchResult>> queryResults;
+
+	/**
+	 * Initializes the argument map.
+	 */
+	public QueryResults() {
 		queryResults = new TreeMap<>();
 	}
 
-	public void add(String query, List<SearchResult> searchResults)
-	{
+	/**
+	 * Adds element to map if given element is not already in the map.
+	 *
+	 * @param query the query to enter as key
+	 * @param searchResults the list of SearchResult objects to enter as value
+	 */
+	public void add(String query, List<SearchResult> searchResults) {
 		queryResults.putIfAbsent(query, searchResults);
 	}
 
-	public List<SearchResult> getSearch(String query)
-	{
-		return queryResults.get(query);
+	/**
+	 * Returns an unmodifiable view of list of search results for a given query.
+	 *
+	 * @param query the query to return the value of
+	 * @return unmodifiable view of list of search results
+	 */
+	public List<SearchResult> getSearch(String query) {
+		return Collections.unmodifiableList(queryResults.get(query));
 	}
 
-	public Set<String> getQueries()
-	{
-		return queryResults.keySet();
+	/**
+	 * Returns an unmodifiable view of set of queries in map.
+	 *
+	 * @return unmodifiable view of set of queries
+	 */
+	public Set<String> getQueries() {
+		return Collections.unmodifiableSet(queryResults.keySet());
 	}
 
-	public void writeQuery(Path path) throws IOException
-	{
+	/**
+	 * Writes map as pretty JSON object to file.
+	 *
+	 * @param path the path to write map to
+	 * @throws IOException if unable to access file
+	 */
+	public void writeQuery(Path path) throws IOException {
 		JsonWriter.asQueryObject(queryResults, path);
 	}
 }
