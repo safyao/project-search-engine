@@ -20,11 +20,11 @@ public class Driver {
 	 */
 	public static void main(String[] args) {
 
-		// Initialize ArgumentParser and InvertedIndex for given command-line arguments.
+		// Initialize ArgumentParser, InvertedIndex, IndexBuilder, and QueryMap for given command-line arguments.
 		ArgumentParser parser = new ArgumentParser(args);
 		InvertedIndex index = new InvertedIndex();
 		IndexBuilder builder = new IndexBuilder(index);
-		QueryResults results = new QueryResults();
+		QueryMap results = new QueryMap();
 
 		if (parser.hasFlag("-path")) {
 			Path path = parser.getPath("-path");
@@ -45,7 +45,7 @@ public class Driver {
 			Path indexPath = parser.getPath("-index", Path.of("index.json"));
 
 			try {
-				// Writes index in pretty Json format to file.
+				// Writes index in pretty JSON format to file.
 				index.writeIndex(indexPath);
 			}
 			catch (IOException e) {
@@ -57,7 +57,7 @@ public class Driver {
 			Path countsPath = parser.getPath("-counts", Path.of("counts.json"));
 
 			try {
-				// Writes counts in pretty Json format to file.
+				// Writes counts in pretty JSON format to file.
 				index.writeCounts(countsPath);
 			}
 			catch (IOException e) {
@@ -65,16 +65,16 @@ public class Driver {
 			}
 		}
 
-
 		if (parser.hasFlag("-query")) {
 			Path queryPath = parser.getPath("-query");
+
+			// Builds map storing query search results from file of queries.
 			try {
-				if (parser.hasFlag("-exact"))
-				{
+				if (parser.hasFlag("-exact")) {
+					// Performs exact search if specified.
 					SearchBuilder.buildSearch(results, queryPath, index, true);
 				}
-				else
-				{
+				else {
 					SearchBuilder.buildSearch(results, queryPath, index, false);
 				}
 			}
@@ -85,17 +85,17 @@ public class Driver {
 				System.err.println("Unable to search index for words in query file at: " + queryPath);
 			}
 		}
-		if (parser.hasFlag("-results"))
-		{
+
+		if (parser.hasFlag("-results")) {
 			Path resultPath = parser.getPath("-results", Path.of("results.json"));
-			try
-			{
+
+			try {
+				// Writes search results in pretty JSON format to file.
 				results.writeQuery(resultPath);
 			}
 			catch (IOException e) {
 				System.err.println("Unable to write the search results to a Json file at: " + resultPath);
 			}
 		}
-
 	}
 }

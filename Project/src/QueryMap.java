@@ -13,16 +13,16 @@ import java.util.TreeMap;
  * @author University of San Francisco
  * @version Fall 2019
  */
-public class QueryResults {
+public class QueryMap {
 
 	/** Stores arguments in key = value pairs. **/
-	private final Map<String, List<SearchResult>> queryResults;
+	private final Map<String, List<SearchResult>> queryMap;
 
 	/**
 	 * Initializes the argument map.
 	 */
-	public QueryResults() {
-		queryResults = new TreeMap<>();
+	public QueryMap() {
+		queryMap = new TreeMap<>();
 	}
 
 	/**
@@ -32,7 +32,7 @@ public class QueryResults {
 	 * @param searchResults the list of SearchResult objects to enter as value
 	 */
 	public void add(String query, List<SearchResult> searchResults) {
-		queryResults.putIfAbsent(query, searchResults);
+		queryMap.putIfAbsent(query, searchResults);
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class QueryResults {
 	 * @return unmodifiable view of list of search results
 	 */
 	public List<SearchResult> getSearch(String query) {
-		return Collections.unmodifiableList(queryResults.get(query));
+		return Collections.unmodifiableList(queryMap.get(query));
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class QueryResults {
 	 * @return unmodifiable view of set of queries
 	 */
 	public Set<String> getQueries() {
-		return Collections.unmodifiableSet(queryResults.keySet());
+		return Collections.unmodifiableSet(queryMap.keySet());
 	}
 
 	/**
@@ -61,6 +61,6 @@ public class QueryResults {
 	 * @throws IOException if unable to access file
 	 */
 	public void writeQuery(Path path) throws IOException {
-		JsonWriter.asQueryObject(queryResults, path);
+		JsonWriter.asQueryObject(queryMap, path);
 	}
 }

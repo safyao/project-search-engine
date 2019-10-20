@@ -20,15 +20,15 @@ public class SearchBuilder {
 	/**
 	 * Builds a sorted list of search results from a query file and stores results in QueryResults map.
 	 *
-	 * @param queryResults the map to store all queries and search results in
+	 * @param queryMap the map to store all queries and search results in
 	 * @param queryPath the path to parse for queries
 	 * @param index the index to search
 	 * @param exact the boolean to perform an exact search
 	 * @throws IOException in unable to access file
 	 */
-	public static void buildSearch(QueryResults queryResults, Path queryPath, InvertedIndex index, boolean exact) throws IOException {
+	public static void buildSearch(QueryMap queryMap, Path queryPath, InvertedIndex index, boolean exact) throws IOException {
 
-		//Reads query file line by line.
+		// Reads query file line by line.
 		try (
 				BufferedReader reader = Files.newBufferedReader(queryPath, StandardCharsets.UTF_8);
 			) {
@@ -36,15 +36,15 @@ public class SearchBuilder {
 
 			while ((line = reader.readLine()) != null) {
 
-				//Parses line of queries.
+				// Parses line of queries.
 				List<String> queryList = TextStemmer.queryParser(line);
 
-				//Completes an exact or partial search based on given arguments.
+				// Completes an exact or partial search based on given arguments.
 				if (exact) {
-					SearchBuilder.exactSearch(queryResults, queryList, index);
+					SearchBuilder.exactSearch(queryMap, queryList, index);
 				}
 				else {
-					SearchBuilder.partialSearch(queryResults, queryList, index);
+					SearchBuilder.partialSearch(queryMap, queryList, index);
 				}
 			}
 		}
@@ -57,12 +57,12 @@ public class SearchBuilder {
 	 * @param query the list of queries to find in index
 	 * @param index the index to search
 	 */
-	public static void exactSearch(QueryResults queryResults, List<String> query, InvertedIndex index) {
+	public static void exactSearch(QueryMap queryResults, List<String> query, InvertedIndex index) {
 
 		List<SearchResult> results = new ArrayList<>();
 		List<String> paths = new ArrayList<>();
 
-		//Finds all locations a query word appears in and performs an exact search through them.
+		// Finds all locations a query word appears in and performs an exact search through them.
 		for (String word : query) {
 			if (index.contains(word)) {
 				Set<String> locations = index.getLocations(word);
@@ -70,7 +70,7 @@ public class SearchBuilder {
 			}
 		}
 
-		//Sorts the search results for the list of queries and adds it into QueryResults map.
+		// Sorts the search results for the list of queries and adds it into QueryResults map.
 		Collections.sort(results, SearchResult.SearchComparator);
 		if (!query.isEmpty()){
 			queryResults.add(queryAsString(query), results);
@@ -84,16 +84,16 @@ public class SearchBuilder {
 	 * @param query the list of queries to find in index
 	 * @param index the index to search
 	 */
-	public static void partialSearch(QueryResults queryResults, List<String> query, InvertedIndex index) {
+	public static void partialSearch(QueryMap queryResults, List<String> query, InvertedIndex index) {
 
 		List<SearchResult> results = new ArrayList<>();
 		List<String> paths = new ArrayList<>();
 		Set<String> wordKeys = index.getWords();
 
-		//Finds all locations a query word partially appears in and performs a partial search through them.
+		// Finds all locations a query word partially appears in and performs a partial search through them.
 		for (String word : query) {
 
-			//Searches through set of keys in index for words that start with the query.
+			// Searches through set of keys in index for words that start with the query.
 			for (String wordKey : wordKeys) {
 				if (wordKey.startsWith(word)) {
 					Set<String> locations = index.getLocations(wordKey);
@@ -102,7 +102,7 @@ public class SearchBuilder {
 			}
 		}
 
-		//Sorts the search results for the list of queries and adds it into QueryResults map.
+		// Sorts the search results for the list of queries and adds it into QueryResults map.
 		Collections.sort(results, SearchResult.SearchComparator);
 		if (!query.isEmpty()) {
 			queryResults.add(queryAsString(query), results);
