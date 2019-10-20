@@ -51,6 +51,7 @@ public class SearchResult implements Comparable<SearchResult> {
 	 * Anonymous inner class that initializes Comparator.
 	 */
 	public static Comparator<SearchResult> SearchComparator = new Comparator<SearchResult>()
+	//
 	{
 		// Compares two SearchResult objects.
 		@Override
