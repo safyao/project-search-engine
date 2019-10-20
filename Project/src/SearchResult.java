@@ -48,11 +48,7 @@ public class SearchResult implements Comparable<SearchResult> {
 	 * Anonymous inner class that initializes Comparator.
 	 */
 	public static Comparator<SearchResult> SearchComparator = new Comparator<SearchResult>() {
-		/**
-		 * Compares two SearchResults.
-		 *
-		 * @return a negative int, zero, or a positive int as "one" is less than, equal to, or greater than "two"
-		 */
+		// Compares two SearchResult objects.
 		@Override
 		public int compare(SearchResult one, SearchResult two) {
 			return two.compareTo(one);
