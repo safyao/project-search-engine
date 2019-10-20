@@ -52,7 +52,6 @@ public class SearchResult implements Comparable<SearchResult> {
 	 */
 	public static Comparator<SearchResult> SearchComparator = new Comparator<SearchResult>()
 	{
-		// Compares two SearchResult objects.
 		@Override
 		public int compare(SearchResult one, SearchResult two) {
 			return two.compareTo(one);
