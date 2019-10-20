@@ -31,6 +31,11 @@ public class SearchResult implements Comparable<SearchResult> {
 		this.score = score;
 	}
 
+	/**
+	 * Compares two SearchResult objects based on score, then count, then location.
+	 * @param other the other object to compare to
+	 * @return a negative int, zero, or a positive int as the first object is less than, equal to, or greater than the second
+	 */
 	@Override
 	public int compareTo(SearchResult other) {
 		if (this.score.compareTo(other.getScore()) != 0) {
@@ -39,15 +44,14 @@ public class SearchResult implements Comparable<SearchResult> {
 		else if (this.count.compareTo(other.getCount()) != 0) {
 			return (this.count.compareTo(other.getCount()));
 		}
-		else {
-			return (other.getWhere().compareTo(this.where));
-		}
+		return (other.getWhere().compareTo(this.where));
 	}
 
 	/**
 	 * Anonymous inner class that initializes Comparator.
 	 */
-	public static Comparator<SearchResult> SearchComparator = new Comparator<SearchResult>() {
+	public static Comparator<SearchResult> SearchComparator = new Comparator<SearchResult>()
+	{
 		// Compares two SearchResult objects.
 		@Override
 		public int compare(SearchResult one, SearchResult two) {
