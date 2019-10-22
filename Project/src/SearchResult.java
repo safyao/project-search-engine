@@ -1,5 +1,11 @@
 import java.util.Comparator;
 
+/*
+ * TODO Since a search result is pretty specific to an inverted index, and the result
+ * depends on specific data within that index (like total count), it makes sense to
+ * make this an non-static inner class within the InvertedIndex class itself!
+ */
+
 /**
  * Data structure class that houses a single search result and implements Comparable.
  *
@@ -10,13 +16,13 @@ import java.util.Comparator;
 public class SearchResult implements Comparable<SearchResult> {
 
 	/** Stores location of search result. */
-	private String where;
+	private String where; // TODO Make this one final---should not be able to change the location for a result.
 
 	/** Stores word count of search result for given location. */
-	private Integer count;
+	private Integer count; // TODO Go ahead and make this an int to avoid too much autoboxing/unboxing
 
 	/** Stores score of search result. */
-	private String score;
+	private String score; // TODO Make this a double, again to avoid a bunch of conversion back and forth
 
 	/**
 	 * Initializes the search result.
@@ -47,6 +53,10 @@ public class SearchResult implements Comparable<SearchResult> {
 		return (other.getWhere().compareTo(this.where));
 	}
 
+	/*
+	 * TODO If you have compareTo properly implemented, you do not need this comparator.
+	 * Go ahead and remove it.
+	 */
 	/**
 	 * Anonymous inner class that initializes Comparator.
 	 */
@@ -99,6 +109,8 @@ public class SearchResult implements Comparable<SearchResult> {
 	 */
 	public void setCount(Integer newCount) {
 		count = newCount;
+		
+		// TODO Anytime you see yourself get the current value, increase it, and then set that value, make an addCount(...) method instead!
 	}
 
 	/**
@@ -108,5 +120,7 @@ public class SearchResult implements Comparable<SearchResult> {
 	 */
 	public void setScore(String newScore) {
 		score = newScore;
+		
+		// TODO It is possible for score and count to get out of date with each other
 	}
 }
