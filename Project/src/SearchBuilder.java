@@ -82,6 +82,7 @@ public class SearchBuilder {
 
 		// Sorts the search results for the list of queries and adds it into QueryResults map.
 		Collections.sort(results, SearchResult.SearchComparator);
+		// TODO Can just do Collections.sort(results) --- no need for comparator!
 		if (!query.isEmpty()){
 			queryResults.add(queryAsString(query), results);
 		}
