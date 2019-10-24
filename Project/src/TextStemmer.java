@@ -112,6 +112,11 @@ public class TextStemmer {
 		for (String word : parsedLine) {
 			String stemmedWord = stemmer.stem(word).toString();
 
+			/*
+			 * TODO This is VERY inefficient to call on a list. Remove this method.
+			 * If you want sorted unique stems, re-add the uniqueStems methods from
+			 * the homework that use a TreeSet instead.
+			 */
 			if (!parsedQuery.contains(stemmedWord)) {
 				parsedQuery.add(stemmedWord);
 			}

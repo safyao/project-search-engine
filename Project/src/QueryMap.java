@@ -6,6 +6,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+/*
+ * TODO Go ahead and integrate this into SearchBuilder. It helps to have slightly
+ * fewer classes to worry about before multithreading, and this doesn't add that 
+ * much new functionality to just using queryMap directly. 
+ */
+
 /**
  * Nested data structure class that stores queries and their corresponding search results in a map..
  *

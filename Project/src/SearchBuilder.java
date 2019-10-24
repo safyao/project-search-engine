@@ -8,6 +8,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+/*
+ * TODO Search should be functionality WITHIN the inverted index class. (That is why
+ * we create an inverted index... to search. It is considered core functionality,
+ * but we broke it up into two projects to make it easier to think about.)
+ * 
+ * Move the exact and partial search methods into the inverted index class. Then,
+ * move the private final Map<String, List<SearchResult>> queryMap; from QueryMap
+ * into this class. 
+ */
+
 /**
  * Utility class that stores search result data into QueryResults data structure.
  *
@@ -72,6 +82,7 @@ public class SearchBuilder {
 
 		// Sorts the search results for the list of queries and adds it into QueryResults map.
 		Collections.sort(results, SearchResult.SearchComparator);
+		// TODO Can just do Collections.sort(results) --- no need for comparator!
 		if (!query.isEmpty()){
 			queryResults.add(queryAsString(query), results);
 		}
@@ -173,6 +184,12 @@ public class SearchBuilder {
 
 		String newScore = String.format("%.8f", newCount/totalCount);
 		previous.setScore(newScore);
+		
+		/*
+		 * TODO After moving the SearchResult class into your index, make this something
+		 * built into the SearchResult class itself. It will have direct access to the 
+		 * index and the word counts! 
+		 */
 	}
 
 	/**
@@ -182,7 +199,11 @@ public class SearchBuilder {
 	 * @return String of queries
 	 */
 	public static String queryAsString(List<String> query) {
-
+		/*
+		 * TODO Great that you are using a StringBuilder... but you essentially re-implemented
+		 * String.join(" ", query). Just use that instead, and delete this method.
+		 */
+		
 		StringBuilder string = new StringBuilder();
 		var iterator = query.iterator();
 

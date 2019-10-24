@@ -174,4 +174,8 @@ public class InvertedIndex {
 	public String toString() {
 		return map.toString();
 	}
+	
+	/*
+	 * TODO Move search methods and search result class into here!
+	 */
 }
