@@ -430,7 +430,7 @@ public class JsonWriter {
 		indent(writer, level);
 		quote("count", writer);
 		writer.write(": ");
-		writer.write(element.getCount().toString());
+		writer.write(Integer.toString(element.getCount()));
 		writer.write(",\n");
 
 		indent(writer, level);

@@ -17,7 +17,7 @@ public class SearchResult implements Comparable<SearchResult> {
 	private String where; // TODO Make this one final---should not be able to change the location for a result.
 
 	/** Stores word count of search result for given location. */
-	private Integer count; // TODO Go ahead and make this an int to avoid too much autoboxing/unboxing
+	private int count;
 
 	/** Stores score of search result. */
 	private String score; // TODO Make this a double, again to avoid a bunch of conversion back and forth
@@ -45,8 +45,8 @@ public class SearchResult implements Comparable<SearchResult> {
 		if (other.getScore().compareTo(this.score) != 0) {
 			return (other.getScore().compareTo(this.score));
 		}
-		else if (other.getCount().compareTo(this.count) != 0) {
-			return (other.getCount().compareTo(this.count));
+		else if (Integer.compare(other.getCount(), this.count) != 0) {
+			return (Integer.compare(other.getCount(), this.count));
 		}
 		return (this.where.compareTo(other.getWhere()));
 	}
@@ -65,7 +65,7 @@ public class SearchResult implements Comparable<SearchResult> {
 	 *
 	 * @return word count of search result
 	 */
-	public Integer getCount() {
+	public int getCount() {
 		return count;
 	}
 
