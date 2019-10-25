@@ -89,7 +89,7 @@ public class SearchBuilder {
 		Collections.sort(results, SearchResult.SearchComparator);
 		// TODO Can just do Collections.sort(results) --- no need for comparator!
 		if (!query.isEmpty()){
-			queryResults.add(queryAsString(query), results);
+			queryResults.add(String.join(" ", query), results);
 		}
 	}
 
@@ -121,7 +121,7 @@ public class SearchBuilder {
 		// Sorts the search results for the list of queries and adds it into QueryResults map.
 		Collections.sort(results, SearchResult.SearchComparator);
 		if (!query.isEmpty()) {
-			queryResults.add(queryAsString(query), results);
+			queryResults.add(String.join(" ", query), results);
 		}
 	}
 
@@ -195,32 +195,5 @@ public class SearchBuilder {
 		 * built into the SearchResult class itself. It will have direct access to the
 		 * index and the word counts!
 		 */
-	}
-
-	/**
-	 * Writes a list of queries as a String.
-	 *
-	 * @param query the query line to write as String
-	 * @return String of queries
-	 */
-	public static String queryAsString(Set<String> query) {
-		/*
-		 * TODO Great that you are using a StringBuilder... but you essentially re-implemented
-		 * String.join(" ", query). Just use that instead, and delete this method.
-		 */
-
-		StringBuilder string = new StringBuilder();
-		var iterator = query.iterator();
-
-		if (iterator.hasNext()) {
-			string.append(iterator.next());
-		}
-
-		while (iterator.hasNext()) {
-			string.append(" ");
-			string.append(iterator.next());
-		}
-
-		return string.toString();
 	}
 }
