@@ -1,5 +1,3 @@
-import java.util.Comparator;
-
 /*
  * TODO Since a search result is pretty specific to an inverted index, and the result
  * depends on specific data within that index (like total count), it makes sense to
@@ -44,36 +42,14 @@ public class SearchResult implements Comparable<SearchResult> {
 	 */
 	@Override
 	public int compareTo(SearchResult other) {
-		if (this.score.compareTo(other.getScore()) != 0) {
-			return (this.score.compareTo(other.getScore()));
+		if (other.getScore().compareTo(this.score) != 0) {
+			return (other.getScore().compareTo(this.score));
 		}
-		else if (this.count.compareTo(other.getCount()) != 0) {
-			return (this.count.compareTo(other.getCount()));
+		else if (other.getCount().compareTo(this.count) != 0) {
+			return (other.getCount().compareTo(this.count));
 		}
-		return (other.getWhere().compareTo(this.where));
+		return (this.where.compareTo(other.getWhere()));
 	}
-
-	/*
-	 * TODO If you have compareTo properly implemented, you do not need this comparator.
-	 * Go ahead and remove it.
-	 */
-	/**
-	 * Anonymous inner class that initializes Comparator.
-	 */
-	public static Comparator<SearchResult> SearchComparator = new Comparator<SearchResult>()
-	{
-		/**
-		 * Compares two SearchResult objects.
-		 *
-		 * @param one the first parameter to compare
-		 * @param two the second parameter to compare
-		 * @return negative int, 0, or positive int depending on comparison between objects
-		 */
-		@Override
-		public int compare(SearchResult one, SearchResult two) {
-			return two.compareTo(one);
-		}
-	};
 
 	/**
 	 * Returns the location of a search result.
@@ -109,7 +85,7 @@ public class SearchResult implements Comparable<SearchResult> {
 	 */
 	public void setCount(Integer newCount) {
 		count = newCount;
-		
+
 		// TODO Anytime you see yourself get the current value, increase it, and then set that value, make an addCount(...) method instead!
 	}
 
@@ -120,7 +96,7 @@ public class SearchResult implements Comparable<SearchResult> {
 	 */
 	public void setScore(String newScore) {
 		score = newScore;
-		
+
 		// TODO It is possible for score and count to get out of date with each other
 	}
 }
