@@ -8,14 +8,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import opennlp.tools.stemmer.Stemmer;
+import opennlp.tools.stemmer.snowball.SnowballStemmer;
+
 /*
  * TODO Search should be functionality WITHIN the inverted index class. (That is why
  * we create an inverted index... to search. It is considered core functionality,
  * but we broke it up into two projects to make it easier to think about.)
- * 
+ *
  * Move the exact and partial search methods into the inverted index class. Then,
  * move the private final Map<String, List<SearchResult>> queryMap; from QueryMap
- * into this class. 
+ * into this class.
  */
 
 /**
@@ -38,6 +41,8 @@ public class SearchBuilder {
 	 */
 	public static void buildSearch(QueryMap queryMap, Path queryPath, InvertedIndex index, boolean exact) throws IOException {
 
+		Stemmer stemmer = new SnowballStemmer(SnowballStemmer.ALGORITHM.ENGLISH);
+
 		// Reads query file line by line.
 		try (
 				BufferedReader reader = Files.newBufferedReader(queryPath, StandardCharsets.UTF_8);
@@ -46,15 +51,15 @@ public class SearchBuilder {
 
 			while ((line = reader.readLine()) != null) {
 
-				// Parses line of queries.
-				List<String> queryList = TextStemmer.queryParser(line);
+				// Stems line of queries.
+				Set<String> querySet = TextStemmer.uniqueStems(line, stemmer);
 
 				// Completes an exact or partial search based on given arguments.
 				if (exact) {
-					SearchBuilder.exactSearch(queryMap, queryList, index);
+					SearchBuilder.exactSearch(queryMap, querySet, index);
 				}
 				else {
-					SearchBuilder.partialSearch(queryMap, queryList, index);
+					SearchBuilder.partialSearch(queryMap, querySet, index);
 				}
 			}
 		}
@@ -67,7 +72,7 @@ public class SearchBuilder {
 	 * @param query the list of queries to find in index
 	 * @param index the index to search
 	 */
-	public static void exactSearch(QueryMap queryResults, List<String> query, InvertedIndex index) {
+	public static void exactSearch(QueryMap queryResults, Set<String> query, InvertedIndex index) {
 
 		List<SearchResult> results = new ArrayList<>();
 		List<String> paths = new ArrayList<>();
@@ -95,7 +100,7 @@ public class SearchBuilder {
 	 * @param query the list of queries to find in index
 	 * @param index the index to search
 	 */
-	public static void partialSearch(QueryMap queryResults, List<String> query, InvertedIndex index) {
+	public static void partialSearch(QueryMap queryResults, Set<String> query, InvertedIndex index) {
 
 		List<SearchResult> results = new ArrayList<>();
 		List<String> paths = new ArrayList<>();
@@ -184,11 +189,11 @@ public class SearchBuilder {
 
 		String newScore = String.format("%.8f", newCount/totalCount);
 		previous.setScore(newScore);
-		
+
 		/*
 		 * TODO After moving the SearchResult class into your index, make this something
-		 * built into the SearchResult class itself. It will have direct access to the 
-		 * index and the word counts! 
+		 * built into the SearchResult class itself. It will have direct access to the
+		 * index and the word counts!
 		 */
 	}
 
@@ -198,12 +203,12 @@ public class SearchBuilder {
 	 * @param query the query line to write as String
 	 * @return String of queries
 	 */
-	public static String queryAsString(List<String> query) {
+	public static String queryAsString(Set<String> query) {
 		/*
 		 * TODO Great that you are using a StringBuilder... but you essentially re-implemented
 		 * String.join(" ", query). Just use that instead, and delete this method.
 		 */
-		
+
 		StringBuilder string = new StringBuilder();
 		var iterator = query.iterator();
 

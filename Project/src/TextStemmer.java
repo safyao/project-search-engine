@@ -4,8 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.TreeSet;
 
 import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
@@ -97,32 +97,27 @@ public class TextStemmer {
 	}
 
 	/**
-	 * Parses, stems, removes duplicates, sorts, and returns elements of a single
-	 * query line as a list of Strings.
+	 * Returns a set of unique (no duplicates) cleaned and stemmed words parsed
+	 * from the provided line.
 	 *
-	 * @param line the line to parse
-	 * @return list of parsed query words
+	 * @param line    the line of words to clean, split, and stem
+	 * @param stemmer the stemmer to use
+	 * @return a sorted set of unique cleaned and stemmed words
+	 *
+	 * @see Stemmer#stem(CharSequence)
+	 * @see TextParser#parse(String)
 	 */
-	public static List<String> queryParser(String line) {
+	public static TreeSet<String> uniqueStems(String line, Stemmer stemmer) {
 
-		List<String> parsedQuery = new ArrayList<>();
-		Stemmer stemmer = new SnowballStemmer(DEFAULT);
-		String[] parsedLine = TextParser.parse(line);
+		String[] parsedText = TextParser.parse(line);
+		TreeSet<String> stemmedSet = new TreeSet<>();
 
-		for (String word : parsedLine) {
-			String stemmedWord = stemmer.stem(word).toString();
-
-			/*
-			 * TODO This is VERY inefficient to call on a list. Remove this method.
-			 * If you want sorted unique stems, re-add the uniqueStems methods from
-			 * the homework that use a TreeSet instead.
-			 */
-			if (!parsedQuery.contains(stemmedWord)) {
-				parsedQuery.add(stemmedWord);
-			}
+		for (String word : parsedText)
+		{
+			String stemmedWord = (String)stemmer.stem(word);
+			stemmedSet.add(stemmedWord);
 		}
 
-		Collections.sort(parsedQuery);
-		return parsedQuery;
+		return stemmedSet;
 	}
 }
