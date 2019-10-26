@@ -20,7 +20,7 @@ public class Driver {
 	 */
 	public static void main(String[] args) {
 
-		// Initialize ArgumentParser, InvertedIndex, IndexBuilder, and QueryMap for given command-line arguments.
+		// Initializes ArgumentParser, InvertedIndex, and IndexBuilder for given command-line arguments.
 		ArgumentParser parser = new ArgumentParser(args);
 		InvertedIndex index = new InvertedIndex();
 		IndexBuilder builder = new IndexBuilder(index);

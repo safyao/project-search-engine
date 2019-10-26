@@ -112,8 +112,7 @@ public class TextStemmer {
 		String[] parsedText = TextParser.parse(line);
 		TreeSet<String> stemmedSet = new TreeSet<>();
 
-		for (String word : parsedText)
-		{
+		for (String word : parsedText) {
 			String stemmedWord = (String)stemmer.stem(word);
 			stemmedSet.add(stemmedWord);
 		}
