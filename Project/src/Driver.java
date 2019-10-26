@@ -24,7 +24,6 @@ public class Driver {
 		ArgumentParser parser = new ArgumentParser(args);
 		InvertedIndex index = new InvertedIndex();
 		IndexBuilder builder = new IndexBuilder(index);
-		QueryMap results = new QueryMap();
 
 		if (parser.hasFlag("-path")) {
 			Path path = parser.getPath("-path");
@@ -72,10 +71,10 @@ public class Driver {
 			try {
 				if (parser.hasFlag("-exact")) {
 					// Performs exact search if specified.
-					SearchBuilder.buildSearch(results, queryPath, index, true);
+					index.buildSearch(queryPath, true);
 				}
 				else {
-					SearchBuilder.buildSearch(results, queryPath, index, false);
+					index.buildSearch(queryPath, false);
 				}
 			}
 			catch (NullPointerException e) {
@@ -91,7 +90,7 @@ public class Driver {
 
 			try {
 				// Writes search results in pretty JSON format to file.
-				results.writeQuery(resultPath);
+				index.writeQuery(resultPath);
 			}
 			catch (IOException e) {
 				System.err.println("Unable to write the search results to a Json file at: " + resultPath);

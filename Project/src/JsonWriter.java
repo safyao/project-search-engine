@@ -326,7 +326,7 @@ public class JsonWriter {
 	 * @param path the path to write to
 	 * @throws IOException
 	 */
-	public static void asQueryObject(Map<String, List<SearchResult>> results, Path path) throws IOException {
+	public static void asQueryObject(Map<String, List<InvertedIndex.SearchResult>> results, Path path) throws IOException {
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 			asQueryObject(results, writer, 0);
 		}
@@ -340,7 +340,7 @@ public class JsonWriter {
 	 * @param level the level to indent
 	 * @throws IOException
 	 */
-	public static void asQueryObject(Map<String, List<SearchResult>> results, Writer writer, int level) throws IOException {
+	public static void asQueryObject(Map<String, List<InvertedIndex.SearchResult>> results, Writer writer, int level) throws IOException {
 
 		writer.write("{");
 		var iterator = results.entrySet().iterator();
@@ -369,7 +369,7 @@ public class JsonWriter {
 	 * @param level the level to indent
 	 * @throws IOException
 	 */
-	private static void writeQueryEntry(Entry<String, List<SearchResult>> element, Writer writer, int level) throws IOException {
+	private static void writeQueryEntry(Entry<String, List<InvertedIndex.SearchResult>> element, Writer writer, int level) throws IOException {
 		indent(writer, level);
 		quote(element.getKey(), writer);
 		writer.write(": ");
@@ -384,7 +384,7 @@ public class JsonWriter {
 	 * @param level the level to indent
 	 * @throws IOException
 	 */
-	public static void asNestedArray(Collection<SearchResult> elements, Writer writer, int level) throws IOException {
+	public static void asNestedArray(Collection<InvertedIndex.SearchResult> elements, Writer writer, int level) throws IOException {
 
 		writer.write("[");
 		var iterator = elements.iterator();
@@ -415,7 +415,7 @@ public class JsonWriter {
 	 * @param level the level to indent
 	 * @throws IOException
 	 */
-	public static void asSearchObject(SearchResult element, Writer writer, int level) throws IOException {
+	public static void asSearchObject(InvertedIndex.SearchResult element, Writer writer, int level) throws IOException {
 
 		writer.write("{");
 		level++;
