@@ -14,13 +14,13 @@
 public class SearchResult implements Comparable<SearchResult> {
 
 	/** Stores location of search result. */
-	private String where; // TODO Make this one final---should not be able to change the location for a result.
+	private final String where;
 
 	/** Stores word count of search result for given location. */
 	private int count;
 
 	/** Stores score of search result. */
-	private String score; // TODO Make this a double, again to avoid a bunch of conversion back and forth
+	private double score; // TODO Make this a double, again to avoid a bunch of conversion back and forth
 
 	/**
 	 * Initializes the search result.
@@ -29,7 +29,7 @@ public class SearchResult implements Comparable<SearchResult> {
 	 * @param count the word count of the search result
 	 * @param score the score of the search result
 	 */
-	public SearchResult(String where, int count, String score) {
+	public SearchResult(String where, int count, double score) {
 		this.where = where;
 		this.count = count;
 		this.score = score;
@@ -42,8 +42,11 @@ public class SearchResult implements Comparable<SearchResult> {
 	 */
 	@Override
 	public int compareTo(SearchResult other) {
-		if (other.getScore().compareTo(this.score) != 0) {
-			return (other.getScore().compareTo(this.score));
+//		if (other.getScore().compareTo(this.score) != 0) {
+//			return (other.getScore().compareTo(this.score));
+//		}
+		if (Double.compare(other.getScore(), this.score) != 0) {
+			return (Double.compare(other.getScore(), this.score));
 		}
 		else if (Integer.compare(other.getCount(), this.count) != 0) {
 			return (Integer.compare(other.getCount(), this.count));
@@ -74,7 +77,7 @@ public class SearchResult implements Comparable<SearchResult> {
 	 *
 	 * @return score of search result
 	 */
-	public String getScore() {
+	public double getScore() {
 		return score;
 	}
 
@@ -94,7 +97,7 @@ public class SearchResult implements Comparable<SearchResult> {
 	 *
 	 * @param newScore the new score to store as score
 	 */
-	public void setScore(String newScore) {
+	public void setScore(double newScore) {
 		score = newScore;
 
 		// TODO It is possible for score and count to get out of date with each other

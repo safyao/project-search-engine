@@ -436,7 +436,7 @@ public class JsonWriter {
 		indent(writer, level);
 		quote("score", writer);
 		writer.write(": ");
-		writer.write(element.getScore());
+		writer.write(String.format("%.8f", element.getScore()));
 		writer.write("\n");
 
 		indent("}", writer, level - 1);

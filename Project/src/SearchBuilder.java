@@ -165,9 +165,10 @@ public class SearchBuilder {
 	 */
 	public static void addResult(InvertedIndex index, List<SearchResult> results, String word, String location, double totalCount) {
 		//Calculates score for query word.
-		Integer count = index.getPositions(word, location).size();
+		int count = index.getPositions(word, location).size();
 		double countCopy = count;
-		String score = String.format("%.8f", countCopy/totalCount);
+		double score = countCopy/totalCount;
+
 		//Stores result in list.
 		SearchResult result = new SearchResult(location, count, score);
 		results.add(result);
@@ -186,7 +187,7 @@ public class SearchBuilder {
 		int newCount = previous.getCount() + index.getPositions(word, location).size();
 		previous.setCount(newCount);
 
-		String newScore = String.format("%.8f", newCount/totalCount);
+		double newScore = newCount/totalCount;
 		previous.setScore(newScore);
 
 		/*
