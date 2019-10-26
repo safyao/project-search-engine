@@ -188,8 +188,9 @@ public class InvertedIndex {
 		return map.toString();
 	}
 
+
 	/**
-	 * Data structure class that houses a single search result and implements Comparable.
+	 * Nested data structure class that houses a single search result and implements Comparable.
 	 */
 	public class SearchResult implements Comparable<SearchResult> {
 
@@ -259,27 +260,19 @@ public class InvertedIndex {
 		}
 
 		/**
-		 * Updates word count of a search result.
+		 * Updates word count and score of a search result.
 		 *
-		 * @param newCount the new count to store as count
+		 * @param word the amount to increment count by
+		 * @param location the location the search result was found
 		 */
-		public void setCount(Integer newCount) {
-			count = newCount;
-
-			// TODO Anytime you see yourself get the current value, increase it, and then set that value, make an addCount(...) method instead!
-		}
-
-		/**
-		 * Updates score of a search result.
-		 *
-		 * @param newScore the new score to store as score
-		 */
-		public void setScore(double newScore) {
-			score = newScore;
-
-			// TODO It is possible for score and count to get out of date with each other
+		public void addCount(String word, String location) {
+			int amount = getPositions(word, location).size();
+			count += amount;
+			double totalCount = InvertedIndex.this.getCount(location);
+			score = count/totalCount;
 		}
 	}
+
 
 	/**
 	 * Builds a sorted list of search results from a query file and stores results in queryMap.
@@ -389,7 +382,7 @@ public class InvertedIndex {
 
 				for (SearchResult item : results) {
 					if (item.getWhere() == location) {
-						updateScore(item, word, location);
+						item.addCount(word, location);
 					}
 				}
 			}
@@ -412,28 +405,6 @@ public class InvertedIndex {
 		//Stores result in list.
 		SearchResult result = new SearchResult(location, count, score);
 		results.add(result);
-	}
-
-	/**
-	 * Updates word count and score for a line of queries.
-	 *
-	 * @param previous the previous SearchResult data for the line of queries
-	 * @param word the word in a line of queries
-	 * @param location the location the word was found in
-	 */
-	public void updateScore(SearchResult previous, String word, String location) {
-		int newCount = previous.getCount() + getPositions(word, location).size();
-		previous.setCount(newCount);
-
-		double totalCount = getCount(location);
-		double newScore = newCount/totalCount;
-		previous.setScore(newScore);
-
-		/*
-		 * TODO After moving the SearchResult class into your index, make this something
-		 * built into the SearchResult class itself. It will have direct access to the
-		 * index and the word counts!
-		 */
 	}
 
 	/**
