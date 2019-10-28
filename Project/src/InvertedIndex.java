@@ -30,9 +30,28 @@ public class InvertedIndex {
 	/** Stores arguments in key = value pairs regarding file word counts. **/
 	private final TreeMap<String, Integer> countsMap;
 
+	/*
+	 * TODO Move back to a SearchBuilder
+	 */
 	/** Stores arguments in key = value pairs regarding query search results. **/
 	private final Map<String, List<InvertedIndex.SearchResult>> queryMap;
 
+	
+	/*
+	 * TODO
+	 * 
+	 * public class SearchBuilder {
+	 * 		private final InvertedIndex index;
+	 * 		private final Map<String, List<InvertedIndex.SearchResult>> queryMap;
+	 * 
+	 * 		public SearchBuilder(InvertedIndex index) {
+	 * 			this.index = index;
+	 * 		}
+	 * 
+	 * 		
+	 * }
+	 */
+	
 	/**
 	 * Initializes the argument maps.
 	 */
@@ -210,6 +229,7 @@ public class InvertedIndex {
 		 * @param count the word count of the search result
 		 * @param score the score of the search result
 		 */
+		// public SearchResult(String where) {
 		public SearchResult(String where, int count, double score) {
 			this.where = where;
 			this.count = count;
@@ -259,6 +279,14 @@ public class InvertedIndex {
 			return score;
 		}
 
+		/*
+		 * TODO 
+		 * Project 3: Make addCount private
+		 * Also rename to update(...)
+		 * Also make addCount(String word)... use the location stored
+		 * in the search result
+		 * int amount = getPositions(word, where).size();
+		 */
 		/**
 		 * Updates word count and score of a search result.
 		 *
@@ -269,7 +297,7 @@ public class InvertedIndex {
 			int amount = getPositions(word, location).size();
 			count += amount;
 			double totalCount = InvertedIndex.this.getCount(location);
-			score = count/totalCount;
+			score = count / totalCount;
 		}
 	}
 
@@ -281,7 +309,7 @@ public class InvertedIndex {
 	 * @param exact the boolean to perform an exact search
 	 * @throws IOException in unable to access file
 	 */
-	public void buildSearch(Path queryPath, boolean exact) throws IOException {
+	public void buildSearch(Path queryPath, boolean exact) throws IOException { // TODO Move to SearchBuilder
 
 		Stemmer stemmer = new SnowballStemmer(SnowballStemmer.ALGORITHM.ENGLISH);
 
@@ -298,7 +326,7 @@ public class InvertedIndex {
 
 				// Completes an exact or partial search based on given arguments.
 				if (exact) {
-					exactSearch(querySet);
+					exactSearch(querySet); // TODO index.exactSearch(...)
 				}
 				else {
 					partialSearch(querySet);
@@ -337,18 +365,33 @@ public class InvertedIndex {
 	 *
 	 * @param query the list of queries to find in index
 	 */
-	public void partialSearch(Set<String> query) {
+	public void partialSearch(Set<String> query) { // TODO Set<String> queries
 
-		List<SearchResult> results = new ArrayList<>();
-		List<String> paths = new ArrayList<>();
-		Set<String> wordKeys = getWords();
+		List<SearchResult> results = new ArrayList<>(); // TODO Keep
+		List<String> paths = new ArrayList<>(); // TODO Remove
+		Set<String> wordKeys = getWords(); // TODO Remove
+		
+		// TODO Add Map<String (location), SearchResult> lookup = ...
 
 		// Finds all locations a query word partially appears in and performs a partial search through them.
-		for (String word : query) {
+		for (String word : query) { // TODO for (String query : queries)
 
 			// Searches through set of keys in index for words that start with the query.
+			// TODO for (String word : map.keySet() <- kind of....) ...
 			for (String wordKey : wordKeys) {
 				if (wordKey.startsWith(word)) {
+					/*
+					 * TODO 
+					 * for each location
+					 *    if lookup has this location as a key
+					 *        get that search result and call update on it
+					 *        lookup.get(location).update(word) (or your addCount)
+					 *    else 
+					 *    		SearchResult result = new SearchResult(...)
+					 *    		add this result to the list
+					 *    		add this same result to the map
+					 * 
+					 */
 					Set<String> locations = getLocations(wordKey);
 					searchLocations(results, paths, locations, wordKey);
 				}
@@ -357,9 +400,16 @@ public class InvertedIndex {
 
 		// Sorts the search results for the list of queries and adds it into QueryMap.
 		Collections.sort(results);
+		
+		// TODO Return the search results
 		if (!query.isEmpty()){
 			queryMap.putIfAbsent(String.join(" ", query), results);
 		}
+		
+		/*
+		 * TODO Take advantage of tree structure to make search (partial) faster
+		 * https://github.com/usf-cs212-fall2019/lectures/blob/master/Data%20Structures/src/FindDemo.java#L146-L163
+		 */
 	}
 
 	/**
@@ -374,13 +424,13 @@ public class InvertedIndex {
 	public void searchLocations(List<SearchResult> results, List<String> paths, Set<String> locations, String word) {
 
 		for (String location : locations) {
-			if (!paths.contains(location)) {
+			if (!paths.contains(location)) { // TODO Expensive contains (linear search)
 				paths.add(location);
 				addResult(results, word, location);
 			}
 			else {
 
-				for (SearchResult item : results) {
+				for (SearchResult item : results) { // TODO Expensive, linear search
 					if (item.getWhere() == location) {
 						item.addCount(word, location);
 					}
@@ -396,7 +446,7 @@ public class InvertedIndex {
 	 * @param word the query word found
 	 * @param location the location the word was found in
 	 */
-	public void addResult(List<SearchResult> results, String word, String location) {
+	public void addResult(List<SearchResult> results, String word, String location) { // TODO Remove method
 		//Calculates score for query word.
 		int count = getPositions(word, location).size();
 		double totalCount = getCount(location);
@@ -404,6 +454,7 @@ public class InvertedIndex {
 
 		//Stores result in list.
 		SearchResult result = new SearchResult(location, count, score);
+		// TODO SearchResult result = new SearchResult(location); result.update(word);
 		results.add(result);
 	}
 
@@ -413,7 +464,7 @@ public class InvertedIndex {
 	 * @param path the path to write search results to
 	 * @throws IOException if unable to access path
 	 */
-	public void writeQuery(Path path) throws IOException {
+	public void writeQuery(Path path) throws IOException { // TODO Move back to SearchBuilder
 		JsonWriter.asQueryObject(queryMap, path);
 	}
 }
