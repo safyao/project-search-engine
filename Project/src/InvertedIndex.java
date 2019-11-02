@@ -198,8 +198,6 @@ public class InvertedIndex {
 		 * Initializes the search result.
 		 *
 		 * @param where where the search result was found
-		 * @param count the word count of the search result
-		 * @param score the score of the search result
 		 */
 		// public SearchResult(String where) {
 		public SearchResult(String where) {
@@ -267,7 +265,7 @@ public class InvertedIndex {
 	/**
 	 * Searches an index for exact word matches of a given list of queries.
 	 *
-	 * @param query the list of queries to find in index
+	 * @param queries the list of queries to find in index
 	 */
 	public List<SearchResult> exactSearch(Set<String> queries) {
 
@@ -305,7 +303,7 @@ public class InvertedIndex {
 	/**
 	 * Searches an index for partial word matches of a given list of queries.
 	 *
-	 * @param query the list of queries to find in index
+	 * @param queries the list of queries to find in index
 	 */
 	public List<SearchResult> partialSearch(Set<String> queries) {
 
@@ -315,11 +313,16 @@ public class InvertedIndex {
 
 		// Finds all locations a query word partially appears in and performs a partial search through them.
 		for (String query : queries) {
-
+			TreeSet<String> set = new TreeSet<>();
+			set.addAll(map.keySet());
 			// Searches through set of keys in index for words that start with the query.
-			// TODO for (String word : map.keySet() <- kind of....) ...
-			for (String word : map.keySet()) {
-				if (word.startsWith(query)) {
+
+
+			for (String word : set.tailSet(query)) {
+				if (!word.startsWith(query)) {
+					break;
+				}
+				else {
 					Set<String> locations = getLocations(word);
 					for (String location : locations)
 					{
@@ -335,18 +338,6 @@ public class InvertedIndex {
 							lookup.get(location).update(word);
 						}
 					}
-					/*
-					 * TODO
-					 * for each location
-					 *    if lookup has this location as a key
-					 *        get that search result and call update on it
-					 *        lookup.get(location).update(word) (or your addCount)
-					 *    else
-					 *    		SearchResult result = new SearchResult(...)
-					 *    		add this result to the list
-					 *    		add this same result to the map
-					 *
-					 */
 				}
 			}
 		}
@@ -355,37 +346,5 @@ public class InvertedIndex {
 		Collections.sort(results);
 
 		return results;
-
-		/*
-		 * TODO Take advantage of tree structure to make search (partial) faster
-		 * https://github.com/usf-cs212-fall2019/lectures/blob/master/Data%20Structures/src/FindDemo.java#L146-L163
-		 */
 	}
-
-//	/**
-//	 * Searches list of locations for appearances of query word and stores total word count for each location.
-//	 * Also stores each search result in list and updates the score if more than one query word appears in a single location.
-//	 *
-//	 * @param results the list of search results for a single query line
-//	 * @param paths the paths (or locations) that have already been searched
-//	 * @param locations the list of locations a query word appears in
-//	 * @param word the query word to find
-//	 */
-//	public void searchLocations(List<SearchResult> results, List<String> paths, Set<String> locations, String word) {
-//
-//		for (String location : locations) {
-//			if (!paths.contains(location)) { // TODO Expensive contains (linear search)
-//				paths.add(location);
-//				addResult(results, word, location);
-//			}
-//			else {
-//
-//				for (SearchResult item : results) { // TODO Expensive, linear search
-//					if (item.getWhere() == location) {
-//						item.update(word);
-//					}
-//				}
-//			}
-//		}
-//	}
 }
