@@ -1,18 +1,13 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
-import opennlp.tools.stemmer.Stemmer;
-import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 /**
  * Nested data structure class that houses Strings, TreeMaps, TreeSets, and Integers in one Map
@@ -30,35 +25,12 @@ public class InvertedIndex {
 	/** Stores arguments in key = value pairs regarding file word counts. **/
 	private final TreeMap<String, Integer> countsMap;
 
-	/*
-	 * TODO Move back to a SearchBuilder
-	 */
-	/** Stores arguments in key = value pairs regarding query search results. **/
-	private final Map<String, List<InvertedIndex.SearchResult>> queryMap;
-
-	
-	/*
-	 * TODO
-	 * 
-	 * public class SearchBuilder {
-	 * 		private final InvertedIndex index;
-	 * 		private final Map<String, List<InvertedIndex.SearchResult>> queryMap;
-	 * 
-	 * 		public SearchBuilder(InvertedIndex index) {
-	 * 			this.index = index;
-	 * 		}
-	 * 
-	 * 		
-	 * }
-	 */
-	
 	/**
 	 * Initializes the argument maps.
 	 */
 	public InvertedIndex() {
 		map = new TreeMap<>();
 		countsMap = new TreeMap<>();
-		queryMap = new TreeMap<>();
 	}
 
 	/**
@@ -230,10 +202,10 @@ public class InvertedIndex {
 		 * @param score the score of the search result
 		 */
 		// public SearchResult(String where) {
-		public SearchResult(String where, int count, double score) {
+		public SearchResult(String where) {
 			this.where = where;
-			this.count = count;
-			this.score = score;
+			this.count = 0;
+			this.score = 0;
 		}
 
 		/**
@@ -279,59 +251,16 @@ public class InvertedIndex {
 			return score;
 		}
 
-		/*
-		 * TODO 
-		 * Project 3: Make addCount private
-		 * Also rename to update(...)
-		 * Also make addCount(String word)... use the location stored
-		 * in the search result
-		 * int amount = getPositions(word, where).size();
-		 */
 		/**
 		 * Updates word count and score of a search result.
 		 *
 		 * @param word the amount to increment count by
-		 * @param location the location the search result was found
 		 */
-		public void addCount(String word, String location) {
-			int amount = getPositions(word, location).size();
+		private void update(String word) {
+			int amount = getPositions(word, where).size();
 			count += amount;
-			double totalCount = InvertedIndex.this.getCount(location);
+			double totalCount = InvertedIndex.this.getCount(where);
 			score = count / totalCount;
-		}
-	}
-
-
-	/**
-	 * Builds a sorted list of search results from a query file and stores results in queryMap.
-	 *
-	 * @param queryPath the path to parse for queries
-	 * @param exact the boolean to perform an exact search
-	 * @throws IOException in unable to access file
-	 */
-	public void buildSearch(Path queryPath, boolean exact) throws IOException { // TODO Move to SearchBuilder
-
-		Stemmer stemmer = new SnowballStemmer(SnowballStemmer.ALGORITHM.ENGLISH);
-
-		// Reads query file line by line.
-		try (
-				BufferedReader reader = Files.newBufferedReader(queryPath, StandardCharsets.UTF_8);
-			) {
-			String line = null;
-
-			while ((line = reader.readLine()) != null) {
-
-				// Stems line of queries.
-				Set<String> querySet = TextStemmer.uniqueStems(line, stemmer);
-
-				// Completes an exact or partial search based on given arguments.
-				if (exact) {
-					exactSearch(querySet); // TODO index.exactSearch(...)
-				}
-				else {
-					partialSearch(querySet);
-				}
-			}
 		}
 	}
 
@@ -340,24 +269,37 @@ public class InvertedIndex {
 	 *
 	 * @param query the list of queries to find in index
 	 */
-	public void exactSearch(Set<String> query) {
+	public List<SearchResult> exactSearch(Set<String> queries) {
 
 		List<SearchResult> results = new ArrayList<>();
-		List<String> paths = new ArrayList<>();
+		Map<String, SearchResult> lookup = new HashMap<>();
 
 		// Finds all locations a query word appears in and performs an exact search through them.
-		for (String word : query) {
-			if (contains(word)) {
-				Set<String> locations = getLocations(word);
-				searchLocations(results, paths, locations, word);
+		for (String query : queries) {
+			if (contains(query))
+			{
+				Set<String> locations = getLocations(query);
+				for (String location : locations)
+				{
+					if (lookup.containsKey(location))
+					{
+						lookup.get(location).update(query);
+					}
+					else
+					{
+						SearchResult result = new SearchResult(location);
+						results.add(result);
+						lookup.put(location, result);
+						lookup.get(location).update(query);
+					}
+				}
 			}
 		}
 
-		// Sorts the search results for the list of queries and adds it into QueryMap.
+		// Sorts the search results for the list of queries and returns them.
 		Collections.sort(results);
-		if (!query.isEmpty()){
-			queryMap.putIfAbsent(String.join(" ", query), results);
-		}
+
+		return results;
 	}
 
 	/**
@@ -365,106 +307,85 @@ public class InvertedIndex {
 	 *
 	 * @param query the list of queries to find in index
 	 */
-	public void partialSearch(Set<String> query) { // TODO Set<String> queries
+	public List<SearchResult> partialSearch(Set<String> queries) {
 
-		List<SearchResult> results = new ArrayList<>(); // TODO Keep
-		List<String> paths = new ArrayList<>(); // TODO Remove
-		Set<String> wordKeys = getWords(); // TODO Remove
-		
-		// TODO Add Map<String (location), SearchResult> lookup = ...
+		List<SearchResult> results = new ArrayList<>();
+
+		Map<String, SearchResult> lookup = new HashMap<>();
 
 		// Finds all locations a query word partially appears in and performs a partial search through them.
-		for (String word : query) { // TODO for (String query : queries)
+		for (String query : queries) {
 
 			// Searches through set of keys in index for words that start with the query.
 			// TODO for (String word : map.keySet() <- kind of....) ...
-			for (String wordKey : wordKeys) {
-				if (wordKey.startsWith(word)) {
+			for (String word : map.keySet()) {
+				if (word.startsWith(query)) {
+					Set<String> locations = getLocations(word);
+					for (String location : locations)
+					{
+						if (lookup.containsKey(location))
+						{
+							lookup.get(location).update(word);
+						}
+						else
+						{
+							SearchResult result = new SearchResult(location);
+							results.add(result);
+							lookup.put(location, result);
+							lookup.get(location).update(word);
+						}
+					}
 					/*
-					 * TODO 
+					 * TODO
 					 * for each location
 					 *    if lookup has this location as a key
 					 *        get that search result and call update on it
 					 *        lookup.get(location).update(word) (or your addCount)
-					 *    else 
+					 *    else
 					 *    		SearchResult result = new SearchResult(...)
 					 *    		add this result to the list
 					 *    		add this same result to the map
-					 * 
+					 *
 					 */
-					Set<String> locations = getLocations(wordKey);
-					searchLocations(results, paths, locations, wordKey);
 				}
 			}
 		}
 
-		// Sorts the search results for the list of queries and adds it into QueryMap.
+		// Sorts the search results and returns them.
 		Collections.sort(results);
-		
-		// TODO Return the search results
-		if (!query.isEmpty()){
-			queryMap.putIfAbsent(String.join(" ", query), results);
-		}
-		
+
+		return results;
+
 		/*
 		 * TODO Take advantage of tree structure to make search (partial) faster
 		 * https://github.com/usf-cs212-fall2019/lectures/blob/master/Data%20Structures/src/FindDemo.java#L146-L163
 		 */
 	}
 
-	/**
-	 * Searches list of locations for appearances of query word and stores total word count for each location.
-	 * Also stores each search result in list and updates the score if more than one query word appears in a single location.
-	 *
-	 * @param results the list of search results for a single query line
-	 * @param paths the paths (or locations) that have already been searched
-	 * @param locations the list of locations a query word appears in
-	 * @param word the query word to find
-	 */
-	public void searchLocations(List<SearchResult> results, List<String> paths, Set<String> locations, String word) {
-
-		for (String location : locations) {
-			if (!paths.contains(location)) { // TODO Expensive contains (linear search)
-				paths.add(location);
-				addResult(results, word, location);
-			}
-			else {
-
-				for (SearchResult item : results) { // TODO Expensive, linear search
-					if (item.getWhere() == location) {
-						item.addCount(word, location);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Adds a search result for a single query word to list.
-	 *
-	 * @param results the list of search results for a single query line
-	 * @param word the query word found
-	 * @param location the location the word was found in
-	 */
-	public void addResult(List<SearchResult> results, String word, String location) { // TODO Remove method
-		//Calculates score for query word.
-		int count = getPositions(word, location).size();
-		double totalCount = getCount(location);
-		double score = count/totalCount;
-
-		//Stores result in list.
-		SearchResult result = new SearchResult(location, count, score);
-		// TODO SearchResult result = new SearchResult(location); result.update(word);
-		results.add(result);
-	}
-
-	/**
-	 * Writes query search results as pretty JSON object to file.
-	 *
-	 * @param path the path to write search results to
-	 * @throws IOException if unable to access path
-	 */
-	public void writeQuery(Path path) throws IOException { // TODO Move back to SearchBuilder
-		JsonWriter.asQueryObject(queryMap, path);
-	}
+//	/**
+//	 * Searches list of locations for appearances of query word and stores total word count for each location.
+//	 * Also stores each search result in list and updates the score if more than one query word appears in a single location.
+//	 *
+//	 * @param results the list of search results for a single query line
+//	 * @param paths the paths (or locations) that have already been searched
+//	 * @param locations the list of locations a query word appears in
+//	 * @param word the query word to find
+//	 */
+//	public void searchLocations(List<SearchResult> results, List<String> paths, Set<String> locations, String word) {
+//
+//		for (String location : locations) {
+//			if (!paths.contains(location)) { // TODO Expensive contains (linear search)
+//				paths.add(location);
+//				addResult(results, word, location);
+//			}
+//			else {
+//
+//				for (SearchResult item : results) { // TODO Expensive, linear search
+//					if (item.getWhere() == location) {
+//						item.update(word);
+//					}
+//				}
+//			}
+//		}
+//	}
 }
