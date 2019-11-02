@@ -20,7 +20,7 @@ public class Driver {
 	 */
 	public static void main(String[] args) {
 
-		// Initializes ArgumentParser, InvertedIndex, and IndexBuilder for given command-line arguments.
+		// Initializes ArgumentParser, InvertedIndex,IndexBuilder, and SearchBuilder for given command-line arguments.
 		ArgumentParser parser = new ArgumentParser(args);
 		InvertedIndex index = new InvertedIndex();
 		IndexBuilder builder = new IndexBuilder(index);
@@ -68,8 +68,8 @@ public class Driver {
 		if (parser.hasFlag("-query")) {
 			Path queryPath = parser.getPath("-query");
 
-			// Builds map storing query search results from file of queries.
 			try {
+				// Builds query search results from file of queries.
 				if (parser.hasFlag("-exact")) {
 					// Performs exact search if specified.
 					searchBuilder.buildSearch(queryPath, true);

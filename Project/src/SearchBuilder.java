@@ -11,13 +11,26 @@ import java.util.TreeMap;
 import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
+/**
+ * Utility class that stores path data into Inverted Index data structure.
+ *
+ * @author CS 212 Software Development
+ * @author University of San Francisco
+ * @version Fall 2019
+ */
 public class SearchBuilder {
 
+	/** Creates an instance of InvertedIndex. */
 	private final InvertedIndex index;
 
 	/** Stores arguments in key = value pairs regarding query search results. **/
 	private final Map<String, List<InvertedIndex.SearchResult>> queryMap;
 
+	/**
+	 * Initializes the InvertedIndex and queryMap.
+	 *
+	 * @param index the index to initialize
+	 */
 	public SearchBuilder(InvertedIndex index) {
 		this.index = index;
 		queryMap = new TreeMap<>();
@@ -54,7 +67,8 @@ public class SearchBuilder {
 					results = index.partialSearch(querySet);
 				}
 
-				if (!querySet.isEmpty()){
+				// Adds result to queryMap.
+				if (!querySet.isEmpty()) {
 					queryMap.putIfAbsent(String.join(" ", querySet), results);
 				}
 			}

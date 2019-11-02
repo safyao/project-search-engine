@@ -199,7 +199,6 @@ public class InvertedIndex {
 		 *
 		 * @param where where the search result was found
 		 */
-		// public SearchResult(String where) {
 		public SearchResult(String where) {
 			this.where = where;
 			this.count = 0;
@@ -266,25 +265,25 @@ public class InvertedIndex {
 	 * Searches an index for exact word matches of a given list of queries.
 	 *
 	 * @param queries the list of queries to find in index
+	 * @return full list of search results for set of queries
 	 */
 	public List<SearchResult> exactSearch(Set<String> queries) {
 
 		List<SearchResult> results = new ArrayList<>();
 		Map<String, SearchResult> lookup = new HashMap<>();
 
-		// Finds all locations a query word appears in and performs an exact search through them.
+		// Finds all locations a query word appears in and stores them as SearchResult in a list of results.
 		for (String query : queries) {
-			if (contains(query))
-			{
+
+			if (contains(query)) {
 				Set<String> locations = getLocations(query);
-				for (String location : locations)
-				{
-					if (lookup.containsKey(location))
-					{
+
+				for (String location : locations) {
+
+					if (lookup.containsKey(location)) {
 						lookup.get(location).update(query);
 					}
-					else
-					{
+					else {
 						SearchResult result = new SearchResult(location);
 						results.add(result);
 						lookup.put(location, result);
@@ -304,34 +303,32 @@ public class InvertedIndex {
 	 * Searches an index for partial word matches of a given list of queries.
 	 *
 	 * @param queries the list of queries to find in index
+	 * @return full list of search results for set of queries
 	 */
 	public List<SearchResult> partialSearch(Set<String> queries) {
 
 		List<SearchResult> results = new ArrayList<>();
-
 		Map<String, SearchResult> lookup = new HashMap<>();
 
 		// Finds all locations a query word partially appears in and performs a partial search through them.
 		for (String query : queries) {
+
 			TreeSet<String> set = new TreeSet<>();
 			set.addAll(map.keySet());
-			// Searches through set of keys in index for words that start with the query.
-
-
+			// Searches through tailset of keys in index for words that start with the query.
 			for (String word : set.tailSet(query)) {
+
 				if (!word.startsWith(query)) {
 					break;
 				}
 				else {
 					Set<String> locations = getLocations(word);
-					for (String location : locations)
-					{
-						if (lookup.containsKey(location))
-						{
+
+					for (String location : locations) {
+						if (lookup.containsKey(location)) {
 							lookup.get(location).update(word);
 						}
-						else
-						{
+						else {
 							SearchResult result = new SearchResult(location);
 							results.add(result);
 							lookup.put(location, result);
