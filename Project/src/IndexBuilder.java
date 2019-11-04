@@ -64,7 +64,7 @@ public class IndexBuilder {
 		List<Path> files = DirectoryTraverser.traverseDirectory(path);
 
 		for (Path item : files) {
-			addPath (item, index);
+			addPath (item, index); // TODO Add to the work queue here instead for project 3
 		}
 	}
 

@@ -119,4 +119,10 @@ public class TextStemmer {
 
 		return stemmedSet;
 	}
+	
+	/* TODO 
+	public static TreeSet<String> uniqueStems(String line) {
+		return uniqueStems(line, new SnowballStemmer(DEFAULT));
+	}
+	*/
 }
