@@ -53,10 +53,15 @@ public class SearchBuilder {
 		}
 	}
 
+	/**
+	 * Searches for a single line of queries and places result in queryMap.
+	 *
+	 * @param line the line to search for
+	 * @param exact boolean on whether to perform exact or partial search
+	 */
 	public void buildSearch(String line, boolean exact) {
-		// Stems line of queries.
+		//Stems line of queries
 		Set<String> querySet = TextStemmer.uniqueStems(line);
-
 		String joined = String.join(" ", querySet);
 
 		if (!querySet.isEmpty() && !queryMap.containsKey(joined)) {

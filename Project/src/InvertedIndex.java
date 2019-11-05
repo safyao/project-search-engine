@@ -261,6 +261,13 @@ public class InvertedIndex {
 		}
 	}
 
+	/**
+	 * Calls partial or exact search depending on input.
+	 *
+	 * @param queries the queries to search for
+	 * @param exactSearch the boolean to decide whether to perform partial or exact search
+	 * @return a list of search results
+	 */
 	public List<SearchResult> search(Set<String> queries, boolean exactSearch) {
 		return exactSearch ? exactSearch(queries) : partialSearch(queries);
 	}
@@ -321,9 +328,17 @@ public class InvertedIndex {
 		return results;
 	}
 
+	/**
+	 * Creates or updates search results based on the given query and the location it's found in.
+	 *
+	 * @param lookup the lookup map
+	 * @param results the list of search results to add to
+	 * @param query the query found
+	 */
 	private void searchLocations(Map<String, SearchResult> lookup, List<SearchResult> results, String query)
 	{
 		Set<String> locations = map.get(query).keySet();
+
 		for (String location : locations) {
 
 			if (lookup.containsKey(location)) {
