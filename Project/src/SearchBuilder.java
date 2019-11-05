@@ -48,29 +48,11 @@ public class SearchBuilder {
 			String line = null;
 
 			while ((line = reader.readLine()) != null) {
-				// TODO Call buildSearch...
-				// TODO Add to the work queue here instead for project 3
-				// Stems line of queries.
-				Set<String> querySet = TextStemmer.uniqueStems(line);
-				List<InvertedIndex.SearchResult> results;
-
-				// Completes an exact or partial search based on given arguments.
-				if (exact) {
-					results = index.exactSearch(querySet);
-				}
-				else {
-					results = index.partialSearch(querySet);
-				}
-
-				// Adds result to queryMap.
-				if (!querySet.isEmpty()) {
-					queryMap.putIfAbsent(String.join(" ", querySet), results);
-				}
+				buildSearch(line, exact);
 			}
 		}
 	}
 
-	/* TODO try this
 	public void buildSearch(String line, boolean exact) {
 		// Stems line of queries.
 		Set<String> querySet = TextStemmer.uniqueStems(line);
@@ -83,8 +65,6 @@ public class SearchBuilder {
 		}
 
 	}
-	*/
-
 
 	/**
 	 * Writes query search results as pretty JSON object to file.
