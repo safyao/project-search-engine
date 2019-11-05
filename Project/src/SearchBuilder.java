@@ -54,7 +54,8 @@ public class SearchBuilder {
 			String line = null;
 
 			while ((line = reader.readLine()) != null) {
-
+				// TODO Call buildSearch... 
+				// TODO Add to the work queue here instead for project 3
 				// Stems line of queries.
 				Set<String> querySet = TextStemmer.uniqueStems(line, stemmer);
 				List<InvertedIndex.SearchResult> results;
@@ -74,6 +75,22 @@ public class SearchBuilder {
 			}
 		}
 	}
+	
+	/* TODO try this
+	public void buildSearch(String line, boolean exact) {
+		// Stems line of queries.
+		Set<String> querySet = TextStemmer.uniqueStems(line);
+		
+		String joined = String.join(" ", querySet);
+		
+		if (!querySet.isEmpty() && !queryMap.containsKey(joined)) {
+			List<InvertedIndex.SearchResult> results = index.search(querySet, exact);
+			queryMap.put(joined, results);
+		}
+
+	}
+	*/
+	
 
 	/**
 	 * Writes query search results as pretty JSON object to file.

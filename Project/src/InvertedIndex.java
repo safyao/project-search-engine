@@ -254,12 +254,19 @@ public class InvertedIndex {
 		 * @param word the amount to increment count by
 		 */
 		private void update(String word) {
+			// TODO Access the index directly instead of calling getPositions
 			int amount = getPositions(word, where).size();
 			count += amount;
 			double totalCount = InvertedIndex.this.getCount(where);
 			score = count / totalCount;
 		}
 	}
+	
+	/* TODO Add this
+	public List<SearchResult> search(Set<String> queries, boolean exactSearch) {
+		return exactSearch ? exactSearch(queries) : partialSearch(queries);
+	}
+	*/
 
 	/**
 	 * Searches an index for exact word matches of a given list of queries.
@@ -276,6 +283,7 @@ public class InvertedIndex {
 		for (String query : queries) {
 
 			if (contains(query)) {
+				// TODO Access index directly
 				Set<String> locations = getLocations(query);
 
 				for (String location : locations) {
@@ -312,7 +320,11 @@ public class InvertedIndex {
 
 		// Finds all locations a query word partially appears in and performs a partial search through them.
 		for (String query : queries) {
-
+			/*
+			 * TODO Want to avoid the copy... maps have their own version of this.
+			 * 
+			 * map.tailMap(query).keySet()
+			 */
 			TreeSet<String> set = new TreeSet<>();
 			set.addAll(map.keySet());
 			// Searches through tailset of keys in index for words that start with the query.
@@ -322,6 +334,7 @@ public class InvertedIndex {
 					break;
 				}
 				else {
+					// TODO The similiar code in exact and partial should be moved into a private helper method
 					Set<String> locations = getLocations(word);
 
 					for (String location : locations) {
