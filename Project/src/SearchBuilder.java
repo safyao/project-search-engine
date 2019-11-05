@@ -8,9 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import opennlp.tools.stemmer.Stemmer;
-import opennlp.tools.stemmer.snowball.SnowballStemmer;
-
 /**
  * Utility class that stores path data into Inverted Index data structure.
  *
@@ -44,9 +41,6 @@ public class SearchBuilder {
 	 * @throws IOException in unable to access file
 	 */
 	public void buildSearch(Path queryPath, boolean exact) throws IOException {
-
-		Stemmer stemmer = new SnowballStemmer(SnowballStemmer.ALGORITHM.ENGLISH);
-
 		// Reads query file line by line.
 		try (
 				BufferedReader reader = Files.newBufferedReader(queryPath, StandardCharsets.UTF_8);
@@ -54,10 +48,10 @@ public class SearchBuilder {
 			String line = null;
 
 			while ((line = reader.readLine()) != null) {
-				// TODO Call buildSearch... 
+				// TODO Call buildSearch...
 				// TODO Add to the work queue here instead for project 3
 				// Stems line of queries.
-				Set<String> querySet = TextStemmer.uniqueStems(line, stemmer);
+				Set<String> querySet = TextStemmer.uniqueStems(line);
 				List<InvertedIndex.SearchResult> results;
 
 				// Completes an exact or partial search based on given arguments.
@@ -75,14 +69,14 @@ public class SearchBuilder {
 			}
 		}
 	}
-	
+
 	/* TODO try this
 	public void buildSearch(String line, boolean exact) {
 		// Stems line of queries.
 		Set<String> querySet = TextStemmer.uniqueStems(line);
-		
+
 		String joined = String.join(" ", querySet);
-		
+
 		if (!querySet.isEmpty() && !queryMap.containsKey(joined)) {
 			List<InvertedIndex.SearchResult> results = index.search(querySet, exact);
 			queryMap.put(joined, results);
@@ -90,7 +84,7 @@ public class SearchBuilder {
 
 	}
 	*/
-	
+
 
 	/**
 	 * Writes query search results as pretty JSON object to file.

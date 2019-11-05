@@ -101,6 +101,21 @@ public class TextStemmer {
 	 * from the provided line.
 	 *
 	 * @param line    the line of words to clean, split, and stem
+	 * @return a sorted set of unique cleaned and stemmed words
+	 *
+	 * @see SnowballStemmer
+	 * @see #DEFAULT
+	 * @see #uniqueStems(String, Stemmer)
+	 */
+	public static TreeSet<String> uniqueStems(String line) {
+		return uniqueStems(line, new SnowballStemmer(DEFAULT));
+	}
+
+	/**
+	 * Returns a set of unique (no duplicates) cleaned and stemmed words parsed
+	 * from the provided line.
+	 *
+	 * @param line    the line of words to clean, split, and stem
 	 * @param stemmer the stemmer to use
 	 * @return a sorted set of unique cleaned and stemmed words
 	 *
@@ -119,10 +134,4 @@ public class TextStemmer {
 
 		return stemmedSet;
 	}
-	
-	/* TODO 
-	public static TreeSet<String> uniqueStems(String line) {
-		return uniqueStems(line, new SnowballStemmer(DEFAULT));
-	}
-	*/
 }
