@@ -1,36 +1,20 @@
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-// TODO Make thread-safe with read-write lock.
-/**
- * Nested data structure class that houses Strings, TreeMaps, TreeSets, and Integers in one Map
- * and Strings and Integers in another.
- *
- * @author CS 212 Software Development
- * @author University of San Francisco
- * @version Fall 2019
- */
-public class ThreadSafeIndex {
 
-	/** Stores arguments in key = value pairs regarding index data. **/
-	private final TreeMap<String, TreeMap<String, TreeSet<Integer>>> map;
+// TODO Javadoc
 
-	/** Stores arguments in key = value pairs regarding file word counts. **/
-	private final TreeMap<String, Integer> countsMap;
+public class ThreadSafeIndex  extends InvertedIndex {
+
+	private final SimpleReadWriteLock lock;
 
 	/**
-	 * Initializes the argument maps.
+	 * Initializes a thread-safe InvertedIndex.
 	 */
 	public ThreadSafeIndex() {
-		map = new TreeMap<>();
-		countsMap = new TreeMap<>();
+		super();
+		lock = new SimpleReadWriteLock();
 	}
 
 	/**
@@ -42,13 +26,15 @@ public class ThreadSafeIndex {
 	 * @param path the path to add if it's not already mapped to the corresponding word
 	 * @param position the position to add if it's not already mapped to the corresponding word and path
 	 */
+	@Override
 	public void add(String word, String path, Integer position) {
-		map.putIfAbsent(word, new TreeMap<String, TreeSet<Integer>>());
-		map.get(word).putIfAbsent(path, new TreeSet<Integer>());
+		lock.writeLock().lock();
 
-		if (map.get(word).get(path).add(position)) {
-			int count = 1 + countsMap.getOrDefault(path, 0);
-			countsMap.put(path, count);
+		try {
+			super.add(word, path, position);
+		}
+		finally {
+			lock.writeLock().unlock();
 		}
 	}
 
@@ -58,8 +44,16 @@ public class ThreadSafeIndex {
 	 * @param path the path to write the index to
 	 * @throws IOException if unable to access path
 	 */
+	@Override
 	public void writeIndex(Path path) throws IOException {
-		JsonWriter.asDoubleObject(map, path);
+		lock.readLock().lock();
+
+		try {
+			super.writeIndex(path);
+		}
+		finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	/**
@@ -68,17 +62,33 @@ public class ThreadSafeIndex {
 	 * @param path the path to write counts to
 	 * @throws IOException if unable to access path
 	 */
+	@Override
 	public void writeCounts(Path path) throws IOException {
-		JsonWriter.asObject(countsMap, path);
+		lock.readLock().lock();
+
+		try {
+			super.writeIndex(path);
+		}
+		finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	/**
-	 * Returns and unmodifiable set view of the keys contained in countsMap.
+	 * Returns an unmodifiable set view of the keys contained in countsMap.
 	 *
 	 * @return unmodifiable set of Strings
 	 */
+	@Override
 	public Set<String> getPaths() {
-		return Collections.unmodifiableSet(countsMap.keySet());
+		lock.readLock().lock();
+
+		try {
+			return super.getPaths();
+		}
+		finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	/**
@@ -87,8 +97,16 @@ public class ThreadSafeIndex {
 	 * @param path the path to get count from
 	 * @return value mapped to path in countsMap
 	 */
+	@Override
 	public Integer getCount(String path) {
-		return countsMap.get(path);
+		lock.readLock().lock();
+
+		try {
+			return super.getCount(path);
+		}
+		finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	/**
@@ -96,8 +114,16 @@ public class ThreadSafeIndex {
 	 *
 	 * @return unmodifiable view of set of Strings
 	 */
+	@Override
 	public Set<String> getWords() {
-		return Collections.unmodifiableSet(map.keySet());
+		lock.readLock().lock();
+
+		try {
+			return super.getWords();
+		}
+		finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	/**
@@ -106,12 +132,15 @@ public class ThreadSafeIndex {
 	 * @param word the word the locations are mapped to
 	 * @return unmodifiable view of set of Strings
 	 */
+	@Override
 	public Set<String> getLocations(String word) {
-		if (map.containsKey(word)) {
-			return Collections.unmodifiableSet(map.get(word).keySet());
+		lock.readLock().lock();
+
+		try {
+			return super.getLocations(word);
 		}
-		else {
-			return Collections.emptySet();
+		finally {
+			lock.readLock().unlock();
 		}
 	}
 
@@ -122,12 +151,15 @@ public class ThreadSafeIndex {
 	 * @param location the location the set is mapped to
 	 * @return unmodifiable view of set of Integers
 	 */
+	@Override
 	public Set<Integer> getPositions(String word, String location) {
-		if (map.containsKey(word) && map.get(word).containsKey(location)) {
-			return Collections.unmodifiableSet(map.get(word).get(location));
+		lock.readLock().lock();
+
+		try {
+			return super.getPositions(word, location);
 		}
-		else {
-			return Collections.emptySet();
+		finally {
+			lock.readLock().unlock();
 		}
 	}
 
@@ -137,8 +169,16 @@ public class ThreadSafeIndex {
 	 * @param path the path to verify is in the map
 	 * @return true if the path is in the map as key
 	 */
+	@Override
 	public boolean containsCount(String path) {
-		return countsMap.containsKey(path);
+		lock.readLock().lock();
+
+		try {
+			return super.containsCount(path);
+		}
+		finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	/**
@@ -147,8 +187,16 @@ public class ThreadSafeIndex {
 	 * @param word the word to verify is in the map
 	 * @return true if the word is in the map
 	 */
+	@Override
 	public boolean contains(String word) {
-		return map.containsKey(word);
+		lock.readLock().lock();
+
+		try {
+			return super.contains(word);
+		}
+		finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	/**
@@ -158,8 +206,16 @@ public class ThreadSafeIndex {
 	 * @param location the location to verify is in the map
 	 * @return true if the location is in the map
 	 */
+	@Override
 	public boolean contains(String word, String location) {
-		return (map.containsKey(word) && map.get(word).containsKey(location));
+		lock.readLock().lock();
+
+		try {
+			return super.contains(word, location);
+		}
+		finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	/**
@@ -170,39 +226,38 @@ public class ThreadSafeIndex {
 	 * @param position the position to verify is in the map
 	 * @return true if the position is in the map
 	 */
+	@Override
 	public boolean contains(String word, String location, Integer position) {
-		return (map.containsKey(word) && map.get(word).containsKey(location) && map.get(word).get(location).contains(position));
+		lock.readLock().lock();
+
+		try {
+			return super.contains(word, location, position);
+		}
+		finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	@Override
 	public String toString() {
-		return map.toString();
+		lock.readLock().lock();
+
+		try {
+			return super.toString();
+		}
+		finally {
+			lock.readLock().unlock();
+		}
 	}
 
 
 	/**
 	 * Nested data structure class that houses a single search result and implements Comparable.
 	 */
-	public class SearchResult implements Comparable<SearchResult> {
+	public class ThreadSafeSearchResult extends SearchResult implements Comparable<SearchResult> {
 
-		/** Stores location of search result. */
-		private final String where;
-
-		/** Stores word count of search result for given location. */
-		private int count;
-
-		/** Stores score of search result. */
-		private double score;
-
-		/**
-		 * Initializes the search result.
-		 *
-		 * @param where where the search result was found
-		 */
-		public SearchResult(String where) {
-			this.where = where;
-			this.count = 0;
-			this.score = 0;
+		public ThreadSafeSearchResult(String where) {
+			super(where);
 		}
 
 		/**
@@ -212,13 +267,14 @@ public class ThreadSafeIndex {
 		 */
 		@Override
 		public int compareTo(SearchResult other) {
-			if (Double.compare(other.getScore(), this.score) != 0) {
-				return (Double.compare(other.getScore(), this.score));
+			lock.readLock().lock();
+
+			try {
+				return super.compareTo(other);
 			}
-			else if (Integer.compare(other.getCount(), this.count) != 0) {
-				return (Integer.compare(other.getCount(), this.count));
+			finally {
+				lock.readLock().unlock();
 			}
-			return (this.where.compareTo(other.getWhere()));
 		}
 
 		/**
@@ -226,8 +282,16 @@ public class ThreadSafeIndex {
 		 *
 		 * @return location of search result
 		 */
+		@Override
 		public String getWhere() {
-			return where;
+			lock.readLock().lock();
+
+			try {
+				return super.getWhere();
+			}
+			finally {
+				lock.readLock().unlock();
+			}
 		}
 
 		/**
@@ -235,8 +299,16 @@ public class ThreadSafeIndex {
 		 *
 		 * @return word count of search result
 		 */
+		@Override
 		public int getCount() {
-			return count;
+			lock.readLock().lock();
+
+			try {
+				return super.getCount();
+			}
+			finally {
+				lock.readLock().unlock();
+			}
 		}
 
 		/**
@@ -244,20 +316,16 @@ public class ThreadSafeIndex {
 		 *
 		 * @return score of search result
 		 */
+		@Override
 		public double getScore() {
-			return score;
-		}
+			lock.readLock().lock();
 
-		/**
-		 * Updates word count and score of a search result.
-		 *
-		 * @param word the amount to increment count by
-		 */
-		private void update(String word) {
-			int amount = map.get(word).get(where).size();
-			count += amount;
-			double totalCount = ThreadSafeIndex.this.getCount(where);
-			score = count / totalCount;
+			try {
+				return super.getScore();
+			}
+			finally {
+				lock.readLock().unlock();
+			}
 		}
 	}
 
@@ -268,88 +336,16 @@ public class ThreadSafeIndex {
 	 * @param exactSearch the boolean to decide whether to perform partial or exact search
 	 * @return a list of search results
 	 */
+	@Override
 	public List<SearchResult> search(Set<String> queries, boolean exactSearch) {
-		return exactSearch ? exactSearch(queries) : partialSearch(queries);
-	}
+		lock.writeLock().lock();
 
-	/**
-	 * Searches an index for exact word matches of a given list of queries.
-	 *
-	 * @param queries the list of queries to find in index
-	 * @return full list of search results for set of queries
-	 */
-	public List<SearchResult> exactSearch(Set<String> queries) {
-
-		List<SearchResult> results = new ArrayList<>();
-		Map<String, SearchResult> lookup = new HashMap<>();
-
-		// Finds all locations a query word appears in and stores them as SearchResult in a list of results.
-		for (String query : queries) {
-			if (contains(query)) {
-				searchLocations(lookup, results, query);
-			}
+		try {
+			return super.search(queries, exactSearch);
 		}
-
-		// Sorts the search results for the list of queries and returns them.
-		Collections.sort(results);
-
-		return results;
-	}
-
-	/**
-	 * Searches an index for partial word matches of a given list of queries.
-	 *
-	 * @param queries the list of queries to find in index
-	 * @return full list of search results for set of queries
-	 */
-	public List<SearchResult> partialSearch(Set<String> queries) {
-
-		List<SearchResult> results = new ArrayList<>();
-		Map<String, SearchResult> lookup = new HashMap<>();
-
-		// Finds all locations a query word partially appears in and performs a partial search through them.
-		for (String query : queries) {
-
-			// Searches through tailmap of keys in index for words that start with the query.
-			for (String word : map.tailMap(query).keySet()) {
-
-				if (!word.startsWith(query)) {
-					break;
-				}
-				else {
-					searchLocations(lookup, results, word);
-				}
-			}
-		}
-
-		// Sorts the search results and returns them.
-		Collections.sort(results);
-
-		return results;
-	}
-
-	/**
-	 * Creates or updates search results based on the given query and the location it's found in.
-	 *
-	 * @param lookup the lookup map
-	 * @param results the list of search results to add to
-	 * @param query the query found
-	 */
-	private void searchLocations(Map<String, SearchResult> lookup, List<SearchResult> results, String query)
-	{
-		Set<String> locations = map.get(query).keySet();
-
-		for (String location : locations) {
-
-			if (lookup.containsKey(location)) {
-				lookup.get(location).update(query);
-			}
-			else {
-				SearchResult result = new SearchResult(location);
-				results.add(result);
-				lookup.put(location, result);
-				lookup.get(location).update(query);
-			}
+		finally {
+			lock.writeLock().unlock();
 		}
 	}
+
 }
