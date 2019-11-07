@@ -92,4 +92,20 @@ public class Driver {
 			}
 		}
 	}
+	/*
+ 	 * TODO For project 3:
+ 	 *
+ 	 * 1) Add your homework classes (SimpleReadWriteLock, WorkQueue)
+ 	 *
+ 	 * 2) Extend InvertedIndex to create a thread-safe version using your lock
+ 	 *
+ 	 * 3) Extend the IndexBuilder class to create a multithreaded version
+ 	 *
+ 	 * public MultithreadedIndexBuilder(ThreadSafeInvertedIndex index, WorkQueue queue)
+ 	 *
+ 	 * Each task you create and add to the work queue will call addPath(path, index)
+ 	 *
+ 	 * 4) Extend to SearchBuilder class to create a multithreaded version. Each
+ 	 * task here calls buildSearch(String line, boolean exact)
+ 	 */
 }
