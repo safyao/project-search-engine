@@ -95,7 +95,7 @@ public class Driver {
 	/*
  	 * TODO For project 3:
  	 *
- 	 * 1) Add your homework classes (SimpleReadWriteLock, WorkQueue)
+ 	 * 1) Add your homework classes (SimpleReadWriteLock, WorkQueue) DONE!
  	 *
  	 * 2) Extend InvertedIndex to create a thread-safe version using your lock
  	 *
