@@ -73,7 +73,7 @@ public class InvertedIndex {
 	}
 
 	/**
-	 * Returns and unmodifiable set view of the keys contained in countsMap.
+	 * Returns an unmodifiable set view of the keys contained in countsMap.
 	 *
 	 * @return unmodifiable set of Strings
 	 */
@@ -278,7 +278,7 @@ public class InvertedIndex {
 	 * @param queries the list of queries to find in index
 	 * @return full list of search results for set of queries
 	 */
-	public List<SearchResult> exactSearch(Set<String> queries) {
+	private List<SearchResult> exactSearch(Set<String> queries) {
 
 		List<SearchResult> results = new ArrayList<>();
 		Map<String, SearchResult> lookup = new HashMap<>();
@@ -302,7 +302,7 @@ public class InvertedIndex {
 	 * @param queries the list of queries to find in index
 	 * @return full list of search results for set of queries
 	 */
-	public List<SearchResult> partialSearch(Set<String> queries) {
+	private List<SearchResult> partialSearch(Set<String> queries) {
 
 		List<SearchResult> results = new ArrayList<>();
 		Map<String, SearchResult> lookup = new HashMap<>();
@@ -335,8 +335,7 @@ public class InvertedIndex {
 	 * @param results the list of search results to add to
 	 * @param query the query found
 	 */
-	private void searchLocations(Map<String, SearchResult> lookup, List<SearchResult> results, String query)
-	{
+	private void searchLocations(Map<String, SearchResult> lookup, List<SearchResult> results, String query) {
 		Set<String> locations = map.get(query).keySet();
 
 		for (String location : locations) {
