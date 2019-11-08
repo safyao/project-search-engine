@@ -7,7 +7,6 @@ import java.util.List;
 
 import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
-// TODO Make multithreaded version.
 
 /**
  * Utility class that stores path data into Inverted Index data structure.
@@ -18,19 +17,20 @@ import opennlp.tools.stemmer.snowball.SnowballStemmer;
  */
 public class MultithreadedIndexBuilder {
 
-	/** Creates an instance of InvertedIndex. */
-	private final InvertedIndex index;
-
 	/** The default stemmer algorithm used by this class. */
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
+
+	private WorkQueue queue;
+	private final ThreadSafeIndex index;
 
 	/**
 	 * Initializes the InvertedIndex.
 	 *
 	 * @param index the index to initialize
 	 */
-	public MultithreadedIndexBuilder(InvertedIndex index) {
+	public MultithreadedIndexBuilder(ThreadSafeIndex index, WorkQueue queue) {
 		this.index = index;
+		this.queue = queue;
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class MultithreadedIndexBuilder {
 	 * @throws IOException if unable to access file
 	 */
 	public void buildIndex (Path path) throws IOException {
-		buildIndex(path, this.index);
+		buildIndex(path, this.index, this.queue);
 	}
 
 	/**
@@ -54,28 +54,13 @@ public class MultithreadedIndexBuilder {
 	}
 
 	/**
-	 * Traverses directory and adds each text file to index.
-	 *
-	 * @param path the path to traverse
-	 * @param index the index to store data into
-	 * @throws IOException if unable to access file
-	 */
-	public static void buildIndex (Path path, InvertedIndex index) throws IOException {
-		List<Path> files = DirectoryTraverser.traverseDirectory(path);
-
-		for (Path item : files) {
-			addPath (item, index);  // TODO Add to the work queue here instead for project 3
-		}
-	}
-
-	/**
 	 * Adds path element into Inverted Index data structure.
 	 *
 	 * @param path the path to gather data from for index
 	 * @param index the index to store data into
 	 * @throws IOException if unable to access path
 	 */
-	public static void addPath (Path path, InvertedIndex index) throws IOException {
+	public static void addPath (Path path, ThreadSafeIndex index) throws IOException {
 		int positionCount = 0;
 
 		Stemmer stemmer = new SnowballStemmer(DEFAULT);
@@ -95,6 +80,46 @@ public class MultithreadedIndexBuilder {
 				for (String word : parsedLine) {
 					String stemmedWord = stemmer.stem(word).toString();
 					index.add(stemmedWord, location, ++positionCount);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Traverses directory and adds each text file to index.
+	 *
+	 * @param path the path to traverse
+	 * @param index the index to store data into
+	 * @throws IOException if unable to access file
+	 */
+	public static void buildIndex (Path path, ThreadSafeIndex index, WorkQueue queue) throws IOException {
+		List<Path> files = DirectoryTraverser.traverseDirectory(path);
+
+		for (Path item : files) {
+			Task task = new Task(item, index);
+			queue.execute(task);
+		}
+
+		queue.finish();
+		queue.shutdown();
+	}
+
+	private static class Task implements Runnable {
+		private final Path item;
+		private final ThreadSafeIndex index;
+
+		public Task(Path item, ThreadSafeIndex index) {
+			this.item = item;
+			this.index = index;
+		}
+
+		@Override
+		public void run() {
+			synchronized (index) {
+				try {
+					addPath(item, index);
+				} catch (IOException e) {
+					System.err.println("Unable to add file contents to InvertedIndex at: " + item);
 				}
 			}
 		}
