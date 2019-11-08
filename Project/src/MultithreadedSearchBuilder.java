@@ -107,7 +107,7 @@ public class MultithreadedSearchBuilder {
 
 		@Override
 		public void run() {
-			synchronized (index) {
+			synchronized (queryMap) {
 				buildSearch(line, exact, index, queryMap);
 			}
 		}

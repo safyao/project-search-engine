@@ -3,8 +3,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
-// TODO Javadoc
-
 public class ThreadSafeIndex  extends InvertedIndex {
 
 	private final SimpleReadWriteLock lock;
@@ -67,7 +65,7 @@ public class ThreadSafeIndex  extends InvertedIndex {
 		lock.readLock().lock();
 
 		try {
-			super.writeIndex(path);
+			super.writeCounts(path);
 		}
 		finally {
 			lock.readLock().unlock();

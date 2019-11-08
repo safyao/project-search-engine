@@ -27,8 +27,14 @@ public class Driver {
 
 		if (parser.hasFlag("-threads")) {
 			String threads = parser.getString("-threads", "5");
-			int numThreads = Integer.parseInt(threads);
-			queue = new WorkQueue(numThreads);
+			try {
+				int numThreads = Integer.parseInt(threads);
+				queue = new WorkQueue(numThreads);
+			}
+			catch (NumberFormatException e)
+			{
+				System.err.println("Please enter a valid argument for the number of threads.");
+			}
 		}
 
 		MultithreadedIndexBuilder builder = new MultithreadedIndexBuilder(index, queue);
@@ -114,6 +120,6 @@ public class Driver {
  	 * Each task you create and add to the work queue will call addPath(path, index)
  	 *
  	 * 4) Extend to SearchBuilder class to create a multithreaded version. Each
- 	 * task here calls buildSearch(String line, boolean exact)
+ 	 * task here calls buildSearch(String line, boolean exact) DONE!
  	 */
 }
