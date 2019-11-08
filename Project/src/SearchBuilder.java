@@ -48,7 +48,7 @@ public class SearchBuilder {
 			String line = null;
 
 			while ((line = reader.readLine()) != null) {
-				buildSearch(line, exact);
+				searchLine(line, exact);
 			}
 		}
 	}
@@ -59,7 +59,7 @@ public class SearchBuilder {
 	 * @param line the line to search for
 	 * @param exact boolean on whether to perform exact or partial search
 	 */
-	public void buildSearch(String line, boolean exact) {
+	public void searchLine(String line, boolean exact) {
 		//Stems line of queries
 		Set<String> querySet = TextStemmer.uniqueStems(line);
 		String joined = String.join(" ", querySet);

@@ -20,7 +20,7 @@ public class MultithreadedIndexBuilder {
 	/** The default stemmer algorithm used by this class. */
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
 
-	private WorkQueue queue;
+	private final WorkQueue queue;
 
 	private final ThreadSafeIndex index;
 
@@ -102,7 +102,6 @@ public class MultithreadedIndexBuilder {
 		}
 
 		queue.finish();
-		queue.shutdown();
 	}
 
 	private static class Task implements Runnable {

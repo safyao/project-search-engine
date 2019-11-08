@@ -336,13 +336,13 @@ public class ThreadSafeIndex  extends InvertedIndex {
 	 */
 	@Override
 	public List<SearchResult> search(Set<String> queries, boolean exactSearch) {
-		lock.writeLock().lock();
+		lock.readLock().lock();
 
 		try {
 			return super.search(queries, exactSearch);
 		}
 		finally {
-			lock.writeLock().unlock();
+			lock.readLock().unlock();
 		}
 	}
 

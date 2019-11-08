@@ -29,6 +29,10 @@ public class Driver {
 			String threads = parser.getString("-threads", "5");
 			try {
 				int numThreads = Integer.parseInt(threads);
+				if (numThreads <= 0)
+				{
+					numThreads = 5;
+				}
 				queue = new WorkQueue(numThreads);
 			}
 			catch (NumberFormatException e)
@@ -105,6 +109,8 @@ public class Driver {
 				System.err.println("Unable to write the search results to a Json file at: " + resultPath);
 			}
 		}
+
+		queue.shutdown();
 	}
 	/*
  	 * TODO For project 3:
