@@ -21,6 +21,7 @@ public class MultithreadedIndexBuilder {
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
 
 	private WorkQueue queue;
+
 	private final ThreadSafeIndex index;
 
 	/**

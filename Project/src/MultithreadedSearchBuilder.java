@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-// TODO Make multithreaded version.
+
 /**
  * Utility class that stores path data into Inverted Index data structure.
  *
@@ -17,20 +17,27 @@ import java.util.TreeMap;
  */
 public class MultithreadedSearchBuilder {
 
-	/** Creates an instance of InvertedIndex. */
-	private final InvertedIndex index;
+
+	private final ThreadSafeIndex index;
 
 	/** Stores arguments in key = value pairs regarding query search results. **/
 	private final Map<String, List<InvertedIndex.SearchResult>> queryMap;
+
+	private WorkQueue queue;
 
 	/**
 	 * Initializes the InvertedIndex and queryMap.
 	 *
 	 * @param index the index to initialize
 	 */
-	public MultithreadedSearchBuilder(InvertedIndex index) {
+	public MultithreadedSearchBuilder(ThreadSafeIndex index, WorkQueue queue) {
 		this.index = index;
+		this.queue = queue;
 		queryMap = new TreeMap<>();
+	}
+
+	public void buildSearch (Path queryPath, boolean exact) throws IOException {
+		buildSearch(queryPath, exact, this.index, this.queue, queryMap);
 	}
 
 	/**
@@ -40,7 +47,7 @@ public class MultithreadedSearchBuilder {
 	 * @param exact the boolean to perform an exact search
 	 * @throws IOException in unable to access file
 	 */
-	public void buildSearch(Path queryPath, boolean exact) throws IOException {
+	public static void buildSearch(Path queryPath, boolean exact, ThreadSafeIndex index, WorkQueue queue, Map<String, List<InvertedIndex.SearchResult>> queryMap) throws IOException {
 		// Reads query file line by line.
 		try (
 				BufferedReader reader = Files.newBufferedReader(queryPath, StandardCharsets.UTF_8);
@@ -48,9 +55,12 @@ public class MultithreadedSearchBuilder {
 			String line = null;
 
 			while ((line = reader.readLine()) != null) {
-				// TODO Add to the work queue here instead for project 3
-				buildSearch(line, exact);
+				Task task = new Task(line, exact, index, queryMap);
+				queue.execute(task);
 			}
+
+			queue.finish();
+			queue.shutdown();
 		}
 	}
 
@@ -60,7 +70,7 @@ public class MultithreadedSearchBuilder {
 	 * @param line the line to search for
 	 * @param exact boolean on whether to perform exact or partial search
 	 */
-	public void buildSearch(String line, boolean exact) {
+	public static void buildSearch(String line, boolean exact, ThreadSafeIndex index, Map<String, List<InvertedIndex.SearchResult>> queryMap) {
 		//Stems line of queries
 		Set<String> querySet = TextStemmer.uniqueStems(line);
 		String joined = String.join(" ", querySet);
@@ -80,5 +90,26 @@ public class MultithreadedSearchBuilder {
 	 */
 	public void writeQuery(Path path) throws IOException {
 		JsonWriter.asQueryObject(queryMap, path);
+	}
+
+	private static class Task implements Runnable {
+		private final String line;
+		private final boolean exact;
+		private final ThreadSafeIndex index;
+		private final Map<String, List<InvertedIndex.SearchResult>> queryMap;
+
+		public Task(String line, boolean exact, ThreadSafeIndex index, Map<String, List<InvertedIndex.SearchResult>> queryMap) {
+			this.line = line;
+			this.exact = exact;
+			this.index = index;
+			this.queryMap = queryMap;
+		}
+
+		@Override
+		public void run() {
+			synchronized (index) {
+				buildSearch(line, exact, index, queryMap);
+			}
+		}
 	}
 }

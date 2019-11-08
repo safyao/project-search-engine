@@ -22,9 +22,17 @@ public class Driver {
 
 		// Initializes ArgumentParser, InvertedIndex,IndexBuilder, and SearchBuilder for given command-line arguments.
 		ArgumentParser parser = new ArgumentParser(args);
-		InvertedIndex index = new InvertedIndex();
-		IndexBuilder builder = new IndexBuilder(index);
-		SearchBuilder searchBuilder = new SearchBuilder(index);
+		ThreadSafeIndex index = new ThreadSafeIndex();
+		WorkQueue queue = new WorkQueue(1);
+
+		if (parser.hasFlag("-threads")) {
+			String threads = parser.getString("-threads", "5");
+			int numThreads = Integer.parseInt(threads);
+			queue = new WorkQueue(numThreads);
+		}
+
+		MultithreadedIndexBuilder builder = new MultithreadedIndexBuilder(index, queue);
+		MultithreadedSearchBuilder searchBuilder = new MultithreadedSearchBuilder(index, queue);
 
 		if (parser.hasFlag("-path")) {
 			Path path = parser.getPath("-path");
@@ -91,13 +99,6 @@ public class Driver {
 				System.err.println("Unable to write the search results to a Json file at: " + resultPath);
 			}
 		}
-
-//		if (parser.hasFlag("-threads")) {
-//			String threads = parser.getString("-threads", "5");
-//			int numThreads = Integer.parseInt(threads);
-//
-//			try
-//		}
 	}
 	/*
  	 * TODO For project 3:
@@ -106,7 +107,7 @@ public class Driver {
  	 *
  	 * 2) Extend InvertedIndex to create a thread-safe version using your lock DONE!
  	 *
- 	 * 3) Extend the IndexBuilder class to create a multithreaded version
+ 	 * 3) Extend the IndexBuilder class to create a multithreaded version DONE!
  	 *
  	 * public MultithreadedIndexBuilder(ThreadSafeInvertedIndex index, WorkQueue queue)
  	 *
