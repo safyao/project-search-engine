@@ -48,7 +48,6 @@ public class SearchBuilder {
 			String line = null;
 
 			while ((line = reader.readLine()) != null) {
-				// TODO Add to the work queue here instead for project 3
 				buildSearch(line, exact);
 			}
 		}

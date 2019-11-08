@@ -91,13 +91,20 @@ public class Driver {
 				System.err.println("Unable to write the search results to a Json file at: " + resultPath);
 			}
 		}
+
+//		if (parser.hasFlag("-threads")) {
+//			String threads = parser.getString("-threads", "5");
+//			int numThreads = Integer.parseInt(threads);
+//
+//			try
+//		}
 	}
 	/*
  	 * TODO For project 3:
  	 *
  	 * 1) Add your homework classes (SimpleReadWriteLock, WorkQueue) DONE!
  	 *
- 	 * 2) Extend InvertedIndex to create a thread-safe version using your lock
+ 	 * 2) Extend InvertedIndex to create a thread-safe version using your lock DONE!
  	 *
  	 * 3) Extend the IndexBuilder class to create a multithreaded version
  	 *
