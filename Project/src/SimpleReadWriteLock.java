@@ -18,10 +18,16 @@ public class SimpleReadWriteLock {
 	/** The lock used for writing. */
 	private final SimpleLock writerLock;
 
-
+	/** Tracks the number of reader threads. */
 	private int readers;
+
+	/** Tracks the number of writer threads. */
 	private int writers;
+
+	/** The thread that will hold the write lock. */
 	private Thread writingThread;
+
+	/** The lock to synchronize on. */
 	private final Object lock;
 
 	/**
@@ -43,7 +49,6 @@ public class SimpleReadWriteLock {
 	 * @return the reader lock
 	 */
 	public SimpleLock readLock() {
-		// NOTE: DO NOT MODIFY THIS METHOD
 		return readerLock;
 	}
 
@@ -53,7 +58,6 @@ public class SimpleReadWriteLock {
 	 * @return the writer lock
 	 */
 	public SimpleLock writeLock() {
-		// NOTE: DO NOT MODIFY THIS METHOD
 		return writerLock;
 	}
 
@@ -69,7 +73,6 @@ public class SimpleReadWriteLock {
 	 * @see Thread#currentThread()
 	 */
 	public static boolean sameThread(Thread other) {
-		// NOTE: DO NOT MODIFY THIS METHOD
 		return other != null && other.getId() == Thread.currentThread().getId();
 	}
 
@@ -153,8 +156,7 @@ public class SimpleReadWriteLock {
 		@Override
 		public void unlock() throws ConcurrentModificationException {
 			synchronized (lock) {
-				if (!sameThread(writingThread))
-				{
+				if (!sameThread(writingThread)) {
 					throw new ConcurrentModificationException();
 				}
 

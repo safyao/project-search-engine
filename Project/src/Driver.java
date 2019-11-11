@@ -20,7 +20,7 @@ public class Driver {
 	 */
 	public static void main(String[] args) {
 
-		// Initializes ArgumentParser, InvertedIndex,IndexBuilder, and SearchBuilder for given command-line arguments.
+		// Initializes ArgumentParser, InvertedIndex, and WorkQueue for given command-line arguments.
 		ArgumentParser parser = new ArgumentParser(args);
 		ThreadSafeIndex index = new ThreadSafeIndex();
 		WorkQueue queue = new WorkQueue(1);
@@ -29,18 +29,17 @@ public class Driver {
 			String threads = parser.getString("-threads", "5");
 			try {
 				int numThreads = Integer.parseInt(threads);
-				if (numThreads <= 0)
-				{
+				if (numThreads <= 0) {
 					numThreads = 5;
 				}
 				queue = new WorkQueue(numThreads);
 			}
-			catch (NumberFormatException e)
-			{
+			catch (NumberFormatException e) {
 				System.err.println("Please enter a valid argument for the number of threads.");
 			}
 		}
 
+		// Initializes a multi-threaded index builder and search builder.
 		MultithreadedIndexBuilder builder = new MultithreadedIndexBuilder(index, queue);
 		MultithreadedSearchBuilder searchBuilder = new MultithreadedSearchBuilder(index, queue);
 
@@ -112,20 +111,4 @@ public class Driver {
 
 		queue.shutdown();
 	}
-	/*
- 	 * TODO For project 3:
- 	 *
- 	 * 1) Add your homework classes (SimpleReadWriteLock, WorkQueue) DONE!
- 	 *
- 	 * 2) Extend InvertedIndex to create a thread-safe version using your lock DONE!
- 	 *
- 	 * 3) Extend the IndexBuilder class to create a multithreaded version DONE!
- 	 *
- 	 * public MultithreadedIndexBuilder(ThreadSafeInvertedIndex index, WorkQueue queue)
- 	 *
- 	 * Each task you create and add to the work queue will call addPath(path, index)
- 	 *
- 	 * 4) Extend to SearchBuilder class to create a multithreaded version. Each
- 	 * task here calls buildSearch(String line, boolean exact) DONE!
- 	 */
 }

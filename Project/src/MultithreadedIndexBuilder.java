@@ -9,7 +9,7 @@ import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 /**
- * Utility class that stores path data into Inverted Index data structure.
+ * A multi-threaded version of {@link IndexBuilder} using a read/write lock.
  *
  * @author CS 212 Software Development
  * @author University of San Francisco
@@ -20,14 +20,17 @@ public class MultithreadedIndexBuilder {
 	/** The default stemmer algorithm used by this class. */
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
 
+	/** The work queue used by this class. */
 	private final WorkQueue queue;
 
+	/** An instance of the thread-safe InvertedIndex. */
 	private final ThreadSafeIndex index;
 
 	/**
-	 * Initializes the InvertedIndex.
+	 * Initializes the MultithreadedIndexBuilder.
 	 *
 	 * @param index the index to initialize
+	 * @param queue the queue to initialize
 	 */
 	public MultithreadedIndexBuilder(ThreadSafeIndex index, WorkQueue queue) {
 		this.index = index;
@@ -55,7 +58,7 @@ public class MultithreadedIndexBuilder {
 	}
 
 	/**
-	 * Adds path element into Inverted Index data structure.
+	 * Adds path element into ThreadSafeIndex data structure.
 	 *
 	 * @param path the path to gather data from for index
 	 * @param index the index to store data into
@@ -87,10 +90,11 @@ public class MultithreadedIndexBuilder {
 	}
 
 	/**
-	 * Traverses directory and adds each text file to index.
+	 * Traverses directory and assigns each text file to a task that's added to the queue.
 	 *
 	 * @param path the path to traverse
 	 * @param index the index to store data into
+	 * @param queue the queue to store work to be done
 	 * @throws IOException if unable to access file
 	 */
 	public static void buildIndex (Path path, ThreadSafeIndex index, WorkQueue queue) throws IOException {
@@ -100,14 +104,27 @@ public class MultithreadedIndexBuilder {
 			Task task = new Task(item, index);
 			queue.execute(task);
 		}
-
 		queue.finish();
 	}
 
+	/**
+	 * Static nested class that implements Runnable and runs tasks.
+	 */
 	private static class Task implements Runnable {
+
+		/** The item to add to the index. */
 		private final Path item;
+
+		/** The index to build. */
 		private final ThreadSafeIndex index;
 
+
+		/**
+		 * Initializes the item and index.
+		 *
+		 * @param item the item to initialize
+		 * @param index the index to initialize
+		 */
 		public Task(Path item, ThreadSafeIndex index) {
 			this.item = item;
 			this.index = index;

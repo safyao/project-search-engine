@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Utility class that stores path data into Inverted Index data structure.
+ * A multi-threaded version of {@link SearchBuilder} using a read/write lock.
  *
  * @author CS 212 Software Development
  * @author University of San Francisco
@@ -13,12 +13,14 @@ import java.nio.file.Path;
  */
 public class MultithreadedSearchBuilder extends SearchBuilder{
 
+	/** The work queue used by this class. */
 	private WorkQueue queue;
 
 	/**
-	 * Initializes the InvertedIndex and queryMap.
+	 * Initializes the ThreadSafeIndex and work queue.
 	 *
 	 * @param index the index to initialize
+	 * @param queue the queue to initialize
 	 */
 	public MultithreadedSearchBuilder(ThreadSafeIndex index, WorkQueue queue) {
 		super(index);
@@ -31,10 +33,11 @@ public class MultithreadedSearchBuilder extends SearchBuilder{
 	}
 
 	/**
-	 * Builds a sorted list of search results from a query file and stores results in queryMap.
+	 * Builds a sorted list of search results from a query file by assigning a task to each line of queries.
 	 *
 	 * @param queryPath the path to parse for queries
 	 * @param exact the boolean to perform an exact search
+	 * @param queue the queue to store work to be done
 	 * @throws IOException in unable to access file
 	 */
 	public void buildSearch(Path queryPath, boolean exact, WorkQueue queue) throws IOException {
@@ -42,47 +45,49 @@ public class MultithreadedSearchBuilder extends SearchBuilder{
 		try (
 				BufferedReader reader = Files.newBufferedReader(queryPath, StandardCharsets.UTF_8);
 			) {
-			String line = null;
 
+			String line = null;
 
 			while ((line = reader.readLine()) != null) {
 				Task task = new Task(line, exact, this);
 				queue.execute(task);
 			}
-
 			queue.finish();
 		}
 	}
 
-	/**
-	 * Searches for a single line of queries and places result in queryMap.
-	 *
-	 * @param line the line to search for
-	 * @param exact boolean on whether to perform exact or partial search
-	 */
 	@Override
 	public void searchLine(String line, boolean exact) {
-		//Stems line of queries
 		super.searchLine(line, exact);
 
 	}
 
-	/**
-	 * Writes query search results as pretty JSON object to file.
-	 *
-	 * @param path the path to write search results to
-	 * @throws IOException if unable to access path
-	 */
 	@Override
 	public void writeQuery(Path path) throws IOException {
 		super.writeQuery(path);
 	}
 
+	/**
+	 * Static nested class that implements Runnable and runs tasks.
+	 */
 	private class Task implements Runnable {
+
+		/** The line of queries search. */
 		private final String line;
+
+		/** The type of search to perform. */
 		private final boolean exact;
+
+		/** An instance of this class. */
 		private final MultithreadedSearchBuilder builder;
 
+		/**
+		 * Initializes the members of this class.
+		 *
+		 * @param line the line to initialize
+		 * @param exact the exact or partial search to initialize
+		 * @param builder the search builder to initialize
+		 */
 		public Task(String line, boolean exact, MultithreadedSearchBuilder builder) {
 			this.line = line;
 			this.exact = exact;

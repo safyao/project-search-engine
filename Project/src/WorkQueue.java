@@ -25,6 +25,7 @@ public class WorkQueue {
 	/** The default number of threads to use when not specified. */
 	public static final int DEFAULT = 5;
 
+	/** Tracks the amount of pending work. */
 	private int pending;
 
 	/**
@@ -54,14 +55,19 @@ public class WorkQueue {
 		}
 	}
 
+	/**
+	 * Increments the pending variable.
+	 */
 	public void incrementPending() {
 		synchronized (queue) {
 			this.pending++;
 		}
 	}
 
-	public void decrementPending()
-	{
+	/**
+	 * Decrements the pending variable and notifies waiting threads if it's at 0.
+	 */
+	public void decrementPending() {
 		synchronized (queue) {
 			this.pending--;
 

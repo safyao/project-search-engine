@@ -8,8 +8,6 @@ import java.util.concurrent.locks.Lock;
  */
 public interface SimpleLock {
 
-	// NOTE: DO NOT MODIFY THIS CLASS
-
 	/**
 	 * Acquires the lock. If the lock is not available then the current thread
 	 * becomes disabled for thread scheduling purposes and lies dormant until the
