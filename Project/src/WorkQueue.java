@@ -58,7 +58,7 @@ public class WorkQueue {
 	/**
 	 * Increments the pending variable.
 	 */
-	public void incrementPending() {
+	public void incrementPending() { // TODO private
 		synchronized (queue) {
 			this.pending++;
 		}
@@ -67,7 +67,7 @@ public class WorkQueue {
 	/**
 	 * Decrements the pending variable and notifies waiting threads if it's at 0.
 	 */
-	public void decrementPending() {
+	public void decrementPending() { // TODO private
 		synchronized (queue) {
 			this.pending--;
 
@@ -90,6 +90,11 @@ public class WorkQueue {
 			queue.notifyAll();
 		}
 	}
+	
+	/*
+	 * TODO Any synchronization done for the pending variable should use a different
+	 * lock object. Could use "this" or anything other than queue.
+	 */
 
 	/**
 	 * Waits for all pending work to be finished.
@@ -176,7 +181,7 @@ public class WorkQueue {
 
 				decrementPending();
 
-				synchronized (queue) {
+				synchronized (queue) { // TODO Remove
 					queue.notifyAll();
 				}
 			}

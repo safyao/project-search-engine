@@ -65,6 +65,7 @@ public class IndexBuilder {
 
 		for (Path item : files) {
 			addPath (item, index);
+			// TODO addPath (item);
 		}
 	}
 

@@ -15,7 +15,7 @@ import opennlp.tools.stemmer.snowball.SnowballStemmer;
  * @author University of San Francisco
  * @version Fall 2019
  */
-public class MultithreadedIndexBuilder {
+public class MultithreadedIndexBuilder { // TODO extends IndexBuilder
 
 	/** The default stemmer algorithm used by this class. */
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
@@ -33,6 +33,7 @@ public class MultithreadedIndexBuilder {
 	 * @param queue the queue to initialize
 	 */
 	public MultithreadedIndexBuilder(ThreadSafeIndex index, WorkQueue queue) {
+		// TODO super(index);
 		this.index = index;
 		this.queue = queue;
 	}
@@ -45,6 +46,8 @@ public class MultithreadedIndexBuilder {
 	 */
 	public void buildIndex (Path path) throws IOException {
 		buildIndex(path, this.index, this.queue);
+		// TODO super.buildIndex(path);
+		// TODO queue.finish();
 	}
 
 	/**
@@ -54,9 +57,11 @@ public class MultithreadedIndexBuilder {
 	 * @throws IOException if unable to access file
 	 */
 	public void addPath (Path path) throws IOException {
+		// TODO queue.execute(new Task(path));
 		addPath(path, this.index);
 	}
 
+	// TODO Remove
 	/**
 	 * Adds path element into ThreadSafeIndex data structure.
 	 *
@@ -89,6 +94,7 @@ public class MultithreadedIndexBuilder {
 		}
 	}
 
+	// TODO Remove
 	/**
 	 * Traverses directory and assigns each text file to a task that's added to the queue.
 	 *
@@ -110,13 +116,13 @@ public class MultithreadedIndexBuilder {
 	/**
 	 * Static nested class that implements Runnable and runs tasks.
 	 */
-	private static class Task implements Runnable {
+	private static class Task implements Runnable { // TODO Make a non-static class
 
 		/** The item to add to the index. */
 		private final Path item;
 
 		/** The index to build. */
-		private final ThreadSafeIndex index;
+		private final ThreadSafeIndex index; // TODO Remove, access index directly
 
 
 		/**
@@ -132,9 +138,15 @@ public class MultithreadedIndexBuilder {
 
 		@Override
 		public void run() {
-			synchronized (index) {
+			synchronized (index) { // TODO If your index is thread safe, do not need to synchronize
 				try {
 					addPath(item, index);
+					
+					/* TODO 
+					InvertedIndex local = new InvertedIndex();
+					addPath(item, local);
+					index.addAll(local);
+					*/
 				} catch (IOException e) {
 					System.err.println("Unable to add file contents to InvertedIndex at: " + item);
 				}

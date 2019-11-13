@@ -179,7 +179,7 @@ public class ThreadSafeIndex  extends InvertedIndex {
 		}
 	}
 
-
+	// TODO Remove this inner class
 	/**
 	 * Nested data structure class that houses a single search result and implements Comparable.
 	 */
