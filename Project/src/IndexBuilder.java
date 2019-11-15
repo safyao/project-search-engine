@@ -64,8 +64,12 @@ public class IndexBuilder {
 		List<Path> files = DirectoryTraverser.traverseDirectory(path);
 
 		for (Path item : files) {
-			addPath (item, index);
-			// TODO addPath (item);
+//			addPath (item, index);
+			// TODO
+			addPath (item);
+			// This causes an error since I'm calling an instance method inside a static method.
+			// Should I do this instead?
+			// new IndexBuilder(index).addPath(item);
 		}
 	}
 
