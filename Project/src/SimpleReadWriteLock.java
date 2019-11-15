@@ -90,7 +90,7 @@ public class SimpleReadWriteLock {
 			synchronized (lock) {
 				while (writers > 0) {
 					try {
-						    lock.wait();
+						lock.wait();
 					}
 					catch (InterruptedException e) {
 						System.err.println("Warning: ReadLock lock interrupted while waiting.");
@@ -110,7 +110,7 @@ public class SimpleReadWriteLock {
 		public void unlock() {
 			synchronized (lock) {
 				readers--;
-				lock.notifyAll();
+				lock.notifyAll(); // TODO if readers == 0 then notify
 			}
 		}
 
@@ -137,7 +137,7 @@ public class SimpleReadWriteLock {
 						Thread.currentThread().interrupt();
 					}
 				}
-				lock.notifyAll();
+				lock.notifyAll(); // TODO Move to end
 				writers++;
 				writingThread = Thread.currentThread();
 			}
@@ -160,7 +160,7 @@ public class SimpleReadWriteLock {
 					throw new ConcurrentModificationException();
 				}
 
-				lock.notifyAll();
+				lock.notifyAll(); // TODO Move to end
 				writers--;
 				writingThread = null;
 			}
