@@ -19,7 +19,7 @@ import opennlp.tools.stemmer.snowball.SnowballStemmer;
 public class IndexBuilder {
 
 	/** Creates an instance of InvertedIndex. */
-	private final InvertedIndex index;
+	protected final InvertedIndex index;
 
 	/** The default stemmer algorithm used by this class. */
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
@@ -31,16 +31,6 @@ public class IndexBuilder {
 	 */
 	public IndexBuilder(InvertedIndex index) {
 		this.index = index;
-	}
-
-	/**
-	 * Calls on buildIndex(...) using non-static reference.
-	 *
-	 * @param path the path to traverse
-	 * @throws IOException if unable to access file
-	 */
-	public void buildIndex (Path path) throws IOException {
-		buildIndex(path, this.index);
 	}
 
 	/**
@@ -57,19 +47,13 @@ public class IndexBuilder {
 	 * Traverses directory and adds each text file to index.
 	 *
 	 * @param path the path to traverse
-	 * @param index the index to store data into
 	 * @throws IOException if unable to access file
 	 */
-	public static void buildIndex (Path path, InvertedIndex index) throws IOException {
+	public void buildIndex (Path path) throws IOException {
 		List<Path> files = DirectoryTraverser.traverseDirectory(path);
 
 		for (Path item : files) {
-//			addPath (item, index);
-			// TODO
 			addPath (item);
-			// This causes an error since I'm calling an instance method inside a static method.
-			// Should I do this instead?
-			// new IndexBuilder(index).addPath(item);
 		}
 	}
 

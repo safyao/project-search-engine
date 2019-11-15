@@ -1,8 +1,6 @@
 import java.io.IOException;
 import java.nio.file.Path;
 
-import opennlp.tools.stemmer.snowball.SnowballStemmer;
-
 /**
  * A multi-threaded version of {@link IndexBuilder} using a read/write lock.
  *
@@ -11,9 +9,6 @@ import opennlp.tools.stemmer.snowball.SnowballStemmer;
  * @version Fall 2019
  */
 public class MultithreadedIndexBuilder extends IndexBuilder {
-
-	/** The default stemmer algorithm used by this class. */
-	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
 
 	/** The work queue used by this class. */
 	private final WorkQueue queue;

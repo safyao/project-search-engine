@@ -39,7 +39,7 @@ public class Driver {
 			}
 		}
 
-		// Initializes a multi-threaded index builder and search builder.
+		// Initializes a multithreaded index builder and search builder.
 		MultithreadedIndexBuilder builder = new MultithreadedIndexBuilder(index, queue);
 		MultithreadedSearchBuilder searchBuilder = new MultithreadedSearchBuilder(index, queue);
 
