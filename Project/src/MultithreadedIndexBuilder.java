@@ -33,7 +33,6 @@ public class MultithreadedIndexBuilder extends IndexBuilder {
 	@Override
 	public void addPath (Path path) throws IOException {
 		queue.execute(new Task(path));
-
 	}
 
 	/**
@@ -43,7 +42,6 @@ public class MultithreadedIndexBuilder extends IndexBuilder {
 
 		/** The item to add to the index. */
 		private final Path item;
-
 
 		/**
 		 * Initializes the item.

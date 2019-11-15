@@ -32,24 +32,38 @@ public class InvertedIndex {
 		map = new TreeMap<>();
 		countsMap = new TreeMap<>();
 	}
-	
-	/* TODO
+
+	// TODO
+
 	public void addAll(InvertedIndex other) {
 		// combine this.map and other.map together
 		for (String key : other.map.keySet()) {
 			if (this.map.containsKey(key)) {
-				
+
+				for (String path : other.map.get(key).keySet()) {
+					if (this.map.get(key).containsKey(path)) {
+
+						for (int position : other.map.get(key).get(path)) {
+							System.out.println("Hit it");
+							this.map.get(key).get(path).add(position);
+						}
+					}
+					else {
+						this.map.get(key).put(path, other.map.get(key).get(path));
+					}
+				}
 			}
 			else {
 				this.map.put(key, other.map.get(key));
 			}
-			
 		}
-		
+
 		// combine this.countsMap and other.countsMap together
+		for (String countKey : other.countsMap.keySet()) {
+			this.countsMap.put(countKey, other.countsMap.get(countKey));
+		}
 	}
-	*/
-	
+
 	/**
 	 * Adds elements to map if the given element does not already exist for the corresponding
 	 * key(s). If a new word or path is being entered, also initializes it's associated value.
