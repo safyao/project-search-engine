@@ -110,7 +110,9 @@ public class SimpleReadWriteLock {
 		public void unlock() {
 			synchronized (lock) {
 				readers--;
-				lock.notifyAll(); // TODO if readers == 0 then notify
+				if (readers == 0) {
+					lock.notifyAll();
+				}
 			}
 		}
 
@@ -137,9 +139,10 @@ public class SimpleReadWriteLock {
 						Thread.currentThread().interrupt();
 					}
 				}
-				lock.notifyAll(); // TODO Move to end
+
 				writers++;
 				writingThread = Thread.currentThread();
+				lock.notifyAll();
 			}
 		}
 
@@ -160,9 +163,9 @@ public class SimpleReadWriteLock {
 					throw new ConcurrentModificationException();
 				}
 
-				lock.notifyAll(); // TODO Move to end
 				writers--;
 				writingThread = null;
+				lock.notifyAll();
 			}
 		}
 	}
