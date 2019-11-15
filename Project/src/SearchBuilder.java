@@ -21,7 +21,7 @@ public class SearchBuilder {
 	private final InvertedIndex index;
 
 	/** Stores arguments in key = value pairs regarding query search results. **/
-	protected final Map<String, List<InvertedIndex.SearchResult>> queryMap;
+	private final Map<String, List<InvertedIndex.SearchResult>> queryMap;
 
 	/**
 	 * Initializes the InvertedIndex and queryMap.
