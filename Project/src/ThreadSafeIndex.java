@@ -24,6 +24,18 @@ public class ThreadSafeIndex  extends InvertedIndex {
 	}
 
 	@Override
+	public void addAll(InvertedIndex other) {
+		lock.writeLock().lock();
+
+		try {
+			super.addAll(other);
+		}
+		finally {
+			lock.writeLock().unlock();
+		}
+	}
+
+	@Override
 	public void add(String word, String path, Integer position) {
 		lock.writeLock().lock();
 

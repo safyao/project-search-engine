@@ -25,14 +25,14 @@ public class MultithreadedIndexBuilder extends IndexBuilder {
 	}
 
 	@Override
-	public void buildIndex (Path path) throws IOException {
-		super.buildIndex(path);
-		queue.finish();
+	public void addPath (Path path) throws IOException {
+		queue.execute(new Task(path));
 	}
 
 	@Override
-	public void addPath (Path path) throws IOException {
-		queue.execute(new Task(path));
+	public void buildIndex (Path path) throws IOException {
+		super.buildIndex(path);
+		queue.finish();
 	}
 
 	/**
