@@ -11,7 +11,7 @@ import java.nio.file.Path;
  * @author University of San Francisco
  * @version Fall 2019
  */
-public class MultithreadedSearchBuilder extends SearchBuilder{
+public class MultithreadedSearchBuilder extends SearchBuilder {
 
 	/** The work queue used by this class. */
 	private WorkQueue queue;

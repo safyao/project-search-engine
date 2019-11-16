@@ -33,20 +33,21 @@ public class InvertedIndex {
 		countsMap = new TreeMap<>();
 	}
 
-	// TODO
-
+	/**
+	 * Adds all of the elements in the other InvertedIndex to this InvertedIndex if they're not already present.
+	 * Also updates the map holding the word counts.
+	 *
+	 * @param other the other InvertedIndex to add
+	 */
 	public void addAll(InvertedIndex other) {
-		// combine this.map and other.map together
+		// Combines this.map and other.map together.
 		for (String key : other.map.keySet()) {
 			if (this.map.containsKey(key)) {
 
 				for (String path : other.map.get(key).keySet()) {
-					if (this.map.get(key).containsKey(path)) {
 
-						for (int position : other.map.get(key).get(path)) {
-							System.out.println("Hit it");
-							this.map.get(key).get(path).add(position);
-						}
+					if (this.map.get(key).containsKey(path)) {
+						this.map.get(key).get(path).addAll(other.map.get(key).get(path));
 					}
 					else {
 						this.map.get(key).put(path, other.map.get(key).get(path));
@@ -58,9 +59,15 @@ public class InvertedIndex {
 			}
 		}
 
-		// combine this.countsMap and other.countsMap together
+		// Combines this.countsMap and other.countsMap together.
 		for (String countKey : other.countsMap.keySet()) {
-			this.countsMap.put(countKey, other.countsMap.get(countKey));
+			if (this.countsMap.containsKey(countKey)) {
+				int newCount = this.countsMap.get(countKey) + other.countsMap.get(countKey);
+				this.countsMap.put(countKey, newCount);
+			}
+			else {
+				this.countsMap.putIfAbsent(countKey, other.countsMap.get(countKey));
+			}
 		}
 	}
 
