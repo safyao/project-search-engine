@@ -86,7 +86,7 @@ public class WorkQueue {
 	public void execute(Runnable r) {
 		synchronized (queue) {
 			queue.addLast(r);
-			incrementPending();
+			incrementPending(); // TODO Move incrementPending() before synchronized (queue) block
 			queue.notifyAll();
 		}
 	}
