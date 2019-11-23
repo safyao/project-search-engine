@@ -84,9 +84,10 @@ public class WorkQueue {
 	 * @param r work request (in the form of a {@link Runnable} object)
 	 */
 	public void execute(Runnable r) {
+		incrementPending();
+
 		synchronized (queue) {
 			queue.addLast(r);
-			incrementPending(); // TODO Move incrementPending() before synchronized (queue) block
 			queue.notifyAll();
 		}
 	}
