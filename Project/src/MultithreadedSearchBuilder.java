@@ -97,6 +97,26 @@ public class MultithreadedSearchBuilder implements SearchBuilderInterface {
 		List<InvertedIndex.SearchResult> results = index.search(querySet, exact);
 		queryMap.put(joined, results);
 
+		/* Like this?
+		 *
+		 	Set<String> querySet = TextStemmer.uniqueStems(line);
+
+			if (querySet.isEmpty() ) {
+				return;
+			}
+
+			String joined = String.join(" ", querySet);
+
+			synchronized (queryMap) {
+				if (queryMap.containsKey(joined)) {
+					return;
+				}
+
+				List<InvertedIndex.SearchResult> results = index.search(querySet, exact);
+				queryMap.put(joined, results);
+			}
+		 */
+
 	}
 
 	@Override
@@ -139,6 +159,12 @@ public class MultithreadedSearchBuilder implements SearchBuilderInterface {
 			synchronized (builder) {
 				searchLine(line, exact);
 			}
+			/* Would this work (No sync block)?
+			 * public void run() {
+			 * 		searchLine(line, exact);
+			 * }
+			 */
+
 		}
 	}
 }
