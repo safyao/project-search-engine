@@ -3,15 +3,19 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 /*
  * TODO Since we need to re-implement searchLine to synchronize around only
- * parts of it.... it makes more sense to create a 
- * 
+ * parts of it.... it makes more sense to create a
+ *
  * SearchBuilderInterface
  * --- create a default buildSearch method
  * --- in the multithreaded version... SearchBuilderInterface.super.buildSearch(...) and then finish
- * 
+ *
  * ...with the common methods between the two classes and then implement that interface
  * in the SearchBuilder and MultithreadedSearchBuilder classes.
  */
@@ -23,10 +27,16 @@ import java.nio.file.Path;
  * @author University of San Francisco
  * @version Fall 2019
  */
-public class MultithreadedSearchBuilder extends SearchBuilder {
+public class MultithreadedSearchBuilder implements SearchBuilderInterface {
 
 	/** The work queue used by this class. */
-	private WorkQueue queue;
+	private final WorkQueue queue;
+
+	/** Creates an instance of InvertedIndex. */
+	private final InvertedIndex index;
+
+	/** Stores arguments in key = value pairs regarding query search results. **/
+	private final Map<String, List<InvertedIndex.SearchResult>> queryMap;
 
 	/**
 	 * Initializes the ThreadSafeIndex and work queue.
@@ -35,8 +45,9 @@ public class MultithreadedSearchBuilder extends SearchBuilder {
 	 * @param queue the queue to initialize
 	 */
 	public MultithreadedSearchBuilder(ThreadSafeIndex index, WorkQueue queue) {
-		super(index);
+		this.index = index;
 		this.queue = queue;
+		queryMap = new TreeMap<>();
 	}
 
 	@Override
@@ -70,13 +81,27 @@ public class MultithreadedSearchBuilder extends SearchBuilder {
 
 	@Override
 	public void searchLine(String line, boolean exact) {
-		super.searchLine(line, exact);
+		//Stems line of queries.
+		Set<String> querySet = TextStemmer.uniqueStems(line);
+
+		if (querySet.isEmpty() ) {
+			return;
+		}
+
+		String joined = String.join(" ", querySet);
+
+		if (queryMap.containsKey(joined)) {
+			return;
+		}
+
+		List<InvertedIndex.SearchResult> results = index.search(querySet, exact);
+		queryMap.put(joined, results);
 
 	}
 
 	@Override
 	public void writeQuery(Path path) throws IOException {
-		super.writeQuery(path);
+		JsonWriter.asQueryObject(queryMap, path);
 	}
 
 	/**
