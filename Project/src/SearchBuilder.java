@@ -60,31 +60,21 @@ public class SearchBuilder {
 	 * @param exact boolean on whether to perform exact or partial search
 	 */
 	public void searchLine(String line, boolean exact) {
-		//Stems line of queries
+		//Stems line of queries.
 		Set<String> querySet = TextStemmer.uniqueStems(line);
-		String joined = String.join(" ", querySet);
 
-		if (!querySet.isEmpty() && !queryMap.containsKey(joined)) {
-			List<InvertedIndex.SearchResult> results = index.search(querySet, exact);
-			queryMap.put(joined, results);
-		}
-
-		/* TODO
-		Set<String> querySet = TextStemmer.uniqueStems(line);
-		
 		if (querySet.isEmpty() ) {
 			return;
 		}
-		
+
 		String joined = String.join(" ", querySet);
 
 		if (queryMap.containsKey(joined)) {
 			return;
 		}
-		
+
 		List<InvertedIndex.SearchResult> results = index.search(querySet, exact);
 		queryMap.put(joined, results);
-		*/
 	}
 
 	/**

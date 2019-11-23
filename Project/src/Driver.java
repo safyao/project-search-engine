@@ -26,7 +26,7 @@ public class Driver {
 		WorkQueue queue = new WorkQueue(1); // TODO queue = null;
 
 		/*
-		 * TODO 
+		 * TODO
 
  		ArgumentParser parser = new ArgumentParser(args);
 		InvertedIndex index;
@@ -35,9 +35,9 @@ public class Driver {
 		WorkQueue queue = null;
 
  	if (-threads) {
- 		ThreadSafeIndex threadSafe = new ThreadSafeIndex();
+ 		ThreadSafeIndex  threadSafe = new ThreadSafeIndex();
  		index = threadSafe;
- 		
+
  		builder = new MulithreadedIndexBuilder(threadSafe, queue);
  		etc.
  	}
@@ -46,9 +46,9 @@ public class Driver {
  		builder = new IndexBuilder(index);
  		etc.
  	}
- 
+
 		 */
-		
+
 		if (parser.hasFlag("-threads")) {
 			String threads = parser.getString("-threads", "5");
 			try {
@@ -133,7 +133,8 @@ public class Driver {
 			}
 		}
 
-		// TODO if (queue != null) then shutdown
-		queue.shutdown();
+		if (queue != null) {
+			queue.shutdown();
+		}
 	}
 }
