@@ -23,8 +23,32 @@ public class Driver {
 		// Initializes ArgumentParser, InvertedIndex, and WorkQueue for given command-line arguments.
 		ArgumentParser parser = new ArgumentParser(args);
 		ThreadSafeIndex index = new ThreadSafeIndex();
-		WorkQueue queue = new WorkQueue(1);
+		WorkQueue queue = new WorkQueue(1); // TODO queue = null;
 
+		/*
+		 * TODO 
+
+ 		ArgumentParser parser = new ArgumentParser(args);
+		InvertedIndex index;
+		IndexBuilder builder;
+		SearchBuilderInterface searchBuilder;
+		WorkQueue queue = null;
+
+ 	if (-threads) {
+ 		ThreadSafeIndex threadSafe = new ThreadSafeIndex();
+ 		index = threadSafe;
+ 		
+ 		builder = new MulithreadedIndexBuilder(threadSafe, queue);
+ 		etc.
+ 	}
+ 	else {
+ 		index = new InvertedIndex();
+ 		builder = new IndexBuilder(index);
+ 		etc.
+ 	}
+ 
+		 */
+		
 		if (parser.hasFlag("-threads")) {
 			String threads = parser.getString("-threads", "5");
 			try {
@@ -109,6 +133,7 @@ public class Driver {
 			}
 		}
 
+		// TODO if (queue != null) then shutdown
 		queue.shutdown();
 	}
 }

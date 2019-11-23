@@ -97,7 +97,7 @@ public class SimpleReadWriteLock {
 						Thread.currentThread().interrupt();
 					}
 				}
-				lock.notifyAll();
+				lock.notifyAll(); // TODO Move to after readers++
 				readers++;
 			}
 		}
@@ -142,7 +142,7 @@ public class SimpleReadWriteLock {
 
 				writers++;
 				writingThread = Thread.currentThread();
-				lock.notifyAll();
+				lock.notifyAll(); // TODO Remove
 			}
 		}
 

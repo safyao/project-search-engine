@@ -69,6 +69,22 @@ public class SearchBuilder {
 			queryMap.put(joined, results);
 		}
 
+		/* TODO
+		Set<String> querySet = TextStemmer.uniqueStems(line);
+		
+		if (querySet.isEmpty() ) {
+			return;
+		}
+		
+		String joined = String.join(" ", querySet);
+
+		if (queryMap.containsKey(joined)) {
+			return;
+		}
+		
+		List<InvertedIndex.SearchResult> results = index.search(querySet, exact);
+		queryMap.put(joined, results);
+		*/
 	}
 
 	/**

@@ -4,6 +4,18 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/*
+ * TODO Since we need to re-implement searchLine to synchronize around only
+ * parts of it.... it makes more sense to create a 
+ * 
+ * SearchBuilderInterface
+ * --- create a default buildSearch method
+ * --- in the multithreaded version... SearchBuilderInterface.super.buildSearch(...) and then finish
+ * 
+ * ...with the common methods between the two classes and then implement that interface
+ * in the SearchBuilder and MultithreadedSearchBuilder classes.
+ */
+
 /**
  * A multi-threaded version of {@link SearchBuilder} using a read/write lock.
  *
@@ -96,6 +108,9 @@ public class MultithreadedSearchBuilder extends SearchBuilder {
 
 		@Override
 		public void run() {
+			/* TODO
+			 * Can multithread better...
+			 */
 			synchronized (builder) {
 				searchLine(line, exact);
 			}
