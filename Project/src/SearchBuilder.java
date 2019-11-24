@@ -30,12 +30,6 @@ public class SearchBuilder implements SearchBuilderInterface {
 		queryMap = new TreeMap<>();
 	}
 
-	// TODO Can remove, it will inherit the implementation
-	@Override
-	public void buildSearch(Path queryPath, boolean exact) throws IOException {
-		SearchBuilderInterface.super.buildSearch(queryPath, exact);
-	}
-
 	@Override
 	public void searchLine(String line, boolean exact) {
 		//Stems line of queries

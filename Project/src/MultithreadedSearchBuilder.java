@@ -92,24 +92,13 @@ public class MultithreadedSearchBuilder implements SearchBuilderInterface {
 				if (queryMap.containsKey(joined)) {
 					return;
 				}
-				List<InvertedIndex.SearchResult> results = index.search(querySet, exact);
-				queryMap.put(joined, results);
 			}
-			
-			/* TODO Try this instead, so the search is OUTSIDE of any
-			 * synchronized blocks of code.
-			synchronized (builder) {
-				if (queryMap.containsKey(joined)) {
-					return;
-				}
-			}
-			
+
 			List<InvertedIndex.SearchResult> results = index.search(querySet, exact);
-			
+
 			synchronized (builder) {
 				queryMap.put(joined, results);
 			}
-			*/
 		}
 	}
 }
