@@ -20,52 +20,39 @@ public class Driver {
 	 */
 	public static void main(String[] args) {
 
-		// Initializes ArgumentParser, InvertedIndex, and WorkQueue for given command-line arguments.
-		ArgumentParser parser = new ArgumentParser(args);
-		ThreadSafeIndex index = new ThreadSafeIndex();
-		WorkQueue queue = new WorkQueue(1); // TODO queue = null;
-
-		/*
-		 * TODO
-
+		// Initializes ArgumentParser, InvertedIndex, builders, and WorkQueue for given command-line arguments.
  		ArgumentParser parser = new ArgumentParser(args);
 		InvertedIndex index;
 		IndexBuilder builder;
 		SearchBuilderInterface searchBuilder;
 		WorkQueue queue = null;
 
- 	if (-threads) {
- 		ThreadSafeIndex  threadSafe = new ThreadSafeIndex();
- 		index = threadSafe;
+	 	if (parser.hasFlag("-threads")) {
+	 		ThreadSafeIndex  threadSafe = new ThreadSafeIndex();
+	 		index = threadSafe;
 
- 		builder = new MulithreadedIndexBuilder(threadSafe, queue);
- 		etc.
- 	}
- 	else {
- 		index = new InvertedIndex();
- 		builder = new IndexBuilder(index);
- 		etc.
- 	}
+	 		try {
+	 			// Initializes and verifies number of threads for work queue.
+	 			String threads = parser.getString("-threads", "5");
+	 			int numThreads = Integer.parseInt(threads);
 
-		 */
-
-		if (parser.hasFlag("-threads")) {
-			String threads = parser.getString("-threads", "5");
-			try {
-				int numThreads = Integer.parseInt(threads);
-				if (numThreads <= 0) {
+	 			if (numThreads <= 0) {
 					numThreads = 5;
 				}
 				queue = new WorkQueue(numThreads);
-			}
+	 		}
 			catch (NumberFormatException e) {
 				System.err.println("Please enter a valid argument for the number of threads.");
 			}
-		}
 
-		// Initializes a multithreaded index builder and search builder.
-		MultithreadedIndexBuilder builder = new MultithreadedIndexBuilder(index, queue);
-		MultithreadedSearchBuilder searchBuilder = new MultithreadedSearchBuilder(index, queue);
+	 		builder = new MultithreadedIndexBuilder(threadSafe, queue);
+	 		searchBuilder = new MultithreadedSearchBuilder(threadSafe, queue);
+	 	}
+	 	else {
+	 		index = new InvertedIndex();
+	 		builder = new IndexBuilder(index);
+	 		searchBuilder = new SearchBuilder(index);
+	 	}
 
 		if (parser.hasFlag("-path")) {
 			Path path = parser.getPath("-path");

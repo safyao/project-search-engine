@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Utility class that stores path data into Inverted Index data structure.
+ * Utility interface that stores path data into Inverted Index data structure.
  *
  * @author CS 212 Software Development
  * @author University of San Francisco
