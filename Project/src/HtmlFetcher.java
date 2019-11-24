@@ -160,7 +160,7 @@ public class HtmlFetcher {
 	 * @see #fetch(URL, int)
 	 */
 	public static String fetch(String url) {
-		return fetch(url, 0);
+		return fetch(url, 3);
 	}
 
 	/**
@@ -171,6 +171,6 @@ public class HtmlFetcher {
 	 *         resource is not html
 	 */
 	public static String fetch(URL url) {
-		return fetch(url, 0);
+		return fetch(url, 3);
 	}
 }
