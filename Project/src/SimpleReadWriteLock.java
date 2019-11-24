@@ -98,7 +98,7 @@ public class SimpleReadWriteLock {
 					}
 				}
 				readers++;
-				lock.notifyAll();
+				lock.notifyAll(); // TODO Remove, shouldn't need to wake up threads here
 			}
 		}
 
