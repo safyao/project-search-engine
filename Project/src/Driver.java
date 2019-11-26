@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Path;
 
 /**
@@ -60,12 +61,16 @@ public class Driver {
 
 	 		if (queue == null) {
 		 		queue = new WorkQueue(5);
-		 		builder = new MultithreadedIndexBuilder(threadSafe, queue);
 		 		searchBuilder = new MultithreadedSearchBuilder(threadSafe, queue);
 	 		}
 
-	 		WebCrawler crawler = new WebCrawler(queue, threadSafe, builder);
-//	 		crawler.crawl(seed);
+	 		WebCrawler crawler = new WebCrawler(queue, threadSafe);
+	 		try {
+				crawler.crawl(seed);
+			}
+	 		catch (MalformedURLException e) {
+				System.err.println("Unable to crawl the given URL at: \n" + seed.toString());
+			}
 
 	 	}
 
