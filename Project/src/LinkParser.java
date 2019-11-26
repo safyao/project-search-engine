@@ -34,7 +34,7 @@ public class LinkParser {
 	 * using the base URL and cleaned (removing fragments and encoding special
 	 * characters as necessary).
 	 *
-	 * @param base the base url used to convert relative links to absolute3
+	 * @param base the base url used to convert relative links to absolute
 	 * @param html the raw html associated with the base url
 	 * @return cleaned list of all http(s) links in the order they were found
 	 */
@@ -57,28 +57,5 @@ public class LinkParser {
 		}
 
 		return links;
-	}
-
-	/**
-	 * Demonstrates this class.
-	 * @param args unused
-	 * @throws Exception
-	 */
-	public static void main(String[] args) throws Exception {
-		// this demonstrates cleaning
-		URL valid = new URL("https://docs.python.org/3/library/functions.html?highlight=string#format");
-		System.out.println(" Link: " + valid);
-		System.out.println("Clean: " + clean(valid));
-		System.out.println();
-
-		// this demonstrates encoding
-		URL space = new URL("https://www.google.com/search?q=hello world");
-		System.out.println(" Link: " + space);
-		System.out.println("Clean: " + clean(space));
-		System.out.println();
-
-		// this throws an exception
-		URL invalid = new URL("javascript:alert('Hello!');");
-		System.out.println(invalid);
 	}
 }
