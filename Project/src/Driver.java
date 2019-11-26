@@ -58,15 +58,28 @@ public class Driver {
 		if (parser.hasFlag("-url")) {
 	 		String seed = parser.getString("-url");
 	 		ThreadSafeIndex  threadSafe = new ThreadSafeIndex();
-
 	 		if (queue == null) {
 		 		queue = new WorkQueue(5);
 		 		searchBuilder = new MultithreadedSearchBuilder(threadSafe, queue);
 	 		}
 
-	 		WebCrawler crawler = new WebCrawler(queue, threadSafe);
 	 		try {
+		 		int limit;
+		 		if (parser.hasFlag("-limit")) {
+		 			limit = Integer.parseInt(parser.getString("-limit", "50"));
+		 			if (limit <= 0) {
+		 				limit = 50;
+		 			}
+		 		}
+		 		else {
+		 			limit = 50;
+		 		}
+
+		 		WebCrawler crawler = new WebCrawler(queue, threadSafe, limit);
 				crawler.crawl(seed);
+			}
+	 		catch (NumberFormatException e) {
+				System.err.println("Please enter a valid argument for the limit of URLs to crawl.");
 			}
 	 		catch (MalformedURLException e) {
 				System.err.println("Unable to crawl the given URL at: \n" + seed.toString());

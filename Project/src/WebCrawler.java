@@ -13,18 +13,20 @@ public class WebCrawler
 
 	private final ArrayList<URL> allLinks;
 
+	private final int limit;
+
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
 
-	public WebCrawler(WorkQueue queue, ThreadSafeIndex index) {
+	public WebCrawler(WorkQueue queue, ThreadSafeIndex index, int limit) {
 		this.queue = queue;
 		this.index = index;
-
+		this.limit = limit;
 		allLinks = new ArrayList<URL>();
 	}
 
 	public void crawl(String seed) throws MalformedURLException {
 		URL url = LinkParser.clean(new URL(seed));
-		if (!allLinks.contains(url) && allLinks.size() < 50)
+		if (!allLinks.contains(url) && allLinks.size() < limit)
 		{
 			allLinks.add(url);
 			Task task = new Task(url);
@@ -67,7 +69,7 @@ public class WebCrawler
 				for (URL link : links)
 				{
 					synchronized(allLinks) {
-						if (allLinks.size() >= 50)
+						if (allLinks.size() >= limit)
 						{
 							break;
 						}
