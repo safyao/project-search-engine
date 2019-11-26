@@ -27,7 +27,7 @@ public class Driver {
 		SearchBuilderInterface searchBuilder;
 		WorkQueue queue = null;
 
-	 	if (parser.hasFlag("-threads")) {
+		if (parser.hasFlag("-threads")) {
 	 		ThreadSafeIndex  threadSafe = new ThreadSafeIndex();
 	 		index = threadSafe;
 
@@ -52,6 +52,21 @@ public class Driver {
 	 		index = new InvertedIndex();
 	 		builder = new IndexBuilder(index);
 	 		searchBuilder = new SearchBuilder(index);
+	 	}
+
+		if (parser.hasFlag("-url")) {
+	 		String seed = parser.getString("-url");
+	 		ThreadSafeIndex  threadSafe = new ThreadSafeIndex();
+
+	 		if (queue == null) {
+		 		queue = new WorkQueue(5);
+		 		builder = new MultithreadedIndexBuilder(threadSafe, queue);
+		 		searchBuilder = new MultithreadedSearchBuilder(threadSafe, queue);
+	 		}
+
+	 		WebCrawler crawler = new WebCrawler(queue, threadSafe, builder);
+//	 		crawler.crawl(seed);
+
 	 	}
 
 		if (parser.hasFlag("-path")) {
