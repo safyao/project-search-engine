@@ -57,9 +57,11 @@ public class Driver {
 
 		if (parser.hasFlag("-url")) {
 	 		String seed = parser.getString("-url");
-	 		ThreadSafeIndex  threadSafe = new ThreadSafeIndex();
+	 		
 	 		if (queue == null) {
-		 		queue = new WorkQueue(5);
+	 			ThreadSafeIndex  threadSafe = new ThreadSafeIndex();
+		 		index = threadSafe;
+	 			queue = new WorkQueue(5);
 		 		searchBuilder = new MultithreadedSearchBuilder(threadSafe, queue);
 	 		}
 
@@ -75,7 +77,7 @@ public class Driver {
 		 			limit = 50;
 		 		}
 
-		 		WebCrawler crawler = new WebCrawler(queue, threadSafe, limit);
+		 		WebCrawler crawler = new WebCrawler(queue, index, limit);
 				crawler.crawl(seed);
 			}
 	 		catch (NumberFormatException e) {

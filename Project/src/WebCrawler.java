@@ -17,7 +17,7 @@ public class WebCrawler
 
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
 
-	public WebCrawler(WorkQueue queue, ThreadSafeIndex index, int limit) {
+	public WebCrawler(WorkQueue queue, InvertedIndex index, int limit) {
 		this.queue = queue;
 		this.index = index;
 		this.limit = limit;
@@ -26,13 +26,9 @@ public class WebCrawler
 
 	public void crawl(String seed) throws MalformedURLException {
 		URL url = LinkParser.clean(new URL(seed));
-		if (!allLinks.contains(url) && allLinks.size() < limit)
-		{
-			allLinks.add(url);
-			Task task = new Task(url);
-			queue.execute(task);
-		}
-		queue.finish();
+		allLinks.add(url);
+		Task task = new Task(url);
+		queue.execute(task);
 	}
 
 	public void addUrl(URL url, String html) {
