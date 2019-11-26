@@ -29,6 +29,7 @@ public class WebCrawler
 		allLinks.add(url);
 		Task task = new Task(url);
 		queue.execute(task);
+		queue.finish();
 	}
 
 	public void addUrl(URL url, String html) {
