@@ -96,7 +96,8 @@ public class HtmlCleaner {
 	 * @return text without that HTML element
 	 */
 	public static String stripElement(String html, String name) {
-		Pattern pattern = Pattern.compile("(?is)(<" + name + ".*?>.*?<\\/" + name + ".*?>)");
+//		Pattern pattern = Pattern.compile("(?is)(<" + name + ".*?>.*?<\\/" + name + ".*?>)");
+		Pattern pattern = Pattern.compile("(?si)<" + name + ".*?/" + name + "\\s*?>");
 		Matcher matcher = pattern.matcher(html);
 		return matcher.replaceAll(" ");
 	}

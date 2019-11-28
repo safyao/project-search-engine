@@ -57,7 +57,8 @@ public class Driver {
 
 		if (parser.hasFlag("-url")) {
 	 		String seed = parser.getString("-url");
-	 		
+
+	 		// Initializes the work queue.
 	 		if (queue == null) {
 	 			ThreadSafeIndex  threadSafe = new ThreadSafeIndex();
 		 		index = threadSafe;
@@ -66,6 +67,7 @@ public class Driver {
 	 		}
 
 	 		try {
+	 			// Crawls the URL.
 		 		int limit;
 		 		if (parser.hasFlag("-limit")) {
 		 			limit = Integer.parseInt(parser.getString("-limit", "50"));
@@ -86,7 +88,6 @@ public class Driver {
 	 		catch (MalformedURLException e) {
 				System.err.println("Unable to crawl the given URL at: \n" + seed.toString());
 			}
-
 	 	}
 
 		if (parser.hasFlag("-path")) {
