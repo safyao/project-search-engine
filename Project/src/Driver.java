@@ -90,6 +90,28 @@ public class Driver {
 			}
 	 	}
 
+		if (parser.hasFlag("-port")) {
+	 		String port = parser.getString("-port", "8080");
+
+	 		// Initializes the work queue.
+	 		if (queue == null) {
+	 			ThreadSafeIndex  threadSafe = new ThreadSafeIndex();
+		 		index = threadSafe;
+	 			queue = new WorkQueue(5);
+		 		searchBuilder = new MultithreadedSearchBuilder(threadSafe, queue);
+	 		}
+
+	 		try {
+		 		int num = Integer.parseInt(port);
+		 		if (num <= 0) {
+	 				num = 8080;
+	 			}
+			}
+	 		catch (NumberFormatException e) {
+				System.err.println("Please enter a valid argument for the limit of URLs to crawl.");
+			}
+	 	}
+
 		if (parser.hasFlag("-path")) {
 			Path path = parser.getPath("-path");
 
