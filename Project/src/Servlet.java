@@ -22,10 +22,10 @@ public class Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/** The title to use for this webpage. */
-	private static final String TITLE = "Messages";
+	private static final String TITLE = "Search";
 
 	/** The thread-safe data structure to use for storing messages. */
-	private ConcurrentLinkedQueue<String> messages;
+	private ConcurrentLinkedQueue<String> queries;
 
 	/**
 	 * Initializes this message board. Each message board has its own collection
@@ -33,7 +33,7 @@ public class Servlet extends HttpServlet {
 	 */
 	public Servlet() {
 		super();
-		messages = new ConcurrentLinkedQueue<>();
+		queries = new ConcurrentLinkedQueue<>();
 	}
 
 	@Override
@@ -60,11 +60,11 @@ public class Servlet extends HttpServlet {
 		out.printf("	  <div class=\"hero-body\">%n");
 		out.printf("	    <div class=\"container\">%n");
 		out.printf("	      <h1 class=\"title\">%n");
-		out.printf("	        Message Board%n");
+		out.printf("	        Search Engine%n");
 		out.printf("	      </h1>%n");
 		out.printf("	      <h2 class=\"subtitle\">%n");
 		out.printf("					<i class=\"fas fa-calendar-alt\"></i>%n");
-		out.printf("					&nbsp;Updated %s%n", getDate());
+		out.printf("					&nbsp;Time: %s%n", getDate());
 		out.printf("	      </h2>%n");
 		out.printf("	    </div>%n");
 		out.printf("	  </div>%n");
@@ -72,16 +72,39 @@ public class Servlet extends HttpServlet {
 		out.printf("%n");
 		out.printf("	<section class=\"section\">%n");
 		out.printf("		<div class=\"container\">%n");
-		out.printf("			<h2 class=\"title\">Messages</h2>%n");
+		out.printf("			<h2 class=\"title\">Search</h2>%n");
+		out.printf("%n");
+		out.printf("			<form method=\"%s\" action=\"%s\">%n", "POST", request.getServletPath());
+		out.printf("				<div class=\"field\">%n");
+		out.printf("				  <label class=\"label\">Query</label>%n");
+		out.printf("				  <div class=\"control\">%n");
+		out.printf("				    <textarea class=\"textarea\" name=\"%s\" placeholder=\"Enter your query here.\"></textarea>%n", "query");
+		out.printf("				  </div>%n");
+		out.printf("				</div>%n");
+		out.printf("%n");
+		out.printf("				<div class=\"control\">%n");
+		out.printf("			    <button class=\"button is-primary\" type=\"submit\">%n");
+		out.printf("						<i class=\"fas fa-search\"></i>%n");
+		out.printf("						&nbsp;%n");
+		out.printf("						Search Query%n");
+		out.printf("					</button>%n");
+		out.printf("			  </div>%n");
+		out.printf("			</form>%n");
+		out.printf("		</div>%n");
+		out.printf("	</section>%n");
+		out.printf("%n");
+		out.printf("	<section class=\"section\">%n");
+		out.printf("		<div class=\"container\">%n");
+		out.printf("			<h2 class=\"title\">Past Queries</h2>%n");
 		out.printf("%n");
 
-		if (messages.isEmpty()) {
-			out.printf("				<p>No messages.</p>%n");
+		if (queries.isEmpty()) {
+			out.printf("				<p>No queries.</p>%n");
 		}
 		else {
-			for (String message : messages) {
+			for (String query : queries) {
 				out.printf("				<div class=\"box\">%n");
-				out.printf(message);
+				out.printf(query);
 				out.printf("				</div>%n");
 				out.printf("%n");
 			}
@@ -89,39 +112,6 @@ public class Servlet extends HttpServlet {
 
 		out.printf("			</div>%n");
 		out.printf("%n");
-		out.printf("		</div>%n");
-		out.printf("	</section>%n");
-		out.printf("%n");
-		out.printf("	<section class=\"section\">%n");
-		out.printf("		<div class=\"container\">%n");
-		out.printf("			<h2 class=\"title\">Add Message</h2>%n");
-		out.printf("%n");
-		out.printf("			<form method=\"%s\" action=\"%s\">%n", "POST", request.getServletPath());
-		out.printf("				<div class=\"field\">%n");
-		out.printf("					<label class=\"label\">Name</label>%n");
-		out.printf("					<div class=\"control has-icons-left\">%n");
-		out.printf("						<input class=\"input\" type=\"text\" name=\"%s\" placeholder=\"Enter your name here.\">%n", "username");
-		out.printf("						<span class=\"icon is-small is-left\">%n");
-		out.printf("							<i class=\"fas fa-user\"></i>%n");
-		out.printf("						</span>%n");
-		out.printf("					</div>%n");
-		out.printf("				</div>%n");
-		out.printf("%n");
-		out.printf("				<div class=\"field\">%n");
-		out.printf("				  <label class=\"label\">Message</label>%n");
-		out.printf("				  <div class=\"control\">%n");
-		out.printf("				    <textarea class=\"textarea\" name=\"%s\" placeholder=\"Enter your message here.\"></textarea>%n", "message");
-		out.printf("				  </div>%n");
-		out.printf("				</div>%n");
-		out.printf("%n");
-		out.printf("				<div class=\"control\">%n");
-		out.printf("			    <button class=\"button is-primary\" type=\"submit\">%n");
-		out.printf("						<i class=\"fas fa-comment\"></i>%n");
-		out.printf("						&nbsp;%n");
-		out.printf("						Post Message%n");
-		out.printf("					</button>%n");
-		out.printf("			  </div>%n");
-		out.printf("			</form>%n");
 		out.printf("		</div>%n");
 		out.printf("	</section>%n");
 		out.printf("%n");
@@ -145,32 +135,28 @@ public class Servlet extends HttpServlet {
 		response.setContentType("text/html");
 		response.setStatus(HttpServletResponse.SC_OK);
 
-		String username = request.getParameter("username");
-		String message = request.getParameter("message");
+		String query = request.getParameter("query");
 
-		username = username == null ? "anonymous" : username;
-		message = message == null ? "" : message;
+		query = query == null ? "" : query;
 
 		// Avoid XSS attacks using Apache Commons Text
 		// Comment out if you don't have this library installed
-		username = StringEscapeUtils.escapeHtml4(username);
-		message = StringEscapeUtils.escapeHtml4(message);
+		query = StringEscapeUtils.escapeHtml4(query);
 
 		String formatted = String.format(
-				"					<i class=\"fas fa-quote-left has-text-grey-light\"></i> %s <i class=\"fas fa-quote-right has-text-grey-light\"></i>%n" +
-				"					<p class=\"has-text-grey is-size-7 has-text-right\"><em><i class=\"fas fa-user has-text-grey-light\"></i> Posted by %s at %s.</em></p>%n",
-				message,
-				username,
+				"					<i class=\"fas fa-search-plus has-text-grey-light\"></i> %s %n" +
+				"					<p class=\"has-text-grey is-size-7 has-text-right\"><em><i class=\"fas fa-history has-text-grey-light\"></i> Searched at %s.</em></p>%n",
+				query,
 				getDate()
 		);
 
 
 		// Keep in mind multiple threads may access at once
-		messages.add(formatted);
+		queries.add(formatted);
 
 		// Only keep the latest 5 messages
-		if (messages.size() > 5) {
-			messages.poll();
+		if (queries.size() > 5) {
+			queries.poll();
 		}
 
 		response.setStatus(HttpServletResponse.SC_OK);
