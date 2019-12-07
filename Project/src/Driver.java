@@ -106,14 +106,15 @@ public class Driver {
 		 		if (num <= 0) {
 	 				num = 8080;
 	 			}
-//		 		Server.connect(num);
+		 		SearchServer server = new SearchServer(num);
+		 		server.initialize();
 			}
 	 		catch (NumberFormatException e) {
 				System.err.println("Please enter a valid argument for the port.");
 			}
-//	 		catch (IOException e) {
-//				System.err.println("Unable to start server on port: " + port);
-//			}
+	 		catch (Exception e) {
+				System.err.println("Unable to start server on port: " + port);
+			}
 	 	}
 
 		if (parser.hasFlag("-path")) {

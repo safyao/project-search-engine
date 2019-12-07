@@ -18,7 +18,6 @@ public class SearchServer {
 	/**
 	 * Sets up a Jetty server with different servlet instances.
 	 *
-	 * @param args unused
 	 * @throws Exception
 	 */
 	public void initialize() throws Exception {
