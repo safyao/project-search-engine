@@ -106,10 +106,14 @@ public class Driver {
 		 		if (num <= 0) {
 	 				num = 8080;
 	 			}
+//		 		Server.connect(num);
 			}
 	 		catch (NumberFormatException e) {
-				System.err.println("Please enter a valid argument for the limit of URLs to crawl.");
+				System.err.println("Please enter a valid argument for the port.");
 			}
+//	 		catch (IOException e) {
+//				System.err.println("Unable to start server on port: " + port);
+//			}
 	 	}
 
 		if (parser.hasFlag("-path")) {
