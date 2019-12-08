@@ -1,9 +1,6 @@
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,8 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * An alternative implemention of the {@MessageServlet} class but using the
+ * A servlet class that displays the results of a search engine using the
  * Bulma CSS framework.
+ *
+ * @author CS 212 Software Development
+ * @author University of San Francisco
+ * @version Fall 2019
  */
 public class ResultsServlet extends HttpServlet {
 
@@ -25,11 +26,13 @@ public class ResultsServlet extends HttpServlet {
 	/** The title to use for this webpage. */
 	private static final String TITLE = "On the Hunt";
 
+	/** The search builder used by this class. */
 	private final SearchBuilderInterface searchBuilder;
 
 	/**
-	 * Initializes this message board. Each message board has its own collection
-	 * of messages.
+	 * Initializes this servlet.
+	 *
+	 * @param searchBuilder the searchBuilder to initialize
 	 */
 	public ResultsServlet(SearchBuilderInterface searchBuilder) {
 		super();
@@ -96,17 +99,10 @@ public class ResultsServlet extends HttpServlet {
 	}
 
 	/**
-	 * Returns the date and time in a long format. For example: "12:00 am on
-	 * Saturday, January 01 2000".
+	 * Writes search results for query in HTML format.
 	 *
-	 * @return current date and time
+	 * @param out the PrintWriter to use
 	 */
-	private static String getDate() {
-		String format = "hh:mm a 'on' EEEE, MMMM dd yyyy";
-		DateFormat formatter = new SimpleDateFormat(format);
-		return formatter.format(new Date());
-	}
-
 	private void writeHtml(PrintWriter out) {
 		Map<String, List<InvertedIndex.SearchResult>> results = searchBuilder.getResults();
 		Set<String> queries = results.keySet();
@@ -123,8 +119,8 @@ public class ResultsServlet extends HttpServlet {
 			out.printf("				<p>No results.</p>%n");
 		}
 		else {
+			// Prints out clickable links, counts, and scores.
 			int total = links.size();
-
 			var iterator = links.iterator();
 
 			while (iterator.hasNext()) {
@@ -141,6 +137,7 @@ public class ResultsServlet extends HttpServlet {
 				out.printf("%n");
 			}
 
+			// Prints total number of results.
 			out.printf("	<section class=\"section\">%n");
 			out.printf("		<div class=\"container\">%n");
 			out.printf("			<h2 class=\"title\">Total Number of Results: %s</h2>%n", total);

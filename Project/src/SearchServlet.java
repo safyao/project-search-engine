@@ -13,8 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.text.StringEscapeUtils;
 
 /**
- * An alternative implemention of the {@MessageServlet} class but using the
+ * A servlet class that displays the home page of a search engine using the
  * Bulma CSS framework.
+ *
+ * @author CS 212 Software Development
+ * @author University of San Francisco
+ * @version Fall 2019
  */
 public class SearchServlet extends HttpServlet {
 
@@ -27,11 +31,13 @@ public class SearchServlet extends HttpServlet {
 	/** The thread-safe data structure to use for storing messages. */
 	private ConcurrentLinkedQueue<String> queries;
 
+	/** The search builder used by this class. */
 	private final SearchBuilderInterface searchBuilder;
 
 	/**
-	 * Initializes this message board. Each message board has its own collection
-	 * of messages.
+	 * Initializes this Servlet.
+	 *
+	 * @param searchBuilder the searchBuilder to initialize
 	 */
 	public SearchServlet(SearchBuilderInterface searchBuilder) {
 		super();
@@ -104,6 +110,7 @@ public class SearchServlet extends HttpServlet {
 		out.printf("			<h2 class=\"title\">Query History</h2>%n");
 		out.printf("%n");
 
+		// Outputs history of queries.
 		if (queries.isEmpty()) {
 			out.printf("				<p>No queries.</p>%n");
 		}
@@ -142,7 +149,7 @@ public class SearchServlet extends HttpServlet {
 
 		query = query == null ? "" : query;
 
-		// Avoids XSS attacks using Apache Commons Text
+		// Avoids XSS attacks using Apache Commons Text.
 		query = StringEscapeUtils.escapeHtml4(query);
 
 		String formatted = String.format(
@@ -152,8 +159,8 @@ public class SearchServlet extends HttpServlet {
 				getDate()
 		);
 
-
-		// Keep in mind multiple threads may access at once
+		// Adds query to list, and performs a search on that query.
+		// Keep in mind multiple threads may access at once.
 		queries.add(formatted);
 		searchBuilder.searchLine(query, false);
 
