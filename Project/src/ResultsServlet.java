@@ -3,6 +3,9 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -70,7 +73,7 @@ public class ResultsServlet extends HttpServlet {
 		out.printf("		<div class=\"container\">%n");
 		out.printf("			<h2 class=\"title\">Results</h2>%n");
 		out.printf("%n");
-		JsonWriter.asQueryObject(searchBuilder.getResults(), out, 0);
+		writeHtml(out);
 		out.printf("%n");
 		out.printf("		</div>%n");
 		out.printf("	</section>%n");
@@ -98,5 +101,34 @@ public class ResultsServlet extends HttpServlet {
 		String format = "hh:mm a 'on' EEEE, MMMM dd yyyy";
 		DateFormat formatter = new SimpleDateFormat(format);
 		return formatter.format(new Date());
+	}
+
+	private void writeHtml(PrintWriter out) {
+		Map<String, List<InvertedIndex.SearchResult>> results = searchBuilder.getResults();
+		Set<String> queries = results.keySet();
+
+		List<InvertedIndex.SearchResult> links = null;
+		for (String query : queries) {
+			if (query != null)
+			{
+				links = results.get(query);
+			}
+		}
+
+		if (links.isEmpty()) {
+			out.printf("				<p>No results.</p>%n");
+		}
+		else {
+
+			var iterator = links.iterator();
+
+			while (iterator.hasNext()) {
+				out.printf("				<div class=\"box\">%n");
+				String link = iterator.next().getWhere();
+				out.printf("				<a href=\"%s\">%s</a>%n", link, link);
+				out.printf("				</div>%n");
+				out.printf("%n");
+			}
+		}
 	}
 }
