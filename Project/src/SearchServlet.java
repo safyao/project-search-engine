@@ -3,6 +3,7 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.servlet.ServletException;
@@ -28,21 +29,21 @@ public class SearchServlet extends HttpServlet {
 	/** The title to use for this webpage. */
 	private static final String TITLE = "On the Hunt";
 
-	/** The thread-safe data structure to use for storing messages. */
-	private ConcurrentLinkedQueue<String> queries;
+	/** The thread-safe data structure to use for storing queries. */
+	private final ConcurrentLinkedDeque<String> queries;
 
-	/** The search builder used by this class. */
-	private final SearchBuilderInterface searchBuilder;
+	/** The thread-safe data structure to use for storing formatted queries. */
+	private final ConcurrentLinkedQueue<String> history;
 
 	/**
 	 * Initializes this Servlet.
 	 *
-	 * @param searchBuilder the searchBuilder to initialize
+	 * @param queries the queries to initialize
 	 */
-	public SearchServlet(SearchBuilderInterface searchBuilder) {
+	public SearchServlet(ConcurrentLinkedDeque<String> queries) {
 		super();
-		queries = new ConcurrentLinkedQueue<>();
-		this.searchBuilder = searchBuilder;
+		this.queries = queries;
+		history = new ConcurrentLinkedQueue<>();
 	}
 
 	@Override
@@ -111,13 +112,13 @@ public class SearchServlet extends HttpServlet {
 		out.printf("%n");
 
 		// Outputs history of queries.
-		if (queries.isEmpty()) {
+		if (history.isEmpty()) {
 			out.printf("				<p>No queries.</p>%n");
 		}
 		else {
-			for (String query : queries) {
+			for (String item : history) {
 				out.printf("				<div class=\"box\">%n");
-				out.printf(query);
+				out.printf(item);
 				out.printf("				</div>%n");
 				out.printf("%n");
 			}
@@ -161,8 +162,8 @@ public class SearchServlet extends HttpServlet {
 
 		// Adds query to list, and performs a search on that query.
 		// Keep in mind multiple threads may access at once.
-		queries.add(formatted);
-		searchBuilder.searchLine(query, false);
+		history.add(formatted);
+		queries.addLast(query);
 
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.sendRedirect("/results");

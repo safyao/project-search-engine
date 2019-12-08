@@ -2,8 +2,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,16 +27,21 @@ public class ResultsServlet extends HttpServlet {
 	private static final String TITLE = "On the Hunt";
 
 	/** The search builder used by this class. */
-	private final SearchBuilderInterface searchBuilder;
+	private final InvertedIndex index;
+
+	/** The queue of queries used by this class. */
+	private final ConcurrentLinkedDeque<String> queries;
 
 	/**
 	 * Initializes this servlet.
 	 *
-	 * @param searchBuilder the searchBuilder to initialize
+	 * @param index the index to initialize
+	 * @param queries the queue of queries to initialize
 	 */
-	public ResultsServlet(SearchBuilderInterface searchBuilder) {
+	public ResultsServlet(InvertedIndex index, ConcurrentLinkedDeque<String> queries) {
 		super();
-		this.searchBuilder = searchBuilder;
+		this.index = index;
+		this.queries = queries;
 	}
 
 	@Override
@@ -80,7 +85,9 @@ public class ResultsServlet extends HttpServlet {
 		out.printf("		<div class=\"container\">%n");
 		out.printf("			<h2 class=\"title\">Results</h2>%n");
 		out.printf("%n");
+
 		writeHtml(out);
+
 		out.printf("%n");
 		out.printf("		</div>%n");
 		out.printf("	</section>%n");
@@ -104,47 +111,46 @@ public class ResultsServlet extends HttpServlet {
 	 * @param out the PrintWriter to use
 	 */
 	private void writeHtml(PrintWriter out) {
-		Map<String, List<InvertedIndex.SearchResult>> results = searchBuilder.getResults();
-		Set<String> queries = results.keySet();
+		synchronized (queries) {
+			if (!queries.isEmpty()) {
+				// Performs the search.
+				String query = queries.getLast();
+				Set<String> querySet = TextStemmer.uniqueStems(query);
+				List<InvertedIndex.SearchResult> results;
+				if (!querySet.isEmpty()) {
+					results = index.search(querySet, false);
+					int total = results.size();
 
-		List<InvertedIndex.SearchResult> links = null;
-		for (String query : queries) {
-			if (query != null) {
-				links = results.get(query);
-				break;
+					// Prints each result and its stats.
+					for (InvertedIndex.SearchResult result : results) {
+						String link = result.getWhere();
+						int count = result.getCount();
+						double score = result.getScore();
+						DecimalFormat df = new DecimalFormat("#.###");
+
+						out.printf("				<div class=\"box\">%n");
+						out.printf("				<a href=\"%s\">%s</a>: %s%n", link, link, count);
+						out.printf("				<p class=\"has-text-grey is-size-7 has-text-right\">Score: %s</p>%n", df.format(score));
+						out.printf("				</div>%n");
+						out.printf("%n");
+					}
+
+					// Prints total number of results.
+					out.printf("	<section class=\"section\">%n");
+					out.printf("		<div class=\"container\">%n");
+					out.printf("			<h2 class=\"title\">Total Number of Results: %s</h2>%n", total);
+					out.printf("%n");
+					out.printf("		</div>%n");
+					out.printf("	</section>%n");
+					out.printf("%n");
+		 		}
+				else {
+					out.printf("				<p>No results.</p>%n");
+				}
 			}
-		}
-
-		if (links == null || links.isEmpty()) {
-			out.printf("				<p>No results.</p>%n");
-		}
-		else {
-			// Prints out clickable links, counts, and scores.
-			int total = links.size();
-			var iterator = links.iterator();
-
-			while (iterator.hasNext()) {
-				out.printf("				<div class=\"box\">%n");
-				InvertedIndex.SearchResult result = iterator.next();
-				String link = result.getWhere();
-				int count = result.getCount();
-				double score = result.getScore();
-				DecimalFormat df = new DecimalFormat("#.###");
-
-				out.printf("				<a href=\"%s\">%s</a>: %s%n", link, link, count);
-				out.printf("				<p class=\"has-text-grey is-size-7 has-text-right\">Score: %s</p>%n", df.format(score));
-				out.printf("				</div>%n");
-				out.printf("%n");
+			else {
+				out.printf("				<p>No results.</p>%n");
 			}
-
-			// Prints total number of results.
-			out.printf("	<section class=\"section\">%n");
-			out.printf("		<div class=\"container\">%n");
-			out.printf("			<h2 class=\"title\">Total Number of Results: %s</h2>%n", total);
-			out.printf("%n");
-			out.printf("		</div>%n");
-			out.printf("	</section>%n");
-			out.printf("%n");
 		}
 	}
 }

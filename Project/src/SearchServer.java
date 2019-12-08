@@ -1,3 +1,5 @@
+import java.util.concurrent.ConcurrentLinkedDeque;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -15,23 +17,22 @@ public class SearchServer {
 	/** The port to run this server. */
 	public final int PORT;
 
-	/** The search builder used by this class. */
-	private final SearchBuilderInterface searchBuilder;
-
 	/** The index used by this class. */
 	private final InvertedIndex index;
+
+	/** The queue of queries used by this class. */
+	private final ConcurrentLinkedDeque<String> queries;
 
 	/**
 	 * Initializes the port and SearchBuilderInterface.
 	 *
 	 * @param port the port to initialize
-	 * @param searchBuilder the searchBuilder to initialize
 	 * @param index the index to initialize
 	 */
-	public SearchServer(int port, SearchBuilderInterface searchBuilder, InvertedIndex index) {
+	public SearchServer(int port, InvertedIndex index) {
 		this.PORT = port;
-		this.searchBuilder = searchBuilder;
 		this.index = index;
+		this.queries = new ConcurrentLinkedDeque<>();
 	}
 
 	/**
@@ -44,11 +45,11 @@ public class SearchServer {
 
 		ServletHandler handler = new ServletHandler();
 		// Displays home page.
-		handler.addServletWithMapping(new ServletHolder(new SearchServlet(searchBuilder)), "/");
+		handler.addServletWithMapping(new ServletHolder(new SearchServlet(queries)), "/");
 		// Displays results page.
-		handler.addServletWithMapping(new ServletHolder(new ResultsServlet(searchBuilder)), "/results");
+		handler.addServletWithMapping(new ServletHolder(new ResultsServlet(index, queries)), "/results");
 		// Displays index word counts page.
-		handler.addServletWithMapping(new ServletHolder(new IndexServlet(index)), "/index-counts");
+		handler.addServletWithMapping(new ServletHolder(new IndexServlet(index)), "/index");
 
 		server.setHandler(handler);
 		server.start();

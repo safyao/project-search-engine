@@ -28,23 +28,30 @@ public class Driver {
 		SearchBuilderInterface searchBuilder;
 		WorkQueue queue = null;
 
-		if (parser.hasFlag("-threads")) {
+		// Enables multithreading for specific arguments.
+		if (parser.hasFlag("-threads") || parser.hasFlag("-url") || parser.hasFlag("-port")) {
 	 		ThreadSafeIndex  threadSafe = new ThreadSafeIndex();
 	 		index = threadSafe;
 
-	 		try {
-	 			// Initializes and verifies number of threads for work queue.
+	 		if (parser.hasFlag("-threads")) {
 	 			String threads = parser.getString("-threads", "5");
-	 			int numThreads = Integer.parseInt(threads);
 
-	 			if (numThreads <= 0) {
-					numThreads = 5;
+	 			try {
+		 			// Initializes and verifies number of threads for work queue.
+		 			int numThreads = Integer.parseInt(threads);
+
+		 			if (numThreads <= 0) {
+						numThreads = 5;
+					}
+					queue = new WorkQueue(numThreads);
+		 		}
+				catch (NumberFormatException e) {
+					System.err.println("Please enter a valid argument for the number of threads.");
 				}
-				queue = new WorkQueue(numThreads);
 	 		}
-			catch (NumberFormatException e) {
-				System.err.println("Please enter a valid argument for the number of threads.");
-			}
+	 		else {
+	 			queue = new WorkQueue(5);
+	 		}
 
 	 		builder = new MultithreadedIndexBuilder(threadSafe, queue);
 	 		searchBuilder = new MultithreadedSearchBuilder(threadSafe, queue);
@@ -58,17 +65,9 @@ public class Driver {
 		if (parser.hasFlag("-url")) {
 	 		String seed = parser.getString("-url");
 
-	 		// Initializes the work queue.
-	 		if (queue == null) {
-	 			ThreadSafeIndex  threadSafe = new ThreadSafeIndex();
-		 		index = threadSafe;
-	 			queue = new WorkQueue(5);
-		 		searchBuilder = new MultithreadedSearchBuilder(threadSafe, queue);
-	 		}
-
 	 		try {
 	 			// Crawls the URL.
-		 		int limit;
+	 			int limit;
 		 		if (parser.hasFlag("-limit")) {
 		 			limit = Integer.parseInt(parser.getString("-limit", "50"));
 		 			if (limit <= 0) {
@@ -93,21 +92,13 @@ public class Driver {
 		if (parser.hasFlag("-port")) {
 	 		String port = parser.getString("-port", "8080");
 
-	 		// Initializes the work queue.
-	 		if (queue == null) {
-	 			ThreadSafeIndex  threadSafe = new ThreadSafeIndex();
-		 		index = threadSafe;
-	 			queue = new WorkQueue(5);
-		 		searchBuilder = new MultithreadedSearchBuilder(threadSafe, queue);
-	 		}
-
-	 		// Initializes the server for the given port.
 	 		try {
+	 			// Initializes the server for the given port.
 		 		int num = Integer.parseInt(port);
 		 		if (num <= 0) {
 	 				num = 8080;
 	 			}
-		 		SearchServer server = new SearchServer(num, searchBuilder, index);
+		 		SearchServer server = new SearchServer(num, index);
 		 		server.initialize();
 			}
 	 		catch (NumberFormatException e) {
