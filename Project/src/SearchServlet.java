@@ -16,7 +16,7 @@ import org.apache.commons.text.StringEscapeUtils;
  * An alternative implemention of the {@MessageServlet} class but using the
  * Bulma CSS framework.
  */
-public class Servlet extends HttpServlet {
+public class SearchServlet extends HttpServlet {
 
 	/** Identifier used for serialization (unused). */
 	private static final long serialVersionUID = 1L;
@@ -33,7 +33,7 @@ public class Servlet extends HttpServlet {
 	 * Initializes this message board. Each message board has its own collection
 	 * of messages.
 	 */
-	public Servlet(SearchBuilderInterface searchBuilder) {
+	public SearchServlet(SearchBuilderInterface searchBuilder) {
 		super();
 		queries = new ConcurrentLinkedQueue<>();
 		this.searchBuilder = searchBuilder;
@@ -134,8 +134,6 @@ public class Servlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		PrintWriter out = response.getWriter();
 
 		response.setContentType("text/html");
 		response.setStatus(HttpServletResponse.SC_OK);

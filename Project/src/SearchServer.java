@@ -27,7 +27,7 @@ public class SearchServer {
 		Server server = new Server(PORT);
 
 		ServletHandler handler = new ServletHandler();
-		handler.addServletWithMapping(new ServletHolder(new Servlet(searchBuilder)), "/");
+		handler.addServletWithMapping(new ServletHolder(new SearchServlet(searchBuilder)), "/");
 		handler.addServletWithMapping(new ServletHolder(new ResultsServlet(searchBuilder)), "/results");
 
 		server.setHandler(handler);
