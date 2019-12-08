@@ -3,6 +3,10 @@ import java.util.regex.Pattern;
 
 /**
  * Cleans simple, validating HTML 4/5 into plain text.
+ *
+ * @author CS 212 Software Development
+ * @author University of San Francisco
+ * @version Fall 2019
  */
 public class HtmlCleaner {
 
@@ -37,8 +41,6 @@ public class HtmlCleaner {
 		return html;
 	}
 
-	// THE FOLLOWING REPLACE WITH THE EMPTY STRING
-
 	/**
 	 * Replaces all HTML entities with an empty string. For example,
 	 * "2010&ndash;2012" will become "20102012".
@@ -64,8 +66,6 @@ public class HtmlCleaner {
 		Matcher matcher = pattern.matcher(html);
 		return matcher.replaceAll("");
 	}
-
-	// THE FOLLOWING REPLACE WITH A SINGLE SPACE
 
 	/**
 	 * Replaces all HTML comments with a single space. For example, "A<!-- B -->C"
@@ -96,7 +96,6 @@ public class HtmlCleaner {
 	 * @return text without that HTML element
 	 */
 	public static String stripElement(String html, String name) {
-//		Pattern pattern = Pattern.compile("(?is)(<" + name + ".*?>.*?<\\/" + name + ".*?>)");
 		Pattern pattern = Pattern.compile("(?si)<" + name + ".*?/" + name + "\\s*?>");
 		Matcher matcher = pattern.matcher(html);
 		return matcher.replaceAll(" ");

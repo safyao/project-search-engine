@@ -7,6 +7,10 @@ import java.util.LinkedList;
  *
  * @see <a href="https://www.ibm.com/developerworks/library/j-jtp0730/index.html">
  * Java Theory and Practice: Thread Pools and Work Queues</a>
+ *
+ * @author CS 212 Software Development
+ * @author University of San Francisco
+ * @version Fall 2019
  */
 public class WorkQueue {
 

@@ -101,12 +101,13 @@ public class Driver {
 		 		searchBuilder = new MultithreadedSearchBuilder(threadSafe, queue);
 	 		}
 
+	 		// Initializes the server for the given port.
 	 		try {
 		 		int num = Integer.parseInt(port);
 		 		if (num <= 0) {
 	 				num = 8080;
 	 			}
-		 		SearchServer server = new SearchServer(num, searchBuilder);
+		 		SearchServer server = new SearchServer(num, searchBuilder, index);
 		 		server.initialize();
 			}
 	 		catch (NumberFormatException e) {

@@ -8,6 +8,10 @@ import java.util.regex.Pattern;
 
 /**
  * Parses URL links from the anchor tags within HTML text.
+ *
+ * @author CS 212 Software Development
+ * @author University of San Francisco
+ * @version Fall 2019
  */
 public class LinkParser {
 

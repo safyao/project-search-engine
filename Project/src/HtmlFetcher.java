@@ -13,6 +13,10 @@ import java.util.regex.Pattern;
  * returns HTML content if possible.
  *
  * @see HttpsFetcher
+ *
+ * @author CS 212 Software Development
+ * @author University of San Francisco
+ * @version Fall 2019
  */
 public class HtmlFetcher {
 
@@ -27,16 +31,15 @@ public class HtmlFetcher {
 		Pattern patternHead = Pattern.compile("(?i)(Content-Type)");
 		Pattern patternHTML = Pattern.compile("(?i)(text\\/html)");
 
-		for (String item: headers.keySet())
-		{
-			if (item != null)
-			{
+		for (String item: headers.keySet()) {
+
+			if (item != null) {
 				Matcher matcherHead = patternHead.matcher(item);
-				if (matcherHead.find())
-				{
+
+				if (matcherHead.find()) {
 					Matcher matcherHTML = patternHTML.matcher(headers.get(item).get(0));
-					if (matcherHTML.find())
-					{
+
+					if (matcherHTML.find()) {
 						return true;
 					}
 				}
@@ -56,13 +59,12 @@ public class HtmlFetcher {
 	public static int getStatusCode(Map<String, List<String>> headers) {
 		Pattern pattern = Pattern.compile("(?i)(HTTP\\/1.1).(\\d*)");
 
-		for (String item: headers.keySet())
-		{
-			if (item == null)
-			{
+		for (String item: headers.keySet()) {
+
+			if (item == null) {
 				Matcher matcher = pattern.matcher(headers.get(item).get(0));
-				if (matcher.find())
-				{
+
+				if (matcher.find()) {
 					return Integer.parseInt(matcher.group(2));
 				}
 			}
@@ -79,7 +81,9 @@ public class HtmlFetcher {
 	 * @return {@code true} if the headers indicate the content type is HTML
 	 */
 	public static boolean isRedirect(Map<String, List<String>> headers) {
+
 		if ((getStatusCode(headers) >= 300) && (getStatusCode(headers) < 400)) {
+
 			if (headers.containsKey("Location") && !headers.get("Location").isEmpty()) {
 				return true;
 			}
@@ -111,21 +115,20 @@ public class HtmlFetcher {
 	public static String fetch(URL url, int redirects) {
 		try {
 			Map<String, List<String>> headers = HttpsFetcher.fetch(url);
-			if (isRedirect(headers) && redirects > 0)
-			{
+
+			if (isRedirect(headers) && redirects > 0) {
 				String redirect = headers.get("Location").get(0);
 				return fetch(redirect, redirects - 1);
 			}
-			else if (getStatusCode(headers) == 200 && isHtml(headers))
-			{
+			else if (getStatusCode(headers) == 200 && isHtml(headers)) {
 				String lines = String.join("\n", headers.get("Content"));
 				return lines;
 			}
 		}
-		catch (IOException e)
-		{
+		catch (IOException e) {
 			System.err.println("Unable to fetch resource at the URL: " + url.toString());
 		}
+
 		return null;
 	}
 

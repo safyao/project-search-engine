@@ -9,6 +9,10 @@ import java.util.ConcurrentModificationException;
  *
  * @see SimpleLock
  * @see SimpleReadWriteLock
+ *
+ * @author CS 212 Software Development
+ * @author University of San Francisco
+ * @version Fall 2019
  */
 public class SimpleReadWriteLock {
 

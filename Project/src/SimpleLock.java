@@ -5,6 +5,10 @@ import java.util.concurrent.locks.Lock;
  * a {@code synchronized} block.
  *
  * Similar but simpler than {@link Lock}.
+ *
+ * @author CS 212 Software Development
+ * @author University of San Francisco
+ * @version Fall 2019
  */
 public interface SimpleLock {
 
