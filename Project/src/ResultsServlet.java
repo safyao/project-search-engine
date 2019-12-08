@@ -22,7 +22,7 @@ public class ResultsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/** The title to use for this webpage. */
-	private static final String TITLE = "Search";
+	private static final String TITLE = "On the Hunt";
 
 	private final SearchBuilderInterface searchBuilder;
 
@@ -58,12 +58,15 @@ public class ResultsServlet extends HttpServlet {
 		out.printf("	<section class=\"hero is-primary is-bold\">%n");
 		out.printf("	  <div class=\"hero-body\">%n");
 		out.printf("	    <div class=\"container\">%n");
+		out.printf("			<figure class=\"image is-128x128\">%n");
+		out.printf("				<img class=\"is-rounded\" src=\"https://free.clipartof.com/733-Free-Clipart-Of-Earth.jpg\">%n");
+		out.printf("			</figure>");
 		out.printf("	      <h1 class=\"title\">%n");
-		out.printf("	        Search Results%n");
+		out.printf("	        On the Hunt%n");
 		out.printf("	      </h1>%n");
 		out.printf("	      <h2 class=\"subtitle\">%n");
-		out.printf("					<i class=\"fas fa-calendar-alt\"></i>%n");
-		out.printf("					&nbsp;Time: %s%n", getDate());
+		out.printf("					<i class=\"fas fa-globe-americas\"></i>%n");
+		out.printf("					&nbsp;If you haven't found it yet, keep looking.%n");
 		out.printf("	      </h2>%n");
 		out.printf("	    </div>%n");
 		out.printf("	  </div>%n");

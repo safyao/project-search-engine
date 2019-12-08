@@ -22,7 +22,7 @@ public class SearchServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/** The title to use for this webpage. */
-	private static final String TITLE = "Search";
+	private static final String TITLE = "On the Hunt";
 
 	/** The thread-safe data structure to use for storing messages. */
 	private ConcurrentLinkedQueue<String> queries;
@@ -62,12 +62,15 @@ public class SearchServlet extends HttpServlet {
 		out.printf("	<section class=\"hero is-primary is-bold\">%n");
 		out.printf("	  <div class=\"hero-body\">%n");
 		out.printf("	    <div class=\"container\">%n");
+		out.printf("			<figure class=\"image is-128x128\">%n");
+		out.printf("				<img class=\"is-rounded\" src=\"https://free.clipartof.com/733-Free-Clipart-Of-Earth.jpg\">%n");
+		out.printf("			</figure>");
 		out.printf("	      <h1 class=\"title\">%n");
-		out.printf("	        Search Engine%n");
+		out.printf("	        On the Hunt%n");
 		out.printf("	      </h1>%n");
 		out.printf("	      <h2 class=\"subtitle\">%n");
-		out.printf("					<i class=\"fas fa-calendar-alt\"></i>%n");
-		out.printf("					&nbsp;Time: %s%n", getDate());
+		out.printf("					<i class=\"fas fa-globe-americas\"></i>%n");
+		out.printf("					&nbsp;If you haven't found it yet, keep looking.%n");
 		out.printf("	      </h2>%n");
 		out.printf("	    </div>%n");
 		out.printf("	  </div>%n");
@@ -98,7 +101,7 @@ public class SearchServlet extends HttpServlet {
 		out.printf("%n");
 		out.printf("	<section class=\"section\">%n");
 		out.printf("		<div class=\"container\">%n");
-		out.printf("			<h2 class=\"title\">Past Queries</h2>%n");
+		out.printf("			<h2 class=\"title\">Query History</h2>%n");
 		out.printf("%n");
 
 		if (queries.isEmpty()) {
@@ -114,9 +117,6 @@ public class SearchServlet extends HttpServlet {
 		}
 
 		out.printf("			</div>%n");
-		out.printf("%n");
-		out.printf("		</div>%n");
-		out.printf("	</section>%n");
 		out.printf("%n");
 		out.printf("	<footer class=\"footer\">%n");
 		out.printf("	  <div class=\"content has-text-centered\">%n");
@@ -142,8 +142,7 @@ public class SearchServlet extends HttpServlet {
 
 		query = query == null ? "" : query;
 
-		// Avoid XSS attacks using Apache Commons Text
-		// Comment out if you don't have this library installed
+		// Avoids XSS attacks using Apache Commons Text
 		query = StringEscapeUtils.escapeHtml4(query);
 
 		String formatted = String.format(
