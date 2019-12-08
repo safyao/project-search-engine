@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Utility interface that stores path data into Inverted Index data structure.
@@ -48,4 +50,11 @@ public interface SearchBuilderInterface {
 	 * @throws IOException if unable to access path
 	 */
 	public abstract void writeQuery(Path path) throws IOException;
+
+	/**
+	 * Returns an unmodifiable view of queryMap.
+	 *
+	 * @return unmodifiable Map
+	 */
+	public abstract Map<String, List<InvertedIndex.SearchResult>> getResults();
 }

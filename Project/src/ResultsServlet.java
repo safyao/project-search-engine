@@ -3,20 +3,17 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.text.StringEscapeUtils;
-
 /**
  * An alternative implemention of the {@MessageServlet} class but using the
  * Bulma CSS framework.
  */
-public class Servlet extends HttpServlet {
+public class ResultsServlet extends HttpServlet {
 
 	/** Identifier used for serialization (unused). */
 	private static final long serialVersionUID = 1L;
@@ -24,18 +21,14 @@ public class Servlet extends HttpServlet {
 	/** The title to use for this webpage. */
 	private static final String TITLE = "Search";
 
-	/** The thread-safe data structure to use for storing messages. */
-	private ConcurrentLinkedQueue<String> queries;
-
 	private final SearchBuilderInterface searchBuilder;
 
 	/**
 	 * Initializes this message board. Each message board has its own collection
 	 * of messages.
 	 */
-	public Servlet(SearchBuilderInterface searchBuilder) {
+	public ResultsServlet(SearchBuilderInterface searchBuilder) {
 		super();
-		queries = new ConcurrentLinkedQueue<>();
 		this.searchBuilder = searchBuilder;
 	}
 
@@ -63,7 +56,7 @@ public class Servlet extends HttpServlet {
 		out.printf("	  <div class=\"hero-body\">%n");
 		out.printf("	    <div class=\"container\">%n");
 		out.printf("	      <h1 class=\"title\">%n");
-		out.printf("	        Search Engine%n");
+		out.printf("	        Search Results%n");
 		out.printf("	      </h1>%n");
 		out.printf("	      <h2 class=\"subtitle\">%n");
 		out.printf("					<i class=\"fas fa-calendar-alt\"></i>%n");
@@ -75,45 +68,9 @@ public class Servlet extends HttpServlet {
 		out.printf("%n");
 		out.printf("	<section class=\"section\">%n");
 		out.printf("		<div class=\"container\">%n");
-		out.printf("			<h2 class=\"title\">Search</h2>%n");
+		out.printf("			<h2 class=\"title\">Results</h2>%n");
 		out.printf("%n");
-		out.printf("			<form method=\"%s\" action=\"%s\">%n", "POST", request.getServletPath());
-		out.printf("				<div class=\"field\">%n");
-		out.printf("				  <label class=\"label\">Query</label>%n");
-		out.printf("				  <div class=\"control\">%n");
-		out.printf("				    <textarea class=\"textarea\" name=\"%s\" placeholder=\"Enter your query here.\"></textarea>%n", "query");
-		out.printf("				  </div>%n");
-		out.printf("				</div>%n");
-		out.printf("%n");
-		out.printf("				<div class=\"control\">%n");
-		out.printf("			    <button class=\"button is-primary\" type=\"submit\">%n");
-		out.printf("						<i class=\"fas fa-search\"></i>%n");
-		out.printf("						&nbsp;%n");
-		out.printf("						Search Query%n");
-		out.printf("					</button>%n");
-		out.printf("			  </div>%n");
-		out.printf("			</form>%n");
-		out.printf("		</div>%n");
-		out.printf("	</section>%n");
-		out.printf("%n");
-		out.printf("	<section class=\"section\">%n");
-		out.printf("		<div class=\"container\">%n");
-		out.printf("			<h2 class=\"title\">Past Queries</h2>%n");
-		out.printf("%n");
-
-		if (queries.isEmpty()) {
-			out.printf("				<p>No queries.</p>%n");
-		}
-		else {
-			for (String query : queries) {
-				out.printf("				<div class=\"box\">%n");
-				out.printf(query);
-				out.printf("				</div>%n");
-				out.printf("%n");
-			}
-		}
-
-		out.printf("			</div>%n");
+		JsonWriter.asQueryObject(searchBuilder.getResults(), out, 0);
 		out.printf("%n");
 		out.printf("		</div>%n");
 		out.printf("	</section>%n");
@@ -129,39 +86,6 @@ public class Servlet extends HttpServlet {
 		out.printf("</html>%n");
 
 		response.setStatus(HttpServletResponse.SC_OK);
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
-		PrintWriter out = response.getWriter();
-
-		response.setContentType("text/html");
-		response.setStatus(HttpServletResponse.SC_OK);
-
-		String query = request.getParameter("query");
-
-		query = query == null ? "" : query;
-
-		// Avoid XSS attacks using Apache Commons Text
-		// Comment out if you don't have this library installed
-		query = StringEscapeUtils.escapeHtml4(query);
-
-		String formatted = String.format(
-				"					<i class=\"fas fa-search-plus has-text-grey-light\"></i> %s %n" +
-				"					<p class=\"has-text-grey is-size-7 has-text-right\"><em><i class=\"fas fa-history has-text-grey-light\"></i> Searched at %s.</em></p>%n",
-				query,
-				getDate()
-		);
-
-
-		// Keep in mind multiple threads may access at once
-		queries.add(formatted);
-		searchBuilder.searchLine(query, false);
-
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.sendRedirect("/results");
 	}
 
 	/**

@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,6 +51,13 @@ public class MultithreadedSearchBuilder implements SearchBuilderInterface {
 	@Override
 	public void writeQuery(Path path) throws IOException {
 		JsonWriter.asQueryObject(queryMap, path);
+	}
+
+	@Override
+	public Map<String, List<InvertedIndex.SearchResult>> getResults() {
+		synchronized (this) {
+			return Collections.unmodifiableMap(queryMap);
+		}
 	}
 
 	/**

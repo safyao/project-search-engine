@@ -106,7 +106,7 @@ public class Driver {
 		 		if (num <= 0) {
 	 				num = 8080;
 	 			}
-		 		SearchServer server = new SearchServer(num);
+		 		SearchServer server = new SearchServer(num, searchBuilder);
 		 		server.initialize();
 			}
 	 		catch (NumberFormatException e) {

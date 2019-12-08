@@ -11,9 +11,12 @@ public class SearchServer {
 	/** The port to run this server. */
 	public final int PORT;
 
-	public SearchServer(int port)
+	private final SearchBuilderInterface searchBuilder;
+
+	public SearchServer(int port, SearchBuilderInterface searchBuilder)
 	{
 		this.PORT = port;
+		this.searchBuilder = searchBuilder;
 	}
 	/**
 	 * Sets up a Jetty server with different servlet instances.
@@ -24,9 +27,8 @@ public class SearchServer {
 		Server server = new Server(PORT);
 
 		ServletHandler handler = new ServletHandler();
-		handler.addServletWithMapping(new ServletHolder(new Servlet()), "/");
-		handler.addServletWithMapping(new ServletHolder(new Servlet()), "/cake");
-		handler.addServletWithMapping(new ServletHolder(new Servlet()), "/bulma");
+		handler.addServletWithMapping(new ServletHolder(new Servlet(searchBuilder)), "/");
+		handler.addServletWithMapping(new ServletHolder(new ResultsServlet(searchBuilder)), "/results");
 
 		server.setHandler(handler);
 		server.start();
