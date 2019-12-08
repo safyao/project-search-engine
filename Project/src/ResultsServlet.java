@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -60,7 +61,7 @@ public class ResultsServlet extends HttpServlet {
 		out.printf("	    <div class=\"container\">%n");
 		out.printf("			<figure class=\"image is-128x128\">%n");
 		out.printf("				<img class=\"is-rounded\" src=\"https://free.clipartof.com/733-Free-Clipart-Of-Earth.jpg\">%n");
-		out.printf("			</figure>");
+		out.printf("			</figure>%n");
 		out.printf("	      <h1 class=\"title\">%n");
 		out.printf("	        On the Hunt%n");
 		out.printf("	      </h1>%n");
@@ -112,26 +113,41 @@ public class ResultsServlet extends HttpServlet {
 
 		List<InvertedIndex.SearchResult> links = null;
 		for (String query : queries) {
-			if (query != null)
-			{
+			if (query != null) {
 				links = results.get(query);
+				break;
 			}
 		}
 
-		if (results.isEmpty() || links == null || links.isEmpty()) {
+		if (links == null || links.isEmpty()) {
 			out.printf("				<p>No results.</p>%n");
 		}
 		else {
+			int total = links.size();
 
 			var iterator = links.iterator();
 
 			while (iterator.hasNext()) {
 				out.printf("				<div class=\"box\">%n");
-				String link = iterator.next().getWhere();
-				out.printf("				<a href=\"%s\">%s</a>%n", link, link);
+				InvertedIndex.SearchResult result = iterator.next();
+				String link = result.getWhere();
+				int count = result.getCount();
+				double score = result.getScore();
+				DecimalFormat df = new DecimalFormat("#.###");
+
+				out.printf("				<a href=\"%s\">%s</a>: %s%n", link, link, count);
+				out.printf("				<p class=\"has-text-grey is-size-7 has-text-right\">Score: %s</p>%n", df.format(score));
 				out.printf("				</div>%n");
 				out.printf("%n");
 			}
+
+			out.printf("	<section class=\"section\">%n");
+			out.printf("		<div class=\"container\">%n");
+			out.printf("			<h2 class=\"title\">Total Number of Results: %s</h2>%n", total);
+			out.printf("%n");
+			out.printf("		</div>%n");
+			out.printf("	</section>%n");
+			out.printf("%n");
 		}
 	}
 }
