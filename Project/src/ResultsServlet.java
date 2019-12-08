@@ -115,7 +115,7 @@ public class ResultsServlet extends HttpServlet {
 			}
 		}
 
-		if (links.isEmpty()) {
+		if (results.isEmpty() || links == null || links.isEmpty()) {
 			out.printf("				<p>No results.</p>%n");
 		}
 		else {
