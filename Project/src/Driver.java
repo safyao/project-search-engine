@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 
+// TODO Check names of third party libraries
+
 /**
  * Class responsible for running this project based on the provided command-line
  * arguments. See the README for details.
