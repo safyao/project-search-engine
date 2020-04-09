@@ -1,7 +1,5 @@
-# Project 
+# Search Engine Project
+# Software Devlopment - CS 212
+# Fall 2019
 
-The project is broken into two separate GitHub repositories and Eclipse Java projects. This is the private individual repository for your project source code. Unlike the test repository which is shared, this repository will only be accessible by you, the instructor, and the teacher assistants.
-
-For more details, see the project guides at:
-
-<https://usf-cs212-fall2019.github.io/guides/>
+A fully functional search engine that (1) contains a multithreaded web crawler to build an index from a seed URL and (2) presents a search engine web interface using embedded Jetty and servlets to search the index.
